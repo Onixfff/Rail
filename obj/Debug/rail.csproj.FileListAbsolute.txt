@@ -1,0 +1,241 @@
+D:\1 Завод\sql+programs\железная дорога\rail\rail\bin\Debug\rail.exe.config
+D:\1 Завод\sql+programs\железная дорога\rail\rail\bin\Debug\rail.exe
+D:\1 Завод\sql+programs\железная дорога\rail\rail\bin\Debug\rail.pdb
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.csprojResolveAssemblyReference.cache
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.Properties.Resources.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.csproj.GenerateResource.Cache
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.exe
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.pdb
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.Add.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.Form5.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.password.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.general.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.sendler.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.material.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.datestation.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.datestart.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.datefinish.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.AboutBox1.resources
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\bin\Debug\rail.exe.config
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.exe
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.pdb
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.csprojResolveAssemblyReference.cache
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.AboutBox1.resources
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.password.resources
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.general.resources
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.Add.resources
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.sendler.resources
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.Form5.resources
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.material.resources
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.datestation.resources
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.datestart.resources
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.datefinish.resources
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.Properties.Resources.resources
+G:\Новый том\1 Завод\sql+programs\железная дорога\rail\rail\obj\Debug\rail.csproj.GenerateResource.Cache
+D:\sql+programs\железная дорога\rail\rail\bin\Debug\rail.exe.config
+D:\sql+programs\железная дорога\rail\rail\bin\Debug\rail.exe
+D:\sql+programs\железная дорога\rail\rail\bin\Debug\rail.pdb
+D:\sql+programs\железная дорога\rail\rail\bin\Debug\MySql.Data.dll
+D:\sql+programs\железная дорога\rail\rail\bin\Debug\MySql.Data.xml
+D:\sql+programs\железная дорога\rail\rail\obj\Debug\rail.csprojResolveAssemblyReference.cache
+D:\sql+programs\железная дорога\rail\rail\obj\Debug\rail.AboutBox1.resources
+D:\sql+programs\железная дорога\rail\rail\obj\Debug\rail.password.resources
+D:\sql+programs\железная дорога\rail\rail\obj\Debug\rail.general.resources
+D:\sql+programs\железная дорога\rail\rail\obj\Debug\rail.Add.resources
+D:\sql+programs\железная дорога\rail\rail\obj\Debug\rail.sendler.resources
+D:\sql+programs\железная дорога\rail\rail\obj\Debug\rail.Form5.resources
+D:\sql+programs\железная дорога\rail\rail\obj\Debug\rail.material.resources
+D:\sql+programs\железная дорога\rail\rail\obj\Debug\rail.datestation.resources
+D:\sql+programs\железная дорога\rail\rail\obj\Debug\rail.datestart.resources
+D:\sql+programs\железная дорога\rail\rail\obj\Debug\rail.datefinish.resources
+D:\sql+programs\железная дорога\rail\rail\obj\Debug\rail.Properties.Resources.resources
+D:\sql+programs\железная дорога\rail\rail\obj\Debug\rail.csproj.GenerateResource.Cache
+D:\sql+programs\железная дорога\rail\rail\obj\Debug\rail.exe
+D:\sql+programs\железная дорога\rail\rail\obj\Debug\rail.pdb
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\rail.exe.config
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\rail.exe
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\rail.pdb
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\MySql.Data.xml
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csprojResolveAssemblyReference.cache
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.AboutBox1.resources
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.password.resources
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.general.resources
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Add.resources
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.sendler.resources
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Form5.resources
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.material.resources
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datestation.resources
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datestart.resources
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datefinish.resources
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Properties.Resources.resources
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.GenerateResource.Cache
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.CoreCompileInputs.cache
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.exe
+D:\user\yadisk\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.pdb
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\MySql.Data.xml
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.AboutBox1.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.password.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.general.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Add.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.sendler.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Form5.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.material.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datestation.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datestart.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datefinish.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Properties.Resources.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.GenerateResource.Cache
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.order.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\rail.exe.config
+E:\user\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\rail.exe
+E:\user\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\rail.pdb
+E:\user\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\AdvancedDataGridView.dll
+E:\user\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\MySql.Data.xml
+E:\user\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\ru\AdvancedDataGridView.resources.dll
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csprojAssemblyReference.cache
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.AboutBox1.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.order.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.password.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.general.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Add.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.sendler.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Form5.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.material.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datestation.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datestart.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datefinish.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Properties.Resources.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.GenerateResource.cache
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.CoreCompileInputs.cache
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.CopyComplete
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.exe
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.pdb
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\ru\AdvancedDataGridView.resources.dll
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.report.resources
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\rail.exe.config
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\rail.exe
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\MySql.Data.dll
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\MySql.Data.xml
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\ru\AdvancedDataGridView.resources.dll
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csprojResolveAssemblyReference.cache
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.AboutBox1.resources
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.order.resources
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.password.resources
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.general.resources
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Add.resources
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.report.resources
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.sendler.resources
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Form5.resources
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.material.resources
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datestation.resources
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datestart.resources
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datefinish.resources
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Properties.Resources.resources
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.GenerateResource.Cache
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.exe
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.pdb
+D:\Яндекс.Диск\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\rail.pdb
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csprojAssemblyReference.cache
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.CopyComplete
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.balance.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.balance.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.report.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.zero_silo.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.add_silo.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\libnodave.net.dll
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.move_silo.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.pass.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\rail.exe.config
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\rail.exe
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\rail.pdb
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.exe
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.pdb
+E:\user\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\libnodave.net.dll
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.add_silo.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.move_silo.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.pass.resources
+E:\user\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.zero_silo.resources
+C:\Users\Wehrhahn\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.CoreCompileInputs.cache
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\rail.exe.config
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\rail.exe
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\rail.pdb
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\MySql.Data.xml
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\bin\Debug\ru\AdvancedDataGridView.resources.dll
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csprojAssemblyReference.cache
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.add_silo.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.move_silo.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.pass.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.zero_silo.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.AboutBox1.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.balance.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.order.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.password.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.general.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Add.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.report.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.sendler.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Form5.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.material.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datestation.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datestart.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datefinish.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Properties.Resources.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.GenerateResource.cache
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.CoreCompileInputs.cache
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.CopyComplete
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.exe
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.pdb
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.AssemblyReference.cache
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.SuggestedBindingRedirects.cache
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.add_silo.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.move_silo.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.pass.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.zero_silo.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.AboutBox1.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.balance.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.order.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.password.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.general.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Add.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.report.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.sendler.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Form5.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.material.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datestation.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datestart.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.datefinish.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.Properties.Resources.resources
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.GenerateResource.cache
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.CoreCompileInputs.cache
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.exe
+C:\Users\vladi\YandexDisk\sss\железная дорога\rail\rail\obj\Debug\rail.pdb
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.AssemblyReference.cache
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.add_silo.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.move_silo.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.pass.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.zero_silo.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.AboutBox1.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.balance.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.order.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.password.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.general.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.Add.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.report.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.sendler.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.Form5.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.material.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.datestation.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.datestart.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.datefinish.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.Properties.Resources.resources
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.GenerateResource.cache
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.CoreCompileInputs.cache
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.exe
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.pdb
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\bin\Debug\rail.exe.config
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\bin\Debug\rail.exe
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\bin\Debug\rail.pdb
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\bin\Debug\libnodave.net.dll
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\bin\Debug\MySql.Data.xml
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\bin\Debug\ru\AdvancedDataGridView.resources.dll
+C:\Users\PC-01\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.csproj.CopyComplete

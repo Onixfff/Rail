@@ -1,0 +1,43 @@
+D:\1 Завод\sql+programs\железная дорога\rail\rail\bin\Release\rail.exe.config
+D:\1 Завод\sql+programs\железная дорога\rail\rail\bin\Release\rail.exe
+D:\1 Завод\sql+programs\железная дорога\rail\rail\bin\Release\rail.pdb
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Release\rail.password.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Release\rail.general.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Release\rail.Add.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Release\rail.sendler.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Release\rail.Form5.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Release\rail.material.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Release\rail.datestation.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Release\rail.datestart.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Release\rail.datefinish.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Release\rail.Properties.Resources.resources
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Release\rail.csproj.GenerateResource.Cache
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Release\rail.exe
+D:\1 Завод\sql+programs\железная дорога\rail\rail\obj\Release\rail.pdb
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.csprojAssemblyReference.cache
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.add_silo.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.move_silo.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.pass.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.zero_silo.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.AboutBox1.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.balance.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.order.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.password.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.general.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.Add.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.report.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.sendler.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.Form5.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.material.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.datestation.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.datestart.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.datefinish.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.Properties.Resources.resources
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.csproj.GenerateResource.cache
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.csproj.CoreCompileInputs.cache
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.exe
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.pdb
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\bin\Release\rail.exe.config
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\bin\Release\rail.exe
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\bin\Release\rail.pdb
+E:\vnosa\YandexDisk\sss\железная дорога\rail\rail\obj\Release\rail.csproj.CopyComplete
