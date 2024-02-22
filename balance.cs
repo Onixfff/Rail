@@ -1226,7 +1226,7 @@ namespace rail
                         await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text))); 
                     //if (source_id == "17" | source_id == "18" | source_id == "13" | source_id == "14" | source_id == "15")//сухие смеси
                         //textBox_weight.Text = "";
-                   //PLC_RZD();
+                    PLC_RZD();
 
                     Bar();
                     button1.Visible = true;
