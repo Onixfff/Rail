@@ -15,6 +15,7 @@ using System.Threading;
 using DataUpdater;
 using rail;
 using System.Configuration;
+using System.Runtime.CompilerServices;
 namespace rail
 {
     public partial class balance : Form
@@ -198,6 +199,69 @@ namespace rail
             catch (Exception exp)
             {
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
+            }
+        }
+
+        private async void move_mas(string target_id, string source_id, int mas)
+        {
+            switch (source_id)
+            {
+                case "1":
+                    await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text))); //ПРУ
+                    break;
+                case "2":
+                    await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
+                    break;
+                case "3":
+                    await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
+                    break;
+                case "4":
+                    await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
+                    break;
+                case "5":
+                    await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
+                    break;
+                case "6":
+                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
+                    break;
+                case "7":
+                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
+                    break;
+                case "8":
+                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
+                    break;
+                case "9":
+                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
+                    break;
+                case "10":
+                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
+                    break;
+                case "11":
+                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
+                    break;
+                case "12":
+                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
+                    break;
+                case "13":
+                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
+                    break;
+                case "14":
+                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
+                    break;
+                case "15":
+                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
+                    break;
+                case "16":
+                    break;
+                case "17":
+                    break;
+                case "18":
+                    break;
+                case "19":
+                    break;
+                case "20":
+                    await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
+                    break;
             }
         }
 
@@ -889,15 +953,16 @@ namespace rail
         private void Bar()
         {
             progressBar1.Visible = true;
-                
+
             progressBar1.Value = 0;
             progressBar1.Maximum = 100;
+
             for (int i = 0; i < 100; i++)
             {
                 progressBar1.Value = i;
-                System.Threading.Thread.Sleep(150);
+                Thread.Sleep(150);
             }
-            //Thread.Sleep(15000);
+
             progressBar1.Visible = false;
         }
 
@@ -931,16 +996,15 @@ namespace rail
                         if (owner_name == "11" | owner_name == "12" | owner_name == "13" | owner_name == "14" | owner_name == "15" | owner_name == "16")//сухие смеси
                             s11_16(owner_name);
 
-
                         Bar();
-                        update();
-                        Update_silo();
+                        GetData();
+                        Update_visualSilo();
                     }
                 }
             };
         }             
 
-        private void update()
+        private void GetData()
         {
             string sql = ("SELECT * FROM silo_balance where id<>22;");
             MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
@@ -981,10 +1045,6 @@ namespace rail
                 }
                 if(item.Cells[1].Value.ToString() == "ССС")
                     item.DefaultCellStyle.BackColor = Color.GreenYellow;
-              
-
-
-
             }
 #if user
             groupBox5.Visible = false;
@@ -1018,9 +1078,6 @@ namespace rail
             parent.Controls["label_s" + (id + 1).ToString() + "_balance"].Text = string.Format("{0:N0}",str );
 
             //string str2=string.Format("{0:N0}", str);
-
-
-
         }
 
         private void fill_cb()
@@ -1081,7 +1138,7 @@ namespace rail
 
         }
 
-              private void Update_silo()
+        private void Update_visualSilo()
         {
             List<GroupBox> gb = new List<GroupBox>
             {
@@ -1121,7 +1178,7 @@ namespace rail
             //PLC_RZD();
             //Thread.Sleep(5000);
             fill_cb();
-            update();
+            GetData();
             Fg();
             fill_cb("manufactur", comboBox_manufaktur_target);
             fill_cb("silo_num", comboBox_manufaktur_target.SelectedValue.ToString(), comboBox_silo_num_target);
@@ -1132,7 +1189,7 @@ namespace rail
 
             comboBox1.Text = "1";
             
-            Update_silo();
+            Update_visualSilo();
             
 
 
@@ -1216,23 +1273,27 @@ namespace rail
                     button1.Visible = false;
                     //Targe_sours_silo(target_id, source_id);
                     //if (source_num=="6")
-                        //Move_mas_pru("20", Convert.ToInt32(textBox_weight.Text));
+                    //Move_mas_pru("20", Convert.ToInt32(textBox_weight.Text));
                     //else
-                    //if (source_id == "1" | source_id == "2" | source_id == "3" | source_id == "4" | source_id == "5" | source_id == "20")//ПРУ
-                    await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));
+                    if (source_id == "1" | source_id == "2" | source_id == "3" | source_id == "4" | source_id == "5" | source_id == "20")//ПРУ
+                        move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
+                        //await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));
                     if (source_id == "6" | source_id == "7" | source_id == "8" | source_id == "9" | source_id == "10")//газобетон
-                        await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));
+                        move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
+                    //await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));
                     if (source_id == "11" | source_id == "12" | source_id == "13" | source_id == "14" | source_id == "15")//сухие смеси
-                        await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text))); 
+                        move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
+                    //await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text))); 
                     //if (source_id == "17" | source_id == "18" | source_id == "13" | source_id == "14" | source_id == "15")//сухие смеси
-                        //textBox_weight.Text = "";
-                    PLC_RZD();
+                    //textBox_weight.Text = "";
 
-                    Bar();
+                    Thread task = new Thread(PLC_RZD);
+                    task.Start();
+
                     button1.Visible = true;
-                    
-                    update();
-                    Update_silo();
+                    //Bar();
+                    GetData();
+                    Update_visualSilo();
 
                 }
             }
@@ -1287,8 +1348,8 @@ namespace rail
                 form6.Close();
                 string strSQL3 = "update silo_balance set silo_material_name ='" + material_name + "' where `id`='" + owner_nmae + "' ;";
                 ExecutQuery(strSQL3);
-                update();
-                Update_silo();
+                GetData();
+                Update_visualSilo();
             };
             form6.button2.Click += (senderSlave, eSlave) =>
             {
@@ -1296,8 +1357,8 @@ namespace rail
                 form6.Close();
                 string strSQL3 = "update silo_balance set silo_material_name ='" + material_name + "' where `id`='" + owner_nmae + "' ;";
                 ExecutQuery(strSQL3);
-                update();
-                Update_silo();
+                GetData();
+                Update_visualSilo();
             };
            
 
@@ -1321,8 +1382,8 @@ namespace rail
                 form4.Close();
                 string strSQL3 = "update silo_balance set silo_name_sendler ='" + material_name + "' where `id`='" + owner_nmae + "' ;";
                 ExecutQuery(strSQL3);
-                update();
-                Update_silo();
+                GetData();
+                Update_visualSilo();
             };
             form4.butenterF4.Click += (senderSlave, eSlave) =>
             {
@@ -1330,12 +1391,12 @@ namespace rail
                 form4.Close();
                 string strSQL3 = "update silo_balance set silo_name_sendler ='" + material_name + "' where `id`='" + owner_nmae + "' ;";
                 ExecutQuery(strSQL3);
-                update();
-                Update_silo();
+                GetData();
+                Update_visualSilo();
             };
 
         }
-        public void GetValueFromControllerByte_SSS(out int s11, out int s12, out int s13, out int s14, out int s15)
+        public void GetValueFromControllerByte_SSS(ref int s11, ref int s12, ref int s13, ref int s14, ref int s15)
         {
             libnodave.daveOSserialType fds;
             libnodave.daveInterface di;
@@ -1432,7 +1493,7 @@ namespace rail
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
             }
         }
-        public void GetValueFromControllerByte(out int s6, out int s7, out int s8, out int s9, out int s10)
+        public void GetValueFromControllerByte(ref int s6, ref int s7, ref int s8, ref int s9, ref int s10)
         {
             libnodave.daveOSserialType fds;
             libnodave.daveInterface di;
@@ -1534,7 +1595,7 @@ namespace rail
             }
         }
 
-        private void PLC_RZD()
+        private async void PLC_RZD()
         {
             int s1=0,s2=0,s3=0,s4=0,s5=0, s16=0, s17=0, s18=0, s19=0, s20=0;
             try /// подключение к ПРУ
@@ -1661,45 +1722,23 @@ namespace rail
                 //plc.Close();
                 //MessageBox.Show("Отключился");
             }
-
-
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
                 //Logger.Log(ex.Message);
             }
 
-            GetValueFromControllerByte(out int s6, out int s7, out int s8, out int s9, out int s10);
-            GetValueFromControllerByte_SSS(out int s11, out int s12, out int s13, out int s14, out int s15);
+            int min = int.MinValue;
+            int s6 = min, s7 = min, s8 = min, s9 = min, s10 = min, s11= min, s12 = min, s13 = min, s14 = min, s15 = min;
 
+            await Task.Run(() => GetValueFromControllerByte(ref s6, ref s7, ref s8, ref s9, ref s10));
+            await Task.Run(() => GetValueFromControllerByte_SSS(ref s11, ref s12, ref s13, ref s14, ref s15));
 
+            await Task.Run(() => UpdateData(new List<double> { s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20 }));
+        }
 
-
-            List<double> var = new List<double>
-            {
-                s1,
-                s2,
-                s3,
-                s4,
-                s5,
-                s6,
-                s7,
-                s8,
-                s9,
-                s10,
-                s11,
-                s12,
-                s13,
-                s14,
-                s15,
-                s16,
-                s17,
-                s18,
-                s19,
-                s20
-            };
-
-
+        private void UpdateData(List<double> var)
+        {
             MySqlConnection mCon = new MySqlConnection(ConfigurationManager.ConnectionStrings["234"].ConnectionString);
             //MySqlConnection mCon = new MySqlConnection("Database=spslogger; Server=192.168.37.101; port=3306; username=%user_1; password=20112004; charset=utf8 ");
 
@@ -1729,8 +1768,7 @@ namespace rail
                 }
 
             }
-
-        }
+        } 
 
         private void Label_s13_name_Click(object sender, EventArgs e)
         {
@@ -1746,7 +1784,7 @@ namespace rail
         {
 
             fill_cb();
-            update();
+            GetData();
             Fg();
             fill_cb("manufactur", comboBox_manufaktur_target);
             fill_cb("silo_num", comboBox_manufaktur_target.SelectedValue.ToString(), comboBox_silo_num_target);
@@ -1758,7 +1796,7 @@ namespace rail
             comboBox1.Text = "1";
             //
             //PLC_RZD();
-            Update_silo();
+            Update_visualSilo();
 
 
         }
