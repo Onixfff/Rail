@@ -183,7 +183,7 @@
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.GridColor = System.Drawing.SystemColors.Control;
-            this.dataGridView1.Location = new System.Drawing.Point(13, 17);
+            this.dataGridView1.Location = new System.Drawing.Point(13, 28);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersVisible = false;
@@ -226,7 +226,7 @@
             this.наименованиеМатериалаToolStripMenuItem,
             this.поставщикToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(220, 114);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(220, 92);
             // 
             // toolStripMenuItem2
             // 
@@ -261,7 +261,7 @@
             this.label_s19_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s19_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s19_balance.Name = "label_s19_balance";
-            this.label_s19_balance.Size = new System.Drawing.Size(139, 16);
+            this.label_s19_balance.Size = new System.Drawing.Size(138, 16);
             this.label_s19_balance.TabIndex = 0;
             this.label_s19_balance.Text = "label_s19_balance";
             // 
@@ -303,7 +303,7 @@
             this.label_s18_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s18_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s18_balance.Name = "label_s18_balance";
-            this.label_s18_balance.Size = new System.Drawing.Size(139, 16);
+            this.label_s18_balance.Size = new System.Drawing.Size(138, 16);
             this.label_s18_balance.TabIndex = 0;
             this.label_s18_balance.Text = "label_s18_balance";
             // 
@@ -345,7 +345,7 @@
             this.label_s17_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s17_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s17_balance.Name = "label_s17_balance";
-            this.label_s17_balance.Size = new System.Drawing.Size(139, 16);
+            this.label_s17_balance.Size = new System.Drawing.Size(138, 16);
             this.label_s17_balance.TabIndex = 0;
             this.label_s17_balance.Text = "label_s17_balance";
             // 
@@ -403,7 +403,7 @@
             this.label_s20_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s20_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s20_balance.Name = "label_s20_balance";
-            this.label_s20_balance.Size = new System.Drawing.Size(139, 16);
+            this.label_s20_balance.Size = new System.Drawing.Size(138, 16);
             this.label_s20_balance.TabIndex = 0;
             this.label_s20_balance.Text = "label_s20_balance";
             // 
@@ -445,7 +445,7 @@
             this.label_s5_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s5_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s5_balance.Name = "label_s5_balance";
-            this.label_s5_balance.Size = new System.Drawing.Size(131, 16);
+            this.label_s5_balance.Size = new System.Drawing.Size(130, 16);
             this.label_s5_balance.TabIndex = 0;
             this.label_s5_balance.Text = "label_s5_balance";
             // 
@@ -487,7 +487,7 @@
             this.label_s1_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s1_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s1_balance.Name = "label_s1_balance";
-            this.label_s1_balance.Size = new System.Drawing.Size(131, 16);
+            this.label_s1_balance.Size = new System.Drawing.Size(130, 16);
             this.label_s1_balance.TabIndex = 0;
             this.label_s1_balance.Text = "label_s1_balance";
             // 
@@ -530,7 +530,7 @@
             this.label_s2_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s2_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s2_balance.Name = "label_s2_balance";
-            this.label_s2_balance.Size = new System.Drawing.Size(131, 16);
+            this.label_s2_balance.Size = new System.Drawing.Size(130, 16);
             this.label_s2_balance.TabIndex = 0;
             this.label_s2_balance.Text = "label_s2_balance";
             // 
@@ -573,7 +573,7 @@
             this.label_s3_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s3_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s3_balance.Name = "label_s3_balance";
-            this.label_s3_balance.Size = new System.Drawing.Size(131, 16);
+            this.label_s3_balance.Size = new System.Drawing.Size(130, 16);
             this.label_s3_balance.TabIndex = 0;
             this.label_s3_balance.Text = "label_s3_balance";
             // 
@@ -615,7 +615,7 @@
             this.label_s4_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s4_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s4_balance.Name = "label_s4_balance";
-            this.label_s4_balance.Size = new System.Drawing.Size(131, 16);
+            this.label_s4_balance.Size = new System.Drawing.Size(130, 16);
             this.label_s4_balance.TabIndex = 0;
             this.label_s4_balance.Text = "label_s4_balance";
             // 
@@ -673,7 +673,7 @@
             this.label_s10_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s10_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s10_balance.Name = "label_s10_balance";
-            this.label_s10_balance.Size = new System.Drawing.Size(139, 16);
+            this.label_s10_balance.Size = new System.Drawing.Size(138, 16);
             this.label_s10_balance.TabIndex = 0;
             this.label_s10_balance.Text = "label_s10_balance";
             // 
@@ -715,7 +715,7 @@
             this.label_s9_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s9_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s9_balance.Name = "label_s9_balance";
-            this.label_s9_balance.Size = new System.Drawing.Size(131, 16);
+            this.label_s9_balance.Size = new System.Drawing.Size(130, 16);
             this.label_s9_balance.TabIndex = 0;
             this.label_s9_balance.Text = "label_s9_balance";
             // 
@@ -757,7 +757,7 @@
             this.label_s8_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s8_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s8_balance.Name = "label_s8_balance";
-            this.label_s8_balance.Size = new System.Drawing.Size(131, 16);
+            this.label_s8_balance.Size = new System.Drawing.Size(130, 16);
             this.label_s8_balance.TabIndex = 0;
             this.label_s8_balance.Text = "label_s8_balance";
             // 
@@ -799,7 +799,7 @@
             this.label_s7_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s7_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s7_balance.Name = "label_s7_balance";
-            this.label_s7_balance.Size = new System.Drawing.Size(131, 16);
+            this.label_s7_balance.Size = new System.Drawing.Size(130, 16);
             this.label_s7_balance.TabIndex = 0;
             this.label_s7_balance.Text = "label_s7_balance";
             // 
@@ -841,7 +841,7 @@
             this.label_s6_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s6_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s6_balance.Name = "label_s6_balance";
-            this.label_s6_balance.Size = new System.Drawing.Size(131, 16);
+            this.label_s6_balance.Size = new System.Drawing.Size(130, 16);
             this.label_s6_balance.TabIndex = 0;
             this.label_s6_balance.Text = "label_s6_balance";
             // 
@@ -900,7 +900,7 @@
             this.label_s11_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s11_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s11_balance.Name = "label_s11_balance";
-            this.label_s11_balance.Size = new System.Drawing.Size(139, 16);
+            this.label_s11_balance.Size = new System.Drawing.Size(138, 16);
             this.label_s11_balance.TabIndex = 0;
             this.label_s11_balance.Text = "label_s11_balance";
             // 
@@ -942,7 +942,7 @@
             this.label_s15_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s15_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s15_balance.Name = "label_s15_balance";
-            this.label_s15_balance.Size = new System.Drawing.Size(139, 16);
+            this.label_s15_balance.Size = new System.Drawing.Size(138, 16);
             this.label_s15_balance.TabIndex = 0;
             this.label_s15_balance.Text = "label_s15_balance";
             // 
@@ -984,7 +984,7 @@
             this.label_s16_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s16_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s16_balance.Name = "label_s16_balance";
-            this.label_s16_balance.Size = new System.Drawing.Size(139, 16);
+            this.label_s16_balance.Size = new System.Drawing.Size(138, 16);
             this.label_s16_balance.TabIndex = 0;
             this.label_s16_balance.Text = "label_s16_balance";
             // 
@@ -1026,7 +1026,7 @@
             this.label_s14_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s14_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s14_balance.Name = "label_s14_balance";
-            this.label_s14_balance.Size = new System.Drawing.Size(139, 16);
+            this.label_s14_balance.Size = new System.Drawing.Size(138, 16);
             this.label_s14_balance.TabIndex = 0;
             this.label_s14_balance.Text = "label_s14_balance";
             // 
@@ -1069,7 +1069,7 @@
             this.label_s13_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s13_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s13_balance.Name = "label_s13_balance";
-            this.label_s13_balance.Size = new System.Drawing.Size(139, 16);
+            this.label_s13_balance.Size = new System.Drawing.Size(138, 16);
             this.label_s13_balance.TabIndex = 0;
             this.label_s13_balance.Text = "label_s13_balance";
             // 
@@ -1113,7 +1113,7 @@
             this.label_s12_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s12_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s12_balance.Name = "label_s12_balance";
-            this.label_s12_balance.Size = new System.Drawing.Size(139, 16);
+            this.label_s12_balance.Size = new System.Drawing.Size(138, 16);
             this.label_s12_balance.TabIndex = 0;
             this.label_s12_balance.Text = "label_s12_balance";
             // 
@@ -1374,9 +1374,6 @@
             this.label61.TabIndex = 0;
             this.label61.Text = "Силос №";
             // 
-            // zugangTableAdapter1
-            // 
-            // 
             // progressBar1
             // 
             this.progressBar1.ForeColor = System.Drawing.SystemColors.GradientActiveCaption;
@@ -1390,7 +1387,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1458, 850);
+            this.ClientSize = new System.Drawing.Size(1458, 847);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.toolStrip1);

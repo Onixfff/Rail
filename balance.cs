@@ -375,8 +375,7 @@ namespace rail
                     }
                     else
                     {
-                        bar.onProgress.Invoke();
-                        //bar.onError.Invoke();
+                        bar.onError.Invoke();
                     }
                 }
                 catch (Exception exp)

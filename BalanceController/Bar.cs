@@ -74,6 +74,9 @@ namespace rail.BalanceController
         private void Error()
         {
             _progress = _endProgress;
+            //balance.onUpdate.Invoke();
+            //TODO Сделать при Error возврат кнопки перемещения (button1)
+            //balance.onCompliteMove.Invoke();
         }
 
         private void ChangeValueBar()
