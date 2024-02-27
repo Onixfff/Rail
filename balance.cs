@@ -16,10 +16,15 @@ using DataUpdater;
 using rail;
 using System.Configuration;
 using System.Runtime.CompilerServices;
+using rail.BalanceController;
 namespace rail
 {
     public partial class balance : Form
     {
+        public static Action onUpdate;
+        public static Action onCompliteMove;
+
+        private Bar bar;
         //MySqlConnection mCon = new MySqlConnection("Database=u0550310_aeroblock; Server=31.31.196.234; port=3306; username=u0550_kornev; password=18061981Kornev; charset=utf8 ");
         MySqlConnection mCon = new MySqlConnection(ConfigurationManager.ConnectionStrings["234"].ConnectionString);
         MySqlCommand msd;
@@ -265,12 +270,13 @@ namespace rail
             }
         }
 
-        private async void Move_mas_pru (string silo,  int mas)
+        private void Move_mas_pru (string silo,  int mas)
         {
 
             libnodave.daveOSserialType fds;
             libnodave.daveInterface di;
             libnodave.daveConnection dc;
+
             try
             {
                 int res = 0;
@@ -282,13 +288,11 @@ namespace rail
                     fds.wfd = fds.rfd;
                     if (fds.rfd > 0)
                     {
-
-
                         di = new libnodave.daveInterface(fds, "IF1", 0, libnodave.daveProtoISOTCP, libnodave.daveSpeed187k);
                         di.setTimeout(50);
                         dc = new libnodave.daveConnection(di, 0, 0, 2);
-                        if (0 == dc.connectPLC())
 
+                        if (0 == dc.connectPLC())
                         {
 
                             if (silo == "1")
@@ -367,31 +371,34 @@ namespace rail
                         }
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
+                        bar.onProgress.Invoke();
                     }
                     else
                     {
-
+                        bar.onProgress.Invoke();
+                        //bar.onError.Invoke();
                     }
                 }
                 catch (Exception exp)
                 {
                     MessageBox.Show(exp.Message);
-
+                    bar.onError.Invoke();
                 }
-
             }
             catch (Exception exp)
             {
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
+                bar.onError.Invoke();
             }
         }
         private void Move_mas_sss(string silo, int mas)
         {
-
             var isComplite = false;
+
             libnodave.daveOSserialType fds;
             libnodave.daveInterface di;
             libnodave.daveConnection dc;
+
             try
             {
                 int res = 0;
@@ -401,10 +408,9 @@ namespace rail
                 {
                     fds.rfd = libnodave.openSocket(102, "192.168.37.199");
                     fds.wfd = fds.rfd;
+
                     if (fds.rfd > 0)
                     {
-
-
                         di = new libnodave.daveInterface(fds, "IF1", 0, libnodave.daveProtoISOTCP, libnodave.daveSpeed187k);
                         di.setTimeout(50);
                         dc = new libnodave.daveConnection(di, 0, 0, 2);
@@ -473,32 +479,37 @@ namespace rail
                         }
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
+                        bar.onProgress.Invoke();
                     }
                     else
                     {
-
+                        bar.onError.Invoke();
                     }
                 }
                 catch (Exception exp)
                 {
                     MessageBox.Show(exp.Message);
-
+                    bar.onError.Invoke();
                 }
 
             }
             catch (Exception exp)
             {
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
+                bar.onError.Invoke();
             }
 
         }
 
         private void Move_mas_gb(string silo, int mas)
         {
-            string conSQL_gb = "Database=spslogger; Server=192.168.100.26; port=3306; username=%user_2; password=20112004; charset=utf8 ";
+            string conSQL_gb = "Database=spslogger; Server=192.168.100.26; port=3306; " +
+                "username=%user_2; password=20112004; charset=utf8 ";
+
             libnodave.daveOSserialType fds;
             libnodave.daveInterface di;
             libnodave.daveConnection dc;
+
             try
             {
                 int res = 0;
@@ -509,15 +520,14 @@ namespace rail
                 {
                     fds.rfd = libnodave.openSocket(102, "192.168.37.102");
                     fds.wfd = fds.rfd;
+
                     if (fds.rfd > 0)
                     {
-
-
                         di = new libnodave.daveInterface(fds, "IF1", 0, libnodave.daveProtoISOTCP, libnodave.daveSpeed187k);
                         di.setTimeout(50);
                         dc = new libnodave.daveConnection(di, 0, 0, 2);
-                        if (0 == dc.connectPLC())
 
+                        if (0 == dc.connectPLC())
                         {
                             //string data = tb2.ResultData.Rows[0][1].ToString();
                             //string strSQL4 = "";
@@ -599,12 +609,14 @@ namespace rail
                                 silo_mas = silo_mas + mas;
                                 res = dc.writeBytes(libnodave.daveDB, 305, 80, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
-                            
-
                         }
-                        MySqlConnection mCon2 = new MySqlConnection("Database=spslogger; Server=192.168.100.26; port=3306; username=%user_2; password=20112004; charset=utf8 ");
+
+                        MySqlConnection mCon2 = new MySqlConnection("Database=spslogger; Server=192.168.100.26; port=3306; " +
+                            "username=%user_2; password=20112004; charset=utf8 ");
+
                         MySqlCommand dsq = new MySqlCommand(sql, mCon2);
                         mCon2.Open();
+
                         try
                         {
                             if (dsq.ExecuteNonQuery() == 1)
@@ -615,32 +627,33 @@ namespace rail
                             {
                                 MessageBox.Show("Ошибка записи");
                             }
-                            // MessageBox.Show("OK");
                         }
                         catch (Exception ex)
                         {
                             MessageBox.Show(ex.ToString());
                         }
-                        mCon2.Close();
+                        finally { mCon2.Close(); }
 
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
+                        bar.onProgress.Invoke();
                     }
                     else
                     {
-
+                        bar.onError.Invoke();
                     }
                 }
                 catch (Exception exp)
                 {
                     MessageBox.Show(exp.Message);
-
+                    bar.onError.Invoke();
                 }
 
             }
             catch (Exception exp)
             {
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
+                bar.onError.Invoke();
             }
         }
 
@@ -946,6 +959,7 @@ namespace rail
             }
 
         }
+
         private void Bar()
         {
             progressBar1.Visible = true;
@@ -998,7 +1012,7 @@ namespace rail
                     }
                 }
             };
-        }             
+        }
 
         private void GetData()
         {
@@ -1007,48 +1021,52 @@ namespace rail
             DataSet ds = new DataSet();
             ds.Reset();
             dD.Fill(ds, sql);
-            dataGridView1.DataSource = ds.Tables[0];
-            //dataGridView1.AutoResizeColumns();
-            dataGridView1.Columns[0].HeaderText = "№ п/п";
-            dataGridView1.Columns[0].Visible = false;
-            dataGridView1.Columns[1].HeaderText = "Место положение";
-            dataGridView1.Columns[1].Width = 90;
-            dataGridView1.Columns[2].HeaderText = "№ силоса";
-            dataGridView1.Columns[2].Width = 50;
-            dataGridView1.Columns[3].HeaderText = "Наименование материала";
-            dataGridView1.Columns[3].Width = 160;
-            dataGridView1.Columns[4].HeaderText = "Производитель";
-            dataGridView1.Columns[4].Width = 160;
-            dataGridView1.Columns[5].HeaderText = "Фактический вес, тн";
-            dataGridView1.Columns[5].Width = 80;
-            dataGridView1.Columns[6].HeaderText = "MAX вместимость, тн";
-            dataGridView1.Columns[6].Width = 80;
-            dataGridView1.Columns[5].DefaultCellStyle.Format = "N0";
-            foreach (DataGridViewRow item in dataGridView1.Rows)
+            dataGridView1.Invoke((MethodInvoker)delegate
             {
+                dataGridView1.DataSource = ds.Tables[0];
+                //dataGridView1.AutoResizeColumns();
+                dataGridView1.Columns[0].HeaderText = "№ п/п";
+                dataGridView1.Columns[0].Visible = false;
+                dataGridView1.Columns[1].HeaderText = "Место положение";
+                dataGridView1.Columns[1].Width = 90;
+                dataGridView1.Columns[2].HeaderText = "№ силоса";
+                dataGridView1.Columns[2].Width = 50;
+                dataGridView1.Columns[3].HeaderText = "Наименование материала";
+                dataGridView1.Columns[3].Width = 160;
+                dataGridView1.Columns[4].HeaderText = "Производитель";
+                dataGridView1.Columns[4].Width = 160;
+                dataGridView1.Columns[5].HeaderText = "Фактический вес, тн";
+                dataGridView1.Columns[5].Width = 80;
+                dataGridView1.Columns[6].HeaderText = "MAX вместимость, тн";
+                dataGridView1.Columns[6].Width = 80;
+                dataGridView1.Columns[5].DefaultCellStyle.Format = "N0";
+                foreach (DataGridViewRow item in dataGridView1.Rows)
+                {
 
-                if (item.Cells[1].Value.ToString() == "БСУ")
-                {
-                    item.DefaultCellStyle.BackColor = Color.LightBlue;
+                    if (item.Cells[1].Value.ToString() == "БСУ")
+                    {
+                        item.DefaultCellStyle.BackColor = Color.LightBlue;
+                    }
+                    if (item.Cells[1].Value.ToString() == "ПРУ")
+                    {
+                        item.DefaultCellStyle.BackColor = Color.LightSalmon;
+                    }
+                    if (item.Cells[1].Value.ToString() == "ГАЗОБЕТОН")
+                    {
+                        item.DefaultCellStyle.BackColor = Color.LemonChiffon;
+                    }
+                    if (item.Cells[1].Value.ToString() == "ССС")
+                        item.DefaultCellStyle.BackColor = Color.GreenYellow;
                 }
-                if (item.Cells[1].Value.ToString() == "ПРУ")
-                {
-                    item.DefaultCellStyle.BackColor = Color.LightSalmon;
-                }
-                if (item.Cells[1].Value.ToString() == "ГАЗОБЕТОН")
-                {
-                    item.DefaultCellStyle.BackColor = Color.LemonChiffon;
-                }
-                if(item.Cells[1].Value.ToString() == "ССС")
-                    item.DefaultCellStyle.BackColor = Color.GreenYellow;
-            }
+                Console.WriteLine("Обновление прошло");
 #if user
             groupBox5.Visible = false;
-            contextMenuStrip1.Enabled = false; 
+            contextMenuStrip1.Enabled = false;
 #endif
 
+                this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            });
 
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
         }
         private void read_group_box (Control parent, int id)
         {
@@ -1166,11 +1184,11 @@ namespace rail
             {
                 fill_group_box(gb[id], id);
             }
-
         }
         private void Balance_Load(object sender, EventArgs e)
         {
             
+            bar = new Bar(progressBar1);
             //PLC_RZD();
             //Thread.Sleep(5000);
             fill_cb();
@@ -1271,6 +1289,20 @@ namespace rail
                     //if (source_num=="6")
                     //Move_mas_pru("20", Convert.ToInt32(textBox_weight.Text));
                     //else
+
+                    onUpdate += GetData;
+                    onUpdate += Update_visualSilo;
+                    onUpdate += UnsubscribeUpdate;
+
+                    onCompliteMove += () => button1.Invoke((MethodInvoker)delegate
+                    {
+                        button1.Visible = true;
+                    });
+
+                    onCompliteMove += UnsubscribeComplite;
+
+                    bar.ShowBar();
+
                     if (source_id == "1" | source_id == "2" | source_id == "3" | source_id == "4" | source_id == "5" | source_id == "20")//ПРУ
                         move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
                         //await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));
@@ -1285,14 +1317,25 @@ namespace rail
 
                     Thread task = new Thread(PLC_RZD);
                     task.Start();
-
-                    button1.Visible = true;
                     //Bar();
-                    GetData();
-                    Update_visualSilo();
-
                 }
             }
+        }
+
+        private void UnsubscribeComplite()
+        {
+            onCompliteMove -= UnsubscribeComplite;
+            onCompliteMove -= () => button1.Invoke((MethodInvoker) delegate
+            {
+                button1.Visible = true;
+            });
+        }
+
+        private void UnsubscribeUpdate()
+        {
+            onUpdate -= GetData;
+            onUpdate -= Update_visualSilo;
+            bar.onProgress.Invoke();
         }
 
         private void TextBox_weight_target_TextChanged(object sender, EventArgs e)

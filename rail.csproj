@@ -104,6 +104,7 @@
     <Compile Include="balance.Designer.cs">
       <DependentUpon>balance.cs</DependentUpon>
     </Compile>
+    <Compile Include="BalanceController\Bar.cs" />
     <Compile Include="Component1.cs">
       <SubType>Component</SubType>
     </Compile>
