@@ -839,10 +839,6 @@ namespace rail
                 }
 
             }
-
-
-
-
         }
 
         private void s11_16(string on)
