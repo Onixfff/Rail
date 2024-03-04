@@ -23,6 +23,7 @@ namespace rail
     {
         public static Action onUpdate;
         public static Action onCompliteMove;
+        public static Action onErrorBar;
 
         private Bar bar;
         //MySqlConnection mCon = new MySqlConnection("Database=u0550310_aeroblock; Server=31.31.196.234; port=3306; username=u0550_kornev; password=18061981Kornev; charset=utf8 ");
@@ -1201,11 +1202,9 @@ namespace rail
             // comboBox_silo_num_target.Text
 
             comboBox1.Text = "1";
-            
+
+            SubscribeError();
             Update_visualSilo();
-            
-
-
 
         }
         private void Fg()
@@ -1231,6 +1230,26 @@ namespace rail
                 return;
             }
 
+        }
+
+        private void SubscribeError()
+        {
+            onErrorBar += () => button1.Invoke((MethodInvoker)delegate
+            {
+                button1.Visible = true;
+            });
+
+            onErrorBar += () => MessageBox.Show("Ошибка перемещения");
+        }
+
+        private void UnsubscribeError()
+        {
+            onErrorBar -= () => button1.Invoke((MethodInvoker)delegate
+            {
+                button1.Visible = true;
+            });
+
+            onErrorBar -= () => MessageBox.Show("Ошибка перемещения");
         }
 
 
@@ -1837,6 +1856,11 @@ namespace rail
             Update_visualSilo();
 
 
+        }
+
+        private void balance_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            UnsubscribeError();
         }
     }
 }
