@@ -144,6 +144,14 @@
             this.label62 = new System.Windows.Forms.Label();
             this.label61 = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.s21 = new System.Windows.Forms.GroupBox();
+            this.label_s21_balance = new System.Windows.Forms.Label();
+            this.label_s21_sender = new System.Windows.Forms.Label();
+            this.label_s21_name = new System.Windows.Forms.Label();
+            this.s22 = new System.Windows.Forms.GroupBox();
+            this.label_s22_balance = new System.Windows.Forms.Label();
+            this.label_s22_sender = new System.Windows.Forms.Label();
+            this.label_s22_name = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.s19.SuspendLayout();
@@ -174,6 +182,8 @@
             this.groupBox5.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            this.s21.SuspendLayout();
+            this.s22.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -371,6 +381,8 @@
             // groupBox2
             // 
             this.groupBox2.BackColor = System.Drawing.Color.LightSalmon;
+            this.groupBox2.Controls.Add(this.s22);
+            this.groupBox2.Controls.Add(this.s21);
             this.groupBox2.Controls.Add(this.s20);
             this.groupBox2.Controls.Add(this.s5);
             this.groupBox2.Controls.Add(this.s1);
@@ -602,7 +614,7 @@
             this.s4.Controls.Add(this.label_s4_balance);
             this.s4.Controls.Add(this.label_s4_sender);
             this.s4.Controls.Add(this.label_s4_name);
-            this.s4.Location = new System.Drawing.Point(373, 32);
+            this.s4.Location = new System.Drawing.Point(383, 32);
             this.s4.Name = "s4";
             this.s4.Size = new System.Drawing.Size(111, 100);
             this.s4.TabIndex = 0;
@@ -1383,6 +1395,90 @@
             this.progressBar1.TabIndex = 4;
             this.progressBar1.Visible = false;
             // 
+            // s21
+            // 
+            this.s21.ContextMenuStrip = this.contextMenuStrip1;
+            this.s21.Controls.Add(this.label_s21_balance);
+            this.s21.Controls.Add(this.label_s21_sender);
+            this.s21.Controls.Add(this.label_s21_name);
+            this.s21.Location = new System.Drawing.Point(256, 142);
+            this.s21.Name = "s21";
+            this.s21.Size = new System.Drawing.Size(111, 100);
+            this.s21.TabIndex = 1;
+            this.s21.TabStop = false;
+            this.s21.Text = "Силос 7";
+            // 
+            // label_s21_balance
+            // 
+            this.label_s21_balance.AutoSize = true;
+            this.label_s21_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label_s21_balance.Location = new System.Drawing.Point(7, 72);
+            this.label_s21_balance.Name = "label_s21_balance";
+            this.label_s21_balance.Size = new System.Drawing.Size(50, 16);
+            this.label_s21_balance.TabIndex = 0;
+            this.label_s21_balance.Text = "label1";
+            // 
+            // label_s21_sender
+            // 
+            this.label_s21_sender.AutoSize = true;
+            this.label_s21_sender.Location = new System.Drawing.Point(6, 44);
+            this.label_s21_sender.Name = "label_s21_sender";
+            this.label_s21_sender.Size = new System.Drawing.Size(35, 13);
+            this.label_s21_sender.TabIndex = 0;
+            this.label_s21_sender.Text = "label2";
+            // 
+            // label_s21_name
+            // 
+            this.label_s21_name.AutoSize = true;
+            this.label_s21_name.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label_s21_name.Location = new System.Drawing.Point(7, 20);
+            this.label_s21_name.Name = "label_s21_name";
+            this.label_s21_name.Size = new System.Drawing.Size(41, 13);
+            this.label_s21_name.TabIndex = 0;
+            this.label_s21_name.Text = "label3";
+            // 
+            // s22
+            // 
+            this.s22.ContextMenuStrip = this.contextMenuStrip1;
+            this.s22.Controls.Add(this.label_s22_balance);
+            this.s22.Controls.Add(this.label_s22_sender);
+            this.s22.Controls.Add(this.label_s22_name);
+            this.s22.Location = new System.Drawing.Point(383, 142);
+            this.s22.Name = "s22";
+            this.s22.Size = new System.Drawing.Size(111, 100);
+            this.s22.TabIndex = 1;
+            this.s22.TabStop = false;
+            this.s22.Text = "Силос 8";
+            // 
+            // label_s22_balance
+            // 
+            this.label_s22_balance.AutoSize = true;
+            this.label_s22_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label_s22_balance.Location = new System.Drawing.Point(7, 72);
+            this.label_s22_balance.Name = "label_s22_balance";
+            this.label_s22_balance.Size = new System.Drawing.Size(50, 16);
+            this.label_s22_balance.TabIndex = 0;
+            this.label_s22_balance.Text = "label4";
+            // 
+            // label_s22_sender
+            // 
+            this.label_s22_sender.AutoSize = true;
+            this.label_s22_sender.Location = new System.Drawing.Point(7, 44);
+            this.label_s22_sender.Name = "label_s22_sender";
+            this.label_s22_sender.Size = new System.Drawing.Size(35, 13);
+            this.label_s22_sender.TabIndex = 0;
+            this.label_s22_sender.Text = "label5";
+            // 
+            // label_s22_name
+            // 
+            this.label_s22_name.AutoSize = true;
+            this.label_s22_name.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label_s22_name.Location = new System.Drawing.Point(7, 20);
+            this.label_s22_name.Name = "label_s22_name";
+            this.label_s22_name.Size = new System.Drawing.Size(41, 13);
+            this.label_s22_name.TabIndex = 0;
+            this.label_s22_name.Text = "label6";
+            // 
             // balance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1454,6 +1550,10 @@
             this.groupBox7.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            this.s21.ResumeLayout(false);
+            this.s21.PerformLayout();
+            this.s22.ResumeLayout(false);
+            this.s22.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1576,5 +1676,13 @@
         private System.Windows.Forms.ComboBox comboBox_silo_num_target;
         private System.Windows.Forms.ComboBox comboBox_manufaktur_target;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.GroupBox s22;
+        private System.Windows.Forms.Label label_s22_balance;
+        private System.Windows.Forms.Label label_s22_sender;
+        private System.Windows.Forms.Label label_s22_name;
+        private System.Windows.Forms.GroupBox s21;
+        private System.Windows.Forms.Label label_s21_balance;
+        private System.Windows.Forms.Label label_s21_sender;
+        private System.Windows.Forms.Label label_s21_name;
     }
 }
