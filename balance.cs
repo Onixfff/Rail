@@ -368,6 +368,31 @@ namespace rail
                                 silo_mas = silo_mas - mas;
                                 res = dc.writeBytes(libnodave.daveDB, 12, 120, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
+                            if(silo == "21")
+                            {
+                                res = dc.readBytes(libnodave.daveDB, 12, 124, 4, null);
+
+                                if (res == 0) //conection OK 
+                                {
+                                    silo_mas = dc.getU32();
+
+                                }
+                                silo_mas = silo_mas - mas;
+                                res = dc.writeBytes(libnodave.daveDB, 12, 124, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
+                            }
+
+                            if(silo == "22")
+                            {
+                                res = dc.readBytes(libnodave.daveDB, 12, 128, 4, null);
+
+                                if (res == 0) //conection OK 
+                                {
+                                    silo_mas = dc.getU32();
+
+                                }
+                                silo_mas = silo_mas - mas;
+                                res = dc.writeBytes(libnodave.daveDB, 12, 128, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
+                            }
 
                         }
                         dc.disconnectPLC();
@@ -1147,9 +1172,6 @@ namespace rail
                 MessageBox.Show(ex.ToString());
             }
             mCon.Close();
-
-
-
         }
 
         private void Update_visualSilo()
