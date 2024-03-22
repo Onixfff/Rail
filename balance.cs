@@ -1175,12 +1175,14 @@ namespace rail
                 s17,
                 s18,
                 s19,
-                s20
+                s20,
+                s21,
+                s22
             };
 
 
             int id;
-            for (id = 0; id <= 19; id++)
+            for (id = 0; id <= 21; id++)
             {
                 fill_group_box(gb[id], id);
             }
