@@ -1679,7 +1679,7 @@ namespace rail
 
         private async void PLC_RZD()
         {
-            int s1=0,s2=0,s3=0,s4=0,s5=0, s16=0, s17=0, s18=0, s19=0, s20=0;
+            int s1 = 0, s2 = 0, s3 = 0, s4 = 0, s5 = 0, s16 = 0, s17 = 0, s18 = 0, s19 = 0, s20 = 0, s21 = 0, s22 = 0;
             try /// подключение к ПРУ
             {
                 libnodave.daveOSserialType fds;
@@ -1754,6 +1754,22 @@ namespace rail
 
                                 }
 
+                                res = dc.readBytes(libnodave.daveDB, 12, 124, 4, null);
+
+                                if (res == 0) //conection OK 
+                                {
+                                    s21 = dc.getU32();
+
+                                }
+
+                                res = dc.readBytes(libnodave.daveDB, 12, 128, 4, null);
+
+                                if (res == 0) //conection OK 
+                                {
+                                    s22 = dc.getU32();
+
+                                }
+
                                 //res = dc.readBits(libnodave.daveDB, 160, 3890, 1, null);
                                 //MessageBox.Show("результат функции:" + res + " = " + libnodave.daveStrerror(res));
 
@@ -1816,7 +1832,7 @@ namespace rail
             await Task.Run(() => GetValueFromControllerByte(ref s6, ref s7, ref s8, ref s9, ref s10));
             await Task.Run(() => GetValueFromControllerByte_SSS(ref s11, ref s12, ref s13, ref s14, ref s15));
 
-            await Task.Run(() => UpdateData(new List<double> { s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20}));
+            await Task.Run(() => UpdateData(new List<double> { s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s21, s22}));
         }
 
         private void UpdateData(List<double> var)
