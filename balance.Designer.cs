@@ -1402,7 +1402,6 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(184, 21);
             this.comboBox1.TabIndex = 2;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.ComboBox1_SelectedIndexChanged);
             this.comboBox1.TextChanged += new System.EventHandler(this.ComboBox1_TextChanged);
             // 
             // textBox_weight
@@ -1552,7 +1551,7 @@
             this.MaximumSize = new System.Drawing.Size(1474, 886);
             this.MinimumSize = new System.Drawing.Size(1474, 886);
             this.Name = "balance";
-            this.Text = "Остатки по складам";
+            this.Text = "    ";
             this.Load += new System.EventHandler(this.Balance_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox1.ResumeLayout(false);

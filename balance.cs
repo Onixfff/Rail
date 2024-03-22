@@ -270,6 +270,93 @@ namespace rail
             }
         }
 
+        private void Move_mas_bsu(string silo, int mas)
+        {
+            libnodave.daveOSserialType fds;
+            libnodave.daveInterface di;
+            libnodave.daveConnection dc;
+
+            try
+            {
+                int res = 0;
+                int silo_mas = 0;
+
+                try
+                {
+                    ///TODO задать правельный ip
+                    fds.rfd = libnodave.openSocket(102, "192.168.37.139");
+                    fds.wfd = fds.rfd;
+                    if (fds.rfd > 0)
+                    {
+                        di = new libnodave.daveInterface(fds, "IF1", 0, libnodave.daveProtoISOTCP, libnodave.daveSpeed187k);
+                        di.setTimeout(50);
+                        dc = new libnodave.daveConnection(di, 0, 0, 2);
+
+                        if (0 == dc.connectPLC())
+                        {
+                            ///TODO уточнить все адреса bity c 17-19
+                            if (silo == "17")
+                            {
+                                res = dc.readBytes(libnodave.daveDB, 12, 100, 4, null);
+
+                                if (res == 0) //conection OK 
+                                {
+                                    silo_mas = dc.getU32();
+
+                                }
+                                silo_mas = silo_mas - mas;
+                                res = dc.writeBytes(libnodave.daveDB, 12, 100, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
+                            }
+
+                            if (silo == "18")
+                            {
+                                res = dc.readBytes(libnodave.daveDB, 12, 104, 4, null);
+
+                                if (res == 0) //conection OK 
+                                {
+                                    silo_mas = dc.getU32();
+
+                                }
+                                silo_mas = silo_mas - mas;
+                                res = dc.writeBytes(libnodave.daveDB, 12, 104, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
+                            }
+
+                            if (silo == "19")
+                            {
+                                res = dc.readBytes(libnodave.daveDB, 12, 104, 4, null);
+
+                                if (res == 0) //conection OK 
+                                {
+                                    silo_mas = dc.getU32();
+
+                                }
+                                silo_mas = silo_mas - mas;
+                                res = dc.writeBytes(libnodave.daveDB, 12, 104, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
+                            }
+                        }
+
+                        dc.disconnectPLC();
+                        libnodave.closeSocket(fds.rfd);
+                        bar.onProgress.Invoke();
+                    }
+                    else
+                    {
+                        bar.onError.Invoke();
+                    }
+                }
+                catch (Exception exp)
+                {
+                    MessageBox.Show(exp.Message);
+                    bar.onError.Invoke();
+                }
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
+                bar.onError.Invoke();
+            }
+        }
+
         private void Move_mas_pru (string silo,  int mas)
         {
             libnodave.daveOSserialType fds;
@@ -358,7 +445,7 @@ namespace rail
                                 silo_mas = silo_mas - mas;
                                 res = dc.writeBytes(libnodave.daveDB, 12, 116, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
-
+                            ///TODO Сверить адреса silo с 20 по 22 (120-124-128)
                             if (silo == "20")
                             {
                                 res = dc.readBytes(libnodave.daveDB, 12, 120, 4, null);
@@ -507,8 +594,21 @@ namespace rail
                                 }
                                 silo_mas = silo_mas + mas;
                                 res = dc.writeBytes(libnodave.daveDB, 10, 16, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
-                            }                            
+                            }
+                            ///TODO сверить silo 16 (20)
+                            if (silo == "16")
+                            {
+                                res = dc.readBytes(libnodave.daveDB, 10, 20, 4, null);
+
+                                if (res == 0) //conection OK 
+                                {
+                                    silo_mas = dc.getU32();
+                                }
+                                silo_mas = silo_mas + mas;
+                                res = dc.writeBytes(libnodave.daveDB, 10, 20, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
+                            }
                         }
+
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
                         bar.onProgress.Invoke();
@@ -1280,10 +1380,6 @@ namespace rail
         private void ComboBox1_TextChanged(object sender, EventArgs e)
         {
             Fg();
-        }
-
-        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
         }
 
         private async void Button1_Click(object sender, EventArgs e)
