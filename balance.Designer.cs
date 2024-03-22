@@ -157,6 +157,7 @@
             this.label_s23_balance = new System.Windows.Forms.Label();
             this.label_s23_sender = new System.Windows.Forms.Label();
             this.label_s23_name = new System.Windows.Forms.Label();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.s19.SuspendLayout();
@@ -207,7 +208,6 @@
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
             this.dataGridView1.Size = new System.Drawing.Size(680, 545);
             this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellContentClick);
             // 
             // groupBox1
             // 
@@ -1194,7 +1194,6 @@
             this.label_s13_name.Size = new System.Drawing.Size(98, 13);
             this.label_s13_name.TabIndex = 0;
             this.label_s13_name.Text = "label_s13_name";
-            this.label_s13_name.Click += new System.EventHandler(this.Label_s13_name_Click);
             // 
             // s12
             // 
@@ -1316,7 +1315,6 @@
             this.comboBox_manufaktur_target.Size = new System.Drawing.Size(184, 21);
             this.comboBox_manufaktur_target.TabIndex = 2;
             this.comboBox_manufaktur_target.SelectedValueChanged += new System.EventHandler(this.ComboBox_manufaktur_target_SelectedValueChanged);
-            this.comboBox_manufaktur_target.TextChanged += new System.EventHandler(this.ComboBox_manufaktur_target_TextChanged);
             // 
             // textBox_weight_target
             // 
@@ -1325,7 +1323,6 @@
             this.textBox_weight_target.Name = "textBox_weight_target";
             this.textBox_weight_target.Size = new System.Drawing.Size(110, 20);
             this.textBox_weight_target.TabIndex = 1;
-            this.textBox_weight_target.TextChanged += new System.EventHandler(this.TextBox_weight_target_TextChanged);
             // 
             // textBox_material_target
             // 
@@ -1397,7 +1394,6 @@
             this.groupBox6.TabIndex = 0;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Склады ПРУ";
-            this.groupBox6.Enter += new System.EventHandler(this.GroupBox6_Enter);
             // 
             // comboBox1
             // 
@@ -1753,5 +1749,6 @@
         private System.Windows.Forms.Label label_s23_balance;
         private System.Windows.Forms.Label label_s23_sender;
         private System.Windows.Forms.Label label_s23_name;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }

@@ -36,6 +36,7 @@ namespace rail
         {
             InitializeComponent();
         }
+        
         private void OpenCon()
         {
             if (mCon.State == ConnectionState.Closed)
@@ -43,6 +44,7 @@ namespace rail
                 mCon.Open();
             }
         }
+
         private void CloseCon()
         {
             if (mCon.State == ConnectionState.Open)
@@ -50,6 +52,7 @@ namespace rail
                 mCon.Close();
             }
         }
+
         public void ExecutQuery(string q)
         {
             try
@@ -64,7 +67,6 @@ namespace rail
                 {
                     MessageBox.Show("Ошибка записи");
                 }
-
             }
             catch (Exception ex)
             {
@@ -73,16 +75,6 @@ namespace rail
             finally { mCon.Close(); }
         }
 
-
-        private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void PictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
         private void s1_6(string on)
         {
             //conSQL = "Database=u0550310_aeroblock; Server=31.31.196.234; port=3306; username=u0550_kornev; password=18061981Kornev; charset=utf8 ";
@@ -143,9 +135,8 @@ namespace rail
                     zero_plc_rzd(on);
                 }
             }
-
-
         }
+
         private void zero_plc_gb(string silo)
         {
             // ОБНУЛЕНИЕ В КОНТРОЛЛЕРЕ
@@ -153,6 +144,7 @@ namespace rail
             libnodave.daveOSserialType fds;
             libnodave.daveInterface di;
             libnodave.daveConnection dc;
+
             try
             {
                 int res = 0;
@@ -161,15 +153,14 @@ namespace rail
                 {
                     fds.rfd = libnodave.openSocket(102, "192.168.37.102");
                     fds.wfd = fds.rfd;
+
                     if (fds.rfd > 0)
                     {
-
-
                         di = new libnodave.daveInterface(fds, "IF1", 0, libnodave.daveProtoISOTCP, libnodave.daveSpeed187k);
                         di.setTimeout(50);
                         dc = new libnodave.daveConnection(di, 0, 0, 2);
-                        if (0 == dc.connectPLC())
 
+                        if (0 == dc.connectPLC())
                         {
                             byte[] aa = { 0, 0, 0, 0 };
                             if (silo == "7")
@@ -200,7 +191,6 @@ namespace rail
                     MessageBox.Show(exp.Message);
 
                 }
-
             }
             catch (Exception exp)
             {
@@ -268,12 +258,20 @@ namespace rail
                 case "20":
                     await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
                     break;
+                case "21":
+                    //await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
+                    break;
+                case "22":
+                    //await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
+                    break;
+                case "23":
+
+                    break;
             }
         }
 
         private void Move_mas_pru (string silo,  int mas)
         {
-
             libnodave.daveOSserialType fds;
             libnodave.daveInterface di;
             libnodave.daveConnection dc;
@@ -308,6 +306,7 @@ namespace rail
                                 silo_mas = silo_mas - mas;
                                 res = dc.writeBytes(libnodave.daveDB, 12, 100, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
+
                             if (silo == "2")
                             {
                                 res = dc.readBytes(libnodave.daveDB, 12, 104, 4, null);
@@ -320,6 +319,7 @@ namespace rail
                                 silo_mas = silo_mas - mas;
                                 res = dc.writeBytes(libnodave.daveDB, 12, 104, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
+
                             if (silo == "3")
                             {
                                 res = dc.readBytes(libnodave.daveDB, 12, 108, 4, null);
@@ -332,6 +332,7 @@ namespace rail
                                 silo_mas = silo_mas - mas;
                                 res = dc.writeBytes(libnodave.daveDB, 12, 108, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
+
                             if (silo == "4")
                             {
                                 res = dc.readBytes(libnodave.daveDB, 12, 112, 4, null);
@@ -344,6 +345,7 @@ namespace rail
                                 silo_mas = silo_mas - mas;
                                 res = dc.writeBytes(libnodave.daveDB, 12, 112, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
+
                             if (silo == "5")
                             {
                                 res = dc.readBytes(libnodave.daveDB, 12, 116, 4, null);
@@ -356,6 +358,7 @@ namespace rail
                                 silo_mas = silo_mas - mas;
                                 res = dc.writeBytes(libnodave.daveDB, 12, 116, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
+
                             if (silo == "20")
                             {
                                 res = dc.readBytes(libnodave.daveDB, 12, 120, 4, null);
@@ -368,6 +371,7 @@ namespace rail
                                 silo_mas = silo_mas - mas;
                                 res = dc.writeBytes(libnodave.daveDB, 12, 120, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
+
                             if(silo == "21")
                             {
                                 res = dc.readBytes(libnodave.daveDB, 12, 124, 4, null);
@@ -393,7 +397,6 @@ namespace rail
                                 silo_mas = silo_mas - mas;
                                 res = dc.writeBytes(libnodave.daveDB, 12, 128, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
-
                         }
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
@@ -440,10 +443,9 @@ namespace rail
                         di = new libnodave.daveInterface(fds, "IF1", 0, libnodave.daveProtoISOTCP, libnodave.daveSpeed187k);
                         di.setTimeout(50);
                         dc = new libnodave.daveConnection(di, 0, 0, 2);
+
                         if (0 == dc.connectPLC())
-
                         {
-
                             if (silo == "11")
                             {
                                 res = dc.readBytes(libnodave.daveDB, 10, 0, 4, null);
@@ -456,6 +458,7 @@ namespace rail
                                 silo_mas = silo_mas + mas;
                                 res = dc.writeBytes(libnodave.daveDB, 10, 0, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
+
                             if (silo == "12")
                             {
                                 res = dc.readBytes(libnodave.daveDB, 10, 4, 4, null);
@@ -468,6 +471,7 @@ namespace rail
                                 silo_mas = silo_mas + mas;
                                 res = dc.writeBytes(libnodave.daveDB, 10, 4, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
+
                             if (silo == "13")
                             {
                                 res = dc.readBytes(libnodave.daveDB, 10, 8, 4, null);
@@ -480,6 +484,7 @@ namespace rail
                                 silo_mas = silo_mas + mas;
                                 res = dc.writeBytes(libnodave.daveDB, 10, 8, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
+
                             if (silo == "14")
                             {
                                 res = dc.readBytes(libnodave.daveDB, 10, 12, 4, null);
@@ -491,6 +496,7 @@ namespace rail
                                 silo_mas = silo_mas + mas;
                                 res = dc.writeBytes(libnodave.daveDB, 10, 12, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
+
                             if (silo == "15")
                             {
                                 res = dc.readBytes(libnodave.daveDB, 10, 16, 4, null);
@@ -517,14 +523,12 @@ namespace rail
                     MessageBox.Show(exp.Message);
                     bar.onError.Invoke();
                 }
-
             }
             catch (Exception exp)
             {
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
                 bar.onError.Invoke();
             }
-
         }
 
         private void Move_mas_gb(string silo, int mas)
@@ -583,6 +587,7 @@ namespace rail
                                 silo_mas = silo_mas + mas;
                                 res = dc.writeBytes(libnodave.daveDB, 305, 88, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
+
                             if (silo == "6")
                             {
                                 sql = "INSERT INTO `spslogger`.`zugang` (`Timestamp`, `Data_56`) VALUES ('"+MySQLData.MysqlTime(DateTime.Now)+"', '"+mas.ToString()+"');";
@@ -596,6 +601,7 @@ namespace rail
                                 silo_mas = silo_mas + mas;
                                 res = dc.writeBytes(libnodave.daveDB, 305, 92, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
+
                             if (silo == "8")
                             {
                                 sql = "INSERT INTO `spslogger`.`zugang` (`Timestamp`, `Data_135`) VALUES ('" + MySQLData.MysqlTime(DateTime.Now) + "', '" + mas.ToString() + "');";
@@ -609,6 +615,7 @@ namespace rail
                                 silo_mas = silo_mas + mas;
                                 res = dc.writeBytes(libnodave.daveDB, 305, 96, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
+
                             if (silo == "10")
                             {
                                 sql = "INSERT INTO `spslogger`.`zugang` (`Timestamp`, `Data_54`) VALUES ('" + MySQLData.MysqlTime(DateTime.Now) + "', '" + mas.ToString() + "');";
@@ -622,6 +629,7 @@ namespace rail
                                 silo_mas = silo_mas + mas;
                                 res = dc.writeBytes(libnodave.daveDB, 305, 84, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
                             }
+
                             if (silo == "9")
                             {
                                 sql = "INSERT INTO `spslogger`.`zugang` (`Timestamp`, `Data_53`) VALUES ('" + MySQLData.MysqlTime(DateTime.Now) + "', '" + mas.ToString() + "');";
@@ -659,7 +667,6 @@ namespace rail
                             MessageBox.Show(ex.ToString());
                         }
                         finally { mCon2.Close(); }
-
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
                         bar.onProgress.Invoke();
@@ -674,7 +681,6 @@ namespace rail
                     MessageBox.Show(exp.Message);
                     bar.onError.Invoke();
                 }
-
             }
             catch (Exception exp)
             {
@@ -876,7 +882,6 @@ namespace rail
                     isok = true;
                     zero_plc_gb(on);
                 }
-
             }
         }
 
@@ -907,8 +912,6 @@ namespace rail
                 data = data2.ToString("yyyy-MM-dd HH:mm");
               
                 strSQL4 =("SELECT sum(weight) FROM `move_silo` where `timestamp`>'" + data + "' and `source_silo_id`='" + on+"'  ;"); 
-             
-
 
                 MySQLData.GetScalar.Result wsi = MySQLData.GetScalar.Scalar(strSQL4, conSQL);
                 weight_sum_in = wsi.ResultText;
@@ -916,8 +919,6 @@ namespace rail
                     weight_sum_in = "1";
 
             }
-
-            
 
             //ExecutQuery(strSQL3);
 
@@ -945,7 +946,6 @@ namespace rail
                     isok = true;
                     zero_plc_sss(on);
                 }
-
             }
         }
 
@@ -981,9 +981,7 @@ namespace rail
                     MessageBox.Show("Перемещение проведено", "Перемещение", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     //textBox_weight.Text = "";
                 }
-
             }
-
         }
 
         private void Bar()
@@ -1008,7 +1006,6 @@ namespace rail
             pass.Show();
             pass.button_pass.MouseClick += (senderSlave, eSlave) =>
             {
-
                 if (pass.textBox_pass.Text == "08082014")
                 {
                     pass.Close();
@@ -1095,29 +1092,19 @@ namespace rail
             groupBox5.Visible = false;
             contextMenuStrip1.Enabled = false;
 #endif
-
                 this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             });
-
         }
+
         private void read_group_box (Control parent, int id)
         {
-
-
-
             string val_1 = parent.Controls["label_s" + (id + 1).ToString() + "_name"].Text.ToString();
             //parent.Controls["label_s" + (id + 1).ToString() + "_sender"].
             //parent.Controls["label_s" + (id + 1).ToString() + "_balance"].Text 
-           
-
-
         }
-
 
         private void fill_group_box(Control parent, int id)
         {
-
-
             int str = Convert.ToInt32( dataGridView1.Rows[id].Cells[5].Value.ToString());
             parent.Controls["label_s" + (id + 1).ToString() + "_name"].Text = dataGridView1.Rows[id].Cells[3].Value.ToString();
             parent.Controls["label_s" + (id + 1).ToString() + "_sender"].Text = dataGridView1.Rows[id].Cells[4].Value.ToString();
@@ -1136,8 +1123,6 @@ namespace rail
             comboBox1.DataSource = tbl1;
             comboBox1.DisplayMember = "silo_num";// столбец для отображения
             comboBox1.ValueMember = "id";
-
-
         }
 
         private void fill_cb(string sql_disp, ComboBox cb)
@@ -1149,9 +1134,8 @@ namespace rail
             cb.DataSource = tbl1;
             cb.DisplayMember = sql_disp;// столбец для отображения
             cb.ValueMember = sql_disp;
-
-
         }
+
         private void fill_cb(string sql_disp, string sql_us, ComboBox cb)
         {
             string sql = ("SELECT distinct " + sql_disp + " FROM silo_balance where  manufactur= '" + sql_us + "'");
@@ -1162,9 +1146,8 @@ namespace rail
             cb.DataSource = tbl1;
             cb.DisplayMember = sql_disp;// столбец для отображения
             cb.ValueMember = sql_disp;
-
-
         }
+
         private void fill_tb(string sql_disp, string sql_us, string sql_us2, TextBox tb)
         {
             string sql = ("SELECT " + sql_disp + " FROM silo_balance where  manufactur= '" + sql_us + "' and silo_num='" + sql_us2 + "' ");
@@ -1210,16 +1193,16 @@ namespace rail
                 s23
             };
 
-
             int id;
+
             for (id = 0; id <= 22; id++)
             {
                 fill_group_box(gb[id], id);
             }
         }
+
         private void Balance_Load(object sender, EventArgs e)
         {
-            
             bar = new Bar(progressBar1);
             //PLC_RZD();
             //Thread.Sleep(5000);
@@ -1237,8 +1220,8 @@ namespace rail
 
             SubscribeError();
             Update_visualSilo();
-
         }
+
         private void Fg()
         {
             string sql;
@@ -1272,7 +1255,6 @@ namespace rail
             {
                 return;
             }
-
         }
 
         private void SubscribeError()
@@ -1295,23 +1277,16 @@ namespace rail
             onErrorBar -= () => MessageBox.Show("Ошибка перемещения");
         }
 
-
-
         private void ComboBox1_TextChanged(object sender, EventArgs e)
         {
             Fg();
-
         }
 
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-
-
         }
 
         private async void Button1_Click(object sender, EventArgs e)
-
         {
             Fg();
             string target_id, source_id;
@@ -1399,19 +1374,10 @@ namespace rail
             bar.onProgress.Invoke();
         }
 
-        private void TextBox_weight_target_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void ComboBox_manufaktur_target_SelectedValueChanged(object sender, EventArgs e)
         {
             fill_cb("silo_num", comboBox_manufaktur_target.SelectedValue.ToString(), comboBox_silo_num_target);
-
-
         }
-
-       
 
         private void ComboBox_silo_num_target_TextChanged(object sender, EventArgs e)
         {
@@ -1420,17 +1386,6 @@ namespace rail
             fill_tb("silo_material_name", val1, val2, textBox_material_target);
             fill_tb("weight", comboBox_manufaktur_target.SelectedValue.ToString(), comboBox_silo_num_target.SelectedValue.ToString(), textBox_weight_target);
         }
-
-        private void ComboBox_manufaktur_target_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void update_silo(Form form6)
-        {
-          
-        }
-       
 
         private void НаименованиеМатериалаToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1460,10 +1415,6 @@ namespace rail
                 GetData();
                 Update_visualSilo();
             };
-           
-
-
-
         }
 
         private void ПоставщикToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1496,6 +1447,7 @@ namespace rail
             };
 
         }
+
         public void GetValueFromControllerByte_SSS(ref int s11, ref int s12, ref int s13, ref int s14, ref int s15)
         {
             libnodave.daveOSserialType fds;
@@ -1569,10 +1521,6 @@ namespace rail
                             }
                             //res = dc.readBits(libnodave.daveDB, 160, 3890, 1, null);
                             //MessageBox.Show("результат функции:" + res + " = " + libnodave.daveStrerror(res));
-
-
-
-
                         }
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
@@ -1593,6 +1541,7 @@ namespace rail
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
             }
         }
+
         public void GetValueFromControllerByte(ref int s6, ref int s7, ref int s8, ref int s9, ref int s10)
         {
             libnodave.daveOSserialType fds;
@@ -1885,16 +1834,6 @@ namespace rail
 
             }
         } 
-
-        private void Label_s13_name_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void GroupBox6_Enter(object sender, EventArgs e)
-        {
-
-        }
 
         private void ToolStripButton1_Click(object sender, EventArgs e)
         {
