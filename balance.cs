@@ -1177,12 +1177,13 @@ namespace rail
                 s19,
                 s20,
                 s21,
-                s22
+                s22,
+                s23
             };
 
 
             int id;
-            for (id = 0; id <= 21; id++)
+            for (id = 0; id <= 22; id++)
             {
                 fill_group_box(gb[id], id);
             }
@@ -1793,7 +1794,7 @@ namespace rail
             await Task.Run(() => GetValueFromControllerByte(ref s6, ref s7, ref s8, ref s9, ref s10));
             await Task.Run(() => GetValueFromControllerByte_SSS(ref s11, ref s12, ref s13, ref s14, ref s15));
 
-            await Task.Run(() => UpdateData(new List<double> { s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20 }));
+            await Task.Run(() => UpdateData(new List<double> { s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20}));
         }
 
         private void UpdateData(List<double> var)
@@ -1802,7 +1803,7 @@ namespace rail
             //MySqlConnection mCon = new MySqlConnection("Database=spslogger; Server=192.168.37.101; port=3306; username=%user_1; password=20112004; charset=utf8 ");
 
             int id;
-            for (id = 0; id <= 19; id++)
+            for (id = 0; id <= 22; id++)
             {
                 string conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 1).ToString() + "');";
                 MySqlCommand dsq = new MySqlCommand(conSQL, mCon);
