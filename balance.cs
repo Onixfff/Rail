@@ -416,6 +416,7 @@ namespace rail
                 bar.onError.Invoke();
             }
         }
+
         private void Move_mas_sss(string silo, int mas)
         {
             var isComplite = false;
@@ -1081,7 +1082,13 @@ namespace rail
                         item.DefaultCellStyle.BackColor = Color.LemonChiffon;
                     }
                     if (item.Cells[1].Value.ToString() == "ССС")
+                    {
                         item.DefaultCellStyle.BackColor = Color.GreenYellow;
+                    }
+                    if(item.Cells[1].Value.ToString() == "Силус кирпича")
+                    {
+                        item.DefaultCellStyle.BackColor = Color.Moccasin;
+                    }
                 }
                 Console.WriteLine("Обновление прошло");
 #if user
@@ -1236,10 +1243,21 @@ namespace rail
         {
             string sql;
             string val = comboBox1.SelectedValue.ToString();
-            if (val == "20") 
-             sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' and silo_num='6'");
-            else
-            sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' and silo_num='" + val + "'");
+            switch (val)
+            {
+                case "20":
+                    sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' and silo_num='6'");
+                    break;
+                case "23":
+                    sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' and silo_num='7'");
+                    break;
+                case "24":
+                    sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' and silo_num='8'");
+                    break;
+                default:
+                    sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' and silo_num='" + val + "'");
+                    break;
+            }
             MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
 
             DataTable tbl1 = new DataTable();
@@ -1355,7 +1373,7 @@ namespace rail
                     if (source_id == "11" | source_id == "12" | source_id == "13" | source_id == "14" | source_id == "15")//сухие смеси
                         move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
                     //await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text))); 
-                    //if (source_id == "17" | source_id == "18" | source_id == "13" | source_id == "14" | source_id == "15")//сухие смеси
+                    //if (source_id == "17" | source_id == "18" | source_id == "19" | source_id == "16" | source_id == "15")//сухие смеси
                     //textBox_weight.Text = "";
 
                     Thread task = new Thread(PLC_RZD);
