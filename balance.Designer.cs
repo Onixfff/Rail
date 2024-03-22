@@ -422,18 +422,18 @@
             this.label_s22_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s22_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s22_balance.Name = "label_s22_balance";
-            this.label_s22_balance.Size = new System.Drawing.Size(50, 16);
+            this.label_s22_balance.Size = new System.Drawing.Size(138, 16);
             this.label_s22_balance.TabIndex = 0;
-            this.label_s22_balance.Text = "label4";
+            this.label_s22_balance.Text = "label_s22_balance";
             // 
             // label_s22_sender
             // 
             this.label_s22_sender.AutoSize = true;
             this.label_s22_sender.Location = new System.Drawing.Point(7, 44);
             this.label_s22_sender.Name = "label_s22_sender";
-            this.label_s22_sender.Size = new System.Drawing.Size(35, 13);
+            this.label_s22_sender.Size = new System.Drawing.Size(90, 13);
             this.label_s22_sender.TabIndex = 0;
-            this.label_s22_sender.Text = "label5";
+            this.label_s22_sender.Text = "label_s22_sender";
             // 
             // label_s22_name
             // 
@@ -441,9 +441,9 @@
             this.label_s22_name.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s22_name.Location = new System.Drawing.Point(7, 20);
             this.label_s22_name.Name = "label_s22_name";
-            this.label_s22_name.Size = new System.Drawing.Size(41, 13);
+            this.label_s22_name.Size = new System.Drawing.Size(98, 13);
             this.label_s22_name.TabIndex = 0;
-            this.label_s22_name.Text = "label6";
+            this.label_s22_name.Text = "label_s22_name";
             // 
             // s21
             // 
@@ -464,18 +464,18 @@
             this.label_s21_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s21_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s21_balance.Name = "label_s21_balance";
-            this.label_s21_balance.Size = new System.Drawing.Size(50, 16);
+            this.label_s21_balance.Size = new System.Drawing.Size(138, 16);
             this.label_s21_balance.TabIndex = 0;
-            this.label_s21_balance.Text = "label1";
+            this.label_s21_balance.Text = "label_s21_balance";
             // 
             // label_s21_sender
             // 
             this.label_s21_sender.AutoSize = true;
             this.label_s21_sender.Location = new System.Drawing.Point(6, 44);
             this.label_s21_sender.Name = "label_s21_sender";
-            this.label_s21_sender.Size = new System.Drawing.Size(35, 13);
+            this.label_s21_sender.Size = new System.Drawing.Size(90, 13);
             this.label_s21_sender.TabIndex = 0;
-            this.label_s21_sender.Text = "label2";
+            this.label_s21_sender.Text = "label_s21_sender";
             // 
             // label_s21_name
             // 
@@ -483,9 +483,9 @@
             this.label_s21_name.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s21_name.Location = new System.Drawing.Point(7, 20);
             this.label_s21_name.Name = "label_s21_name";
-            this.label_s21_name.Size = new System.Drawing.Size(41, 13);
+            this.label_s21_name.Size = new System.Drawing.Size(98, 13);
             this.label_s21_name.TabIndex = 0;
-            this.label_s21_name.Text = "label3";
+            this.label_s21_name.Text = "label_s21_name";
             // 
             // s20
             // 
@@ -1516,18 +1516,18 @@
             this.label_s23_balance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s23_balance.Location = new System.Drawing.Point(7, 72);
             this.label_s23_balance.Name = "label_s23_balance";
-            this.label_s23_balance.Size = new System.Drawing.Size(58, 16);
+            this.label_s23_balance.Size = new System.Drawing.Size(138, 16);
             this.label_s23_balance.TabIndex = 0;
-            this.label_s23_balance.Text = "label10";
+            this.label_s23_balance.Text = "label_s23_balance";
             // 
             // label_s23_sender
             // 
             this.label_s23_sender.AutoSize = true;
             this.label_s23_sender.Location = new System.Drawing.Point(7, 44);
             this.label_s23_sender.Name = "label_s23_sender";
-            this.label_s23_sender.Size = new System.Drawing.Size(41, 13);
+            this.label_s23_sender.Size = new System.Drawing.Size(90, 13);
             this.label_s23_sender.TabIndex = 0;
-            this.label_s23_sender.Text = "label11";
+            this.label_s23_sender.Text = "label_s23_sender";
             // 
             // label_s23_name
             // 
@@ -1535,9 +1535,9 @@
             this.label_s23_name.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label_s23_name.Location = new System.Drawing.Point(7, 20);
             this.label_s23_name.Name = "label_s23_name";
-            this.label_s23_name.Size = new System.Drawing.Size(48, 13);
+            this.label_s23_name.Size = new System.Drawing.Size(98, 13);
             this.label_s23_name.TabIndex = 0;
-            this.label_s23_name.Text = "label12";
+            this.label_s23_name.Text = "label_s23_name";
             // 
             // balance
             // 
