@@ -198,7 +198,7 @@ namespace rail
             }
         }
 
-        private async void move_mas(string target_id, string source_id, int mas)
+        private async Task move_mas(string target_id, string source_id, int mas)
         {
             switch (source_id)
             {
@@ -1436,19 +1436,19 @@ namespace rail
                     bar.ShowBar();
 
                     if (source_id == "1" | source_id == "2" | source_id == "3" | source_id == "4" | source_id == "5" | source_id == "20")//ПРУ
-                        move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
+                        await move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
                         //await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));
                     if (source_id == "6" | source_id == "7" | source_id == "8" | source_id == "9" | source_id == "10")//газобетон
-                        move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
+                        await move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
                     //await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));
                     if (source_id == "11" | source_id == "12" | source_id == "13" | source_id == "14" | source_id == "15")//сухие смеси
-                        move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
+                        await move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
                     //await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text))); 
                     //if (source_id == "17" | source_id == "18" | source_id == "19" | source_id == "16" | source_id == "15")//сухие смеси
                     //textBox_weight.Text = "";
+                    
+                    PLC_RZD();
 
-                    Thread task = new Thread(PLC_RZD);
-                    task.Start();
                     //Bar();
                 }
             }
@@ -1544,12 +1544,13 @@ namespace rail
 
         }
 
-        public void GetValueFromControllerByte_SSS(ref int s11, ref int s12, ref int s13, ref int s14, ref int s15)
+        public void GetValueFromControllerByte_SSS(ref int s11, ref int s12, ref int s13, ref int s14, ref int s15, ref int s16)
         {
             libnodave.daveOSserialType fds;
             libnodave.daveInterface di;
             libnodave.daveConnection dc;
 
+            s16 = 0;
             s15 = 0;
             s14 = 0;
             s13 = 0;
@@ -1613,6 +1614,14 @@ namespace rail
                             if (res == 0) //conection OK 
                             {
                                 s15 = dc.getU32();
+
+                            }
+                            ///TODO Проверить адрес bity для 16
+                            res = dc.readBytes(libnodave.daveDB, 10, 20, 4, null);
+
+                            if (res == 0) //conection OK 
+                            {
+                                s16 = dc.getU32();
 
                             }
                             //res = dc.readBits(libnodave.daveDB, 160, 3890, 1, null);
@@ -1742,7 +1751,7 @@ namespace rail
 
         private async void PLC_RZD()
         {
-            int s1 = 0, s2 = 0, s3 = 0, s4 = 0, s5 = 0, s16 = 0, s17 = 0, s18 = 0, s19 = 0, s20 = 0, s21 = 0, s22 = 0;
+            int s1 = 0, s2 = 0, s3 = 0, s4 = 0, s5 = 0, s16 = 0, s17 = 0, s18 = 0, s19 = 0, s20 = 0, s23 = 0, s24 = 0, s25 = 0;
             try /// подключение к ПРУ
             {
                 libnodave.daveOSserialType fds;
@@ -1821,7 +1830,7 @@ namespace rail
 
                                 if (res == 0) //conection OK 
                                 {
-                                    s21 = dc.getU32();
+                                    s23 = dc.getU32();
 
                                 }
 
@@ -1829,16 +1838,12 @@ namespace rail
 
                                 if (res == 0) //conection OK 
                                 {
-                                    s22 = dc.getU32();
+                                    s24 = dc.getU32();
 
                                 }
 
                                 //res = dc.readBits(libnodave.daveDB, 160, 3890, 1, null);
                                 //MessageBox.Show("результат функции:" + res + " = " + libnodave.daveStrerror(res));
-
-
-
-
                             }
                             dc.disconnectPLC();
                             libnodave.closeSocket(fds.rfd);
@@ -1892,21 +1897,29 @@ namespace rail
             int min = int.MinValue;
             int s6 = min, s7 = min, s8 = min, s9 = min, s10 = min, s11= min, s12 = min, s13 = min, s14 = min, s15 = min;
 
-            await Task.Run(() => GetValueFromControllerByte(ref s6, ref s7, ref s8, ref s9, ref s10));
-            await Task.Run(() => GetValueFromControllerByte_SSS(ref s11, ref s12, ref s13, ref s14, ref s15));
+            GetValueFromControllerByte(ref s6, ref s7, ref s8, ref s9, ref s10);
+            GetValueFromControllerByte_SSS(ref s11, ref s12, ref s13, ref s14, ref s15, ref s16);
+            //TODO Тут добавить для s23 и для s16-19
 
-            await Task.Run(() => UpdateData(new List<double> { s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s21, s22}));
+            UpdateData(new List<double> { s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s23, s24, s25});
         }
 
         private void UpdateData(List<double> var)
-        {
+         {
             MySqlConnection mCon = new MySqlConnection(ConfigurationManager.ConnectionStrings["234"].ConnectionString);
             //MySqlConnection mCon = new MySqlConnection("Database=spslogger; Server=192.168.37.101; port=3306; username=%user_1; password=20112004; charset=utf8 ");
 
             int id;
-            for (id = 0; id <= 22; id++)
+            for (id = 0; id < var.Count; id++)
             {
-                string conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 1).ToString() + "');";
+                if (id >= 20)
+                {
+                    string conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 2).ToString() + "');";
+                }
+                else
+                {
+                    string conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 1).ToString() + "');";
+                }
                 MySqlCommand dsq = new MySqlCommand(conSQL, mCon);
                 try
                 {
@@ -1917,7 +1930,10 @@ namespace rail
                     }
                     else
                     {
+                        bar.onError.Invoke();
                         MessageBox.Show("Ошибка записи");
+
+                        Update_visualSilo();
                     }
                     // MessageBox.Show("OK");
                     mCon.Close();
@@ -1955,6 +1971,8 @@ namespace rail
         private void balance_FormClosing(object sender, FormClosingEventArgs e)
         {
             UnsubscribeError();
+
+            bar.onError.Invoke();
         }
     }
 }
