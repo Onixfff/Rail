@@ -17,6 +17,7 @@ using rail;
 using System.Configuration;
 using System.Runtime.CompilerServices;
 using rail.BalanceController;
+using Mysqlx;
 namespace rail
 {
     public partial class balance : Form
@@ -1902,6 +1903,37 @@ namespace rail
             //TODO Тут добавить для s23 и для s16-19
 
             UpdateData(new List<double> { s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s23, s24, s25});
+        }
+
+        private bool UpdateData(int id, double value)
+        {
+            string conSql = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + value + "' WHERE (`id` = '" + (id) + "');";
+
+            MySqlCommand dsq = new MySqlCommand(conSQL, mCon);
+            try
+            {
+                mCon.Open();
+                if (dsq.ExecuteNonQuery() == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    bar.onError.Invoke();
+                    Update_visualSilo();
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                if (mCon != null && mCon.State != System.Data.ConnectionState.Closed) mCon.Clone();
+                return false;
+            }
+            finally
+            {
+                mCon.Close();
+            }
         }
 
         private void UpdateData(List<double> var)
