@@ -1,23 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-using MySql;
-using System.Data.Odbc;
 using System.Threading;
 //using ru.nvg79.connector;
 using DataUpdater;
-using rail;
 using System.Configuration;
-using System.Runtime.CompilerServices;
 using rail.BalanceController;
-using Mysqlx;
 namespace rail
 {
     public partial class balance : Form
@@ -1085,22 +1077,6 @@ namespace rail
             }
         }
 
-        private void Bar()
-        {
-            progressBar1.Visible = true;
-
-            progressBar1.Value = 0;
-            progressBar1.Maximum = 100;
-
-            for (int i = 0; i < 100; i++)
-            {
-                progressBar1.Value = i;
-                Thread.Sleep(150);
-            }
-
-            progressBar1.Visible = false;
-        }
-
         private void ToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             pass pass = new pass();
@@ -1130,7 +1106,6 @@ namespace rail
                         if (owner_name == "11" | owner_name == "12" | owner_name == "13" | owner_name == "14" | owner_name == "15" | owner_name == "16")//сухие смеси
                             s11_16(owner_name);
 
-                        Bar();
                         GetData();
                         Update_visualSilo();
                     }
@@ -1183,7 +1158,7 @@ namespace rail
                     {
                         item.DefaultCellStyle.BackColor = Color.GreenYellow;
                     }
-                    if(item.Cells[1].Value.ToString() == "Силус кирпича")
+                    if (item.Cells[1].Value.ToString() == "Кирпич")
                     {
                         item.DefaultCellStyle.BackColor = Color.Moccasin;
                     }
@@ -1206,10 +1181,17 @@ namespace rail
 
         private void fill_group_box(Control parent, int id)
         {
-            int str = Convert.ToInt32( dataGridView1.Rows[id].Cells[5].Value.ToString());
-            parent.Controls["label_s" + (id + 1).ToString() + "_name"].Text = dataGridView1.Rows[id].Cells[3].Value.ToString();
-            parent.Controls["label_s" + (id + 1).ToString() + "_sender"].Text = dataGridView1.Rows[id].Cells[4].Value.ToString();
-            parent.Controls["label_s" + (id + 1).ToString() + "_balance"].Text = string.Format("{0:N0}",str );
+            try
+            {
+                int str = Convert.ToInt32(dataGridView1.Rows[id].Cells[5].Value.ToString());
+                parent.Controls["label_s" + (id + 1).ToString() + "_name"].Text = dataGridView1.Rows[id].Cells[3].Value.ToString();
+                parent.Controls["label_s" + (id + 1).ToString() + "_sender"].Text = dataGridView1.Rows[id].Cells[4].Value.ToString();
+                parent.Controls["label_s" + (id + 1).ToString() + "_balance"].Text = string.Format("{0:N0}", str);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             //string str2=string.Format("{0:N0}", str);
         }
@@ -1304,8 +1286,7 @@ namespace rail
 
         private void Balance_Load(object sender, EventArgs e)
         {
-            bar = new Bar(progressBar1);
-            //PLC_RZD();
+            PLC_RZD();
             //Thread.Sleep(5000);
             fill_cb();
             GetData();
@@ -1944,13 +1925,15 @@ namespace rail
             int id;
             for (id = 0; id < var.Count; id++)
             {
+                string conSQL = null;
+
                 if (id >= 20)
                 {
-                    string conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 2).ToString() + "');";
+                    conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 2).ToString() + "');";
                 }
                 else
                 {
-                    string conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 1).ToString() + "');";
+                    conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 1).ToString() + "');";
                 }
                 MySqlCommand dsq = new MySqlCommand(conSQL, mCon);
                 try

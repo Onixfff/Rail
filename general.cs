@@ -158,11 +158,12 @@ namespace rail
         }
         private void picker()
         {
-            var mounth = DateTime.Now.Month;
-            var year = DateTime.Now.Year;
-            var date = new DateTime(year, mounth, 1);
+            int mounth = DateTime.Now.Month;
+            int year = DateTime.Now.Year;
+            DateTime date = new DateTime(year, mounth, 1);
             int days = DateTime.DaysInMonth(year, mounth);
-            var date2 = new DateTime(year, mounth, days);
+            DateTime date2 = new DateTime(year, mounth, days);
+
             dateTimePicker_start.Text = date.ToString();
             dateTimePicker_finish.Text = date2.ToString();
         }
