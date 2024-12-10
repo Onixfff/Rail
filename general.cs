@@ -312,51 +312,72 @@ namespace rail
 
         private void Method()
         {
-            string rt = comboBox1.SelectedItem.ToString();
-            if (rt == "Вагоны на станции")
+            try
             {
-                string sql = ("SELECT * FROM vagon_vihod WHERE prihod='1' and status_start='0' and status_stop='0' ORDER BY id DESC ");
-                MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
-                DataSet ds = new DataSet();
-                ds.Reset();
-                dD.Fill(ds, sql);
-                dataGridView1.DataSource = ds.Tables[0];
+                if(mCon.State == ConnectionState.Closed)
+                {
+                    mCon.Open();
+                }
+
+                string rt = comboBox1.SelectedItem.ToString();
+
+                if (rt == "Вагоны на станции")
+                {
+                    string sql = ("SELECT * FROM vagon_vihod WHERE prihod='1' and status_start='0' and status_stop='0' ORDER BY id DESC ");
+                    MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
+                    DataSet ds = new DataSet();
+                    ds.Reset();
+                    dD.Fill(ds, sql);
+                    dataGridView1.DataSource = ds.Tables[0];
+                }
+                if (rt == "Вагоны в пути")
+                {
+                    string sql = ("SELECT * FROM vagon_vihod WHERE prihod='0' and status_start='0' and status_stop='0' ORDER BY id DESC  ");
+                    MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
+                    DataSet ds = new DataSet();
+                    ds.Reset();
+                    dD.Fill(ds, sql);
+                    dataGridView1.DataSource = ds.Tables[0];
+                }
+                if (rt == "Вагоны на рагзрузке")
+                {
+                    string sql = ("SELECT * FROM vagon_vihod WHERE prihod='1' and status_start='1' and status_stop='0'  ORDER BY id DESC");
+                    MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
+                    DataSet ds = new DataSet();
+                    ds.Reset();
+                    dD.Fill(ds, sql);
+                    dataGridView1.DataSource = ds.Tables[0];
+                }
+                if (rt == "Вагоны рагруженные")
+                {
+                    string sql = ("SELECT * FROM vagon_vihod WHERE prihod='1' and status_start='1' and status_stop='1' ORDER BY id DESC  ");
+                    MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
+                    DataSet ds = new DataSet();
+                    ds.Reset();
+                    dD.Fill(ds, sql);
+                    dataGridView1.DataSource = ds.Tables[0];
+                }
+                if (rt == "Все")
+                {
+                    string sql = ("SELECT * FROM vagon_vihod  ORDER BY id DESC LIMIT 100");
+                    MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
+                    DataSet ds = new DataSet();
+                    ds.Reset();
+                    dD.Fill(ds, sql);
+                    dataGridView1.DataSource = ds.Tables[0];
+                }
             }
-            if (rt == "Вагоны в пути")
+            catch (MySqlException ex)
             {
-                string sql = ("SELECT * FROM vagon_vihod WHERE prihod='0' and status_start='0' and status_stop='0' ORDER BY id DESC  ");
-                MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
-                DataSet ds = new DataSet();
-                ds.Reset();
-                dD.Fill(ds, sql);
-                dataGridView1.DataSource = ds.Tables[0];
+                MessageBox.Show(ex.Message + "ошибка бд");
             }
-            if (rt == "Вагоны на рагзрузке")
+            catch (Exception ex)
             {
-                string sql = ("SELECT * FROM vagon_vihod WHERE prihod='1' and status_start='1' and status_stop='0'  ORDER BY id DESC");
-                MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
-                DataSet ds = new DataSet();
-                ds.Reset();
-                dD.Fill(ds, sql);
-                dataGridView1.DataSource = ds.Tables[0];
+                MessageBox.Show(ex.Message);
             }
-            if (rt == "Вагоны рагруженные")
+            finally 
             {
-                string sql = ("SELECT * FROM vagon_vihod WHERE prihod='1' and status_start='1' and status_stop='1' ORDER BY id DESC  ");
-                MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
-                DataSet ds = new DataSet();
-                ds.Reset();
-                dD.Fill(ds, sql);
-                dataGridView1.DataSource = ds.Tables[0];
-            }
-            if (rt == "Все")
-            {
-                string sql = ("SELECT * FROM vagon_vihod  ORDER BY id DESC  ");
-                MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
-                DataSet ds = new DataSet();
-                ds.Reset();
-                dD.Fill(ds, sql);
-                dataGridView1.DataSource = ds.Tables[0];
+                mCon.Close();
             }
 
         }

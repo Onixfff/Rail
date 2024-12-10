@@ -9,16 +9,11 @@ using System.Threading;
 //using ru.nvg79.connector;
 using DataUpdater;
 using System.Configuration;
-using rail.BalanceController;
+
 namespace rail
 {
     public partial class balance : Form
     {
-        public static Action onUpdate;
-        public static Action onCompliteMove;
-        public static Action onErrorBar;
-
-        private Bar bar;
         //MySqlConnection mCon = new MySqlConnection("Database=u0550310_aeroblock; Server=31.31.196.234; port=3306; username=u0550_kornev; password=18061981Kornev; charset=utf8 ");
         MySqlConnection mCon = new MySqlConnection(ConfigurationManager.ConnectionStrings["234"].ConnectionString);
         MySqlCommand msd;
@@ -330,23 +325,19 @@ namespace rail
 
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
-                        bar.onProgress.Invoke();
                     }
                     else
                     {
-                        bar.onError.Invoke();
                     }
                 }
                 catch (Exception exp)
                 {
                     MessageBox.Show(exp.Message);
-                    bar.onError.Invoke();
                 }
             }
             catch (Exception exp)
             {
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
-                bar.onError.Invoke();
             }
         }
 
@@ -480,23 +471,19 @@ namespace rail
                         }
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
-                        bar.onProgress.Invoke();
                     }
                     else
                     {
-                        bar.onError.Invoke();
                     }
                 }
                 catch (Exception exp)
                 {
                     MessageBox.Show(exp.Message);
-                    bar.onError.Invoke();
                 }
             }
             catch (Exception exp)
             {
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
-                bar.onError.Invoke();
             }
         }
 
@@ -604,23 +591,19 @@ namespace rail
 
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
-                        bar.onProgress.Invoke();
                     }
                     else
                     {
-                        bar.onError.Invoke();
                     }
                 }
                 catch (Exception exp)
                 {
                     MessageBox.Show(exp.Message);
-                    bar.onError.Invoke();
                 }
             }
             catch (Exception exp)
             {
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
-                bar.onError.Invoke();
             }
         }
 
@@ -762,23 +745,19 @@ namespace rail
                         finally { mCon2.Close(); }
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
-                        bar.onProgress.Invoke();
                     }
                     else
                     {
-                        bar.onError.Invoke();
                     }
                 }
                 catch (Exception exp)
                 {
                     MessageBox.Show(exp.Message);
-                    bar.onError.Invoke();
                 }
             }
             catch (Exception exp)
             {
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
-                bar.onError.Invoke();
             }
         }
 
@@ -1286,7 +1265,7 @@ namespace rail
 
         private void Balance_Load(object sender, EventArgs e)
         {
-            PLC_RZD();
+            //PLC_RZD();
             //Thread.Sleep(5000);
             fill_cb();
             GetData();
@@ -1300,7 +1279,6 @@ namespace rail
 
             comboBox1.Text = "1";
 
-            SubscribeError();
             Update_visualSilo();
         }
 
@@ -1337,26 +1315,6 @@ namespace rail
             {
                 return;
             }
-        }
-
-        private void SubscribeError()
-        {
-            onErrorBar += () => button1.Invoke((MethodInvoker)delegate
-            {
-                button1.Visible = true;
-            });
-
-            onErrorBar += () => MessageBox.Show("Ошибка перемещения");
-        }
-
-        private void UnsubscribeError()
-        {
-            onErrorBar -= () => button1.Invoke((MethodInvoker)delegate
-            {
-                button1.Visible = true;
-            });
-
-            onErrorBar -= () => MessageBox.Show("Ошибка перемещения");
         }
 
         private void ComboBox1_TextChanged(object sender, EventArgs e)
@@ -1404,18 +1362,6 @@ namespace rail
                     //Move_mas_pru("20", Convert.ToInt32(textBox_weight.Text));
                     //else
 
-                    onUpdate += GetData;
-                    onUpdate += Update_visualSilo;
-                    onUpdate += UnsubscribeUpdate;
-
-                    onCompliteMove += () => button1.Invoke((MethodInvoker)delegate
-                    {
-                        button1.Visible = true;
-                    });
-
-                    onCompliteMove += UnsubscribeComplite;
-
-                    bar.ShowBar();
 
                     if (source_id == "1" | source_id == "2" | source_id == "3" | source_id == "4" | source_id == "5" | source_id == "20")//ПРУ
                         await move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
@@ -1430,26 +1376,9 @@ namespace rail
                     //textBox_weight.Text = "";
                     
                     PLC_RZD();
-
-                    //Bar();
+                    button1.Visible = true;
                 }
             }
-        }
-
-        private void UnsubscribeComplite()
-        {
-            onCompliteMove -= UnsubscribeComplite;
-            onCompliteMove -= () => button1.Invoke((MethodInvoker) delegate
-            {
-                button1.Visible = true;
-            });
-        }
-
-        private void UnsubscribeUpdate()
-        {
-            onUpdate -= GetData;
-            onUpdate -= Update_visualSilo;
-            bar.onProgress.Invoke();
         }
 
         private void ComboBox_manufaktur_target_SelectedValueChanged(object sender, EventArgs e)
@@ -1552,6 +1481,7 @@ namespace rail
 
                 try
                 {
+                    //Наверное сухие смеси
                     fds.rfd = libnodave.openSocket(102, "192.168.37.199");
                     fds.wfd = fds.rfd;
                     if (fds.rfd > 0)
@@ -1608,6 +1538,61 @@ namespace rail
                             }
                             //res = dc.readBits(libnodave.daveDB, 160, 3890, 1, null);
                             //MessageBox.Show("результат функции:" + res + " = " + libnodave.daveStrerror(res));
+                        }
+                        dc.disconnectPLC();
+                        libnodave.closeSocket(fds.rfd);
+                    }
+                    else
+                    {
+
+                    }
+                }
+                catch (Exception exp)
+                {
+                    MessageBox.Show(exp.Message);
+
+                }
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
+            }
+        }
+
+        private void GetValueFromControllerByteBrick(ref int s23)
+        {
+            libnodave.daveOSserialType fds;
+            libnodave.daveInterface di;
+            libnodave.daveConnection dc;
+
+            s23 = 0;
+
+            try
+            {
+                int res = 0;
+
+                try
+                {
+                    //кирпич
+                    fds.rfd = libnodave.openSocket(102, "192.168.37.102");
+                    fds.wfd = fds.rfd;
+                    if (fds.rfd > 0)
+                    {
+
+                        di = new libnodave.daveInterface(fds, "IF1", 0, libnodave.daveProtoISOTCP, libnodave.daveSpeed187k);
+                        di.setTimeout(500);
+                        dc = new libnodave.daveConnection(di, 0, 0, 2);
+
+                        if (0 == dc.connectPLC())
+                        {
+                            //Заменить данные
+                            res = dc.readBytes(libnodave.daveDB, 305, 88, 4, null);
+
+                            if (res == 0) //conection OK 
+                            {
+                                s23 = dc.getU32();
+
+                            }
                         }
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
@@ -1731,7 +1716,7 @@ namespace rail
             }
         }
 
-        private async void PLC_RZD()
+        private void PLC_RZD()
         {
             int s1 = 0, s2 = 0, s3 = 0, s4 = 0, s5 = 0, s16 = 0, s17 = 0, s18 = 0, s19 = 0, s20 = 0, s23 = 0, s24 = 0, s25 = 0;
             try /// подключение к ПРУ
@@ -1881,7 +1866,7 @@ namespace rail
 
             GetValueFromControllerByte(ref s6, ref s7, ref s8, ref s9, ref s10);
             GetValueFromControllerByte_SSS(ref s11, ref s12, ref s13, ref s14, ref s15, ref s16);
-            //TODO Тут добавить для s23 и для s16-19
+            GetValueFromControllerByteBrick(ref s23);
 
             UpdateData(new List<double> { s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s23, s24, s25});
         }
@@ -1900,7 +1885,6 @@ namespace rail
                 }
                 else
                 {
-                    bar.onError.Invoke();
                     Update_visualSilo();
                     return false;
                 }
@@ -1945,7 +1929,6 @@ namespace rail
                     }
                     else
                     {
-                        bar.onError.Invoke();
                         MessageBox.Show("Ошибка записи");
 
                         Update_visualSilo();
@@ -1964,7 +1947,6 @@ namespace rail
 
         private void ToolStripButton1_Click(object sender, EventArgs e)
         {
-
             fill_cb();
             GetData();
             Fg();
@@ -1979,16 +1961,8 @@ namespace rail
             //
             //PLC_RZD();
             Update_visualSilo();
-
-
         }
 
-        private void balance_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            UnsubscribeError();
-
-            bar.onError.Invoke();
-        }
     }
 }
     
