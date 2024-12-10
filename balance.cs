@@ -1265,7 +1265,7 @@ namespace rail
 
         private void Balance_Load(object sender, EventArgs e)
         {
-            //PLC_RZD();
+            PLC_RZD();
             //Thread.Sleep(5000);
             fill_cb();
             GetData();
@@ -1574,7 +1574,7 @@ namespace rail
                 try
                 {
                     //кирпич
-                    fds.rfd = libnodave.openSocket(102, "192.168.37.102");
+                    fds.rfd = libnodave.openSocket(102, "192.168.37.199");
                     fds.wfd = fds.rfd;
                     if (fds.rfd > 0)
                     {
@@ -1739,6 +1739,7 @@ namespace rail
 
                     try
                     {
+                        //ПРУ
                         fds.rfd = libnodave.openSocket(102, "192.168.37.139");
                         fds.wfd = fds.rfd;
                         if (fds.rfd > 0)
@@ -1798,7 +1799,6 @@ namespace rail
                                 if (res == 0) //conection OK 
                                 {
                                     s23 = dc.getU32();
-
                                 }
 
                                 res = dc.readBytes(libnodave.daveDB, 12, 128, 4, null);
@@ -1806,7 +1806,6 @@ namespace rail
                                 if (res == 0) //conection OK 
                                 {
                                     s24 = dc.getU32();
-
                                 }
 
                                 //res = dc.readBits(libnodave.daveDB, 160, 3890, 1, null);
