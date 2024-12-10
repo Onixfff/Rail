@@ -9,6 +9,7 @@ using System.Threading;
 //using ru.nvg79.connector;
 using DataUpdater;
 using System.Configuration;
+using S7.Net;
 
 namespace rail
 {
@@ -1721,6 +1722,16 @@ namespace rail
             int s1 = 0, s2 = 0, s3 = 0, s4 = 0, s5 = 0, s16 = 0, s17 = 0, s18 = 0, s19 = 0, s20 = 0, s23 = 0, s24 = 0, s25 = 0;
             try /// подключение к ПРУ
             {
+                S7.Net.Plc plc = new S7.Net.Plc(CpuType.S7300, "192.168.37.139", 1, 2);
+                plc.Open();
+                if(plc.IsConnected == false)
+                {
+                    MessageBox.Show("no");
+                }
+                if (plc.IsConnected == true)
+                {
+                    MessageBox.Show("ok");
+                }
                 libnodave.daveOSserialType fds;
                 libnodave.daveInterface di;
                 libnodave.daveConnection dc;

@@ -425,3 +425,5 @@ C:\Users\ING\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\bi
 C:\Users\ING\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.TrustInfo.xml
 C:\Users\ING\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.exe.manifest
 C:\Users\ING\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\obj\Debug\rail.application
+C:\Users\ING\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\bin\Debug\S7.Net.dll
+C:\Users\ING\YandexDisk-fff-fff01\sss\железная дорога\rail\rail\bin\Debug\S7.Net.xml

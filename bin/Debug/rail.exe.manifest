@@ -157,7 +157,19 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>3M6pl+05xV4GEIUy6MFpcZmfqZoZmxJUfzZnrdIGjqw=</dsig:DigestValue>
+        <dsig:DigestValue>vHGu/uZJRqFlWZ4wQaBQiceZbn2fGKM13x81uhVj84I=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="S7.Net.dll" size="98304">
+      <assemblyIdentity name="S7.Net" version="0.20.0.0" publicKeyToken="D5812D469E84C693" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>FPKX1Dph7PMtkK+m0aC0qK6CFFZ/8vYYvBDZE+uOmzU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
