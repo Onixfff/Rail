@@ -1401,23 +1401,15 @@ namespace rail
             ContextMenuStrip strip = (ContextMenuStrip)cms.Owner;
             Control owner = strip.SourceControl;
             string owner_nmae = owner.Name.ToString();
-            owner_nmae = owner_nmae.Remove(0, 1);
-            
-            switch (owner_nmae)
+            owner_nmae = owner_nmae.Remove(0, 1); 
+            if(owner_nmae == "21")
             {
-                case "21":
-                    owner_nmae = "23";
-                    break;
-                case "22":
-                    owner_nmae = "24";
-                    break;
-                case "23":
-                    owner_nmae = "25";
-                    break;
-                default:
-                    break;
+                owner_nmae
             }
+            else if (owner_nmae == "22")
+            {
 
+            }
             material form6 = new material();
             form6.Show();
             string material_name;
@@ -1448,22 +1440,6 @@ namespace rail
             Control owner = strip.SourceControl;
             string owner_nmae = owner.Name.ToString();
             owner_nmae = owner_nmae.Remove(0, 1);
-
-            switch (owner_nmae)
-            {
-                case "21":
-                    owner_nmae = "23";
-                    break;
-                case "22":
-                    owner_nmae = "24";
-                    break;
-                case "23":
-                    owner_nmae = "25";
-                    break;
-                default:
-                    break;
-            }
-
             string material_name;
             sendler form4 = new sendler();
             form4.Show();

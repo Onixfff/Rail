@@ -1,20 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using MySql;
+using System.Data.Odbc;
 using System.Threading;
 //using ru.nvg79.connector;
 using DataUpdater;
+using rail;
 using System.Configuration;
-using S7.Net;
-
+using System.Runtime.CompilerServices;
+using rail.BalanceController;
+using Mysqlx;
 namespace rail
 {
     public partial class balance : Form
     {
+        public static Action onUpdate;
+        public static Action onCompliteMove;
+        public static Action onErrorBar;
+
+        private Bar bar;
         //MySqlConnection mCon = new MySqlConnection("Database=u0550310_aeroblock; Server=31.31.196.234; port=3306; username=u0550_kornev; password=18061981Kornev; charset=utf8 ");
         MySqlConnection mCon = new MySqlConnection(ConfigurationManager.ConnectionStrings["234"].ConnectionString);
         MySqlCommand msd;
@@ -326,19 +338,23 @@ namespace rail
 
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
+                        bar.onProgress.Invoke();
                     }
                     else
                     {
+                        bar.onError.Invoke();
                     }
                 }
                 catch (Exception exp)
                 {
                     MessageBox.Show(exp.Message);
+                    bar.onError.Invoke();
                 }
             }
             catch (Exception exp)
             {
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
+                bar.onError.Invoke();
             }
         }
 
@@ -472,19 +488,23 @@ namespace rail
                         }
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
+                        bar.onProgress.Invoke();
                     }
                     else
                     {
+                        bar.onError.Invoke();
                     }
                 }
                 catch (Exception exp)
                 {
                     MessageBox.Show(exp.Message);
+                    bar.onError.Invoke();
                 }
             }
             catch (Exception exp)
             {
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
+                bar.onError.Invoke();
             }
         }
 
@@ -592,19 +612,23 @@ namespace rail
 
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
+                        bar.onProgress.Invoke();
                     }
                     else
                     {
+                        bar.onError.Invoke();
                     }
                 }
                 catch (Exception exp)
                 {
                     MessageBox.Show(exp.Message);
+                    bar.onError.Invoke();
                 }
             }
             catch (Exception exp)
             {
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
+                bar.onError.Invoke();
             }
         }
 
@@ -746,19 +770,23 @@ namespace rail
                         finally { mCon2.Close(); }
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
+                        bar.onProgress.Invoke();
                     }
                     else
                     {
+                        bar.onError.Invoke();
                     }
                 }
                 catch (Exception exp)
                 {
                     MessageBox.Show(exp.Message);
+                    bar.onError.Invoke();
                 }
             }
             catch (Exception exp)
             {
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
+                bar.onError.Invoke();
             }
         }
 
@@ -1057,6 +1085,22 @@ namespace rail
             }
         }
 
+        private void Bar()
+        {
+            progressBar1.Visible = true;
+
+            progressBar1.Value = 0;
+            progressBar1.Maximum = 100;
+
+            for (int i = 0; i < 100; i++)
+            {
+                progressBar1.Value = i;
+                Thread.Sleep(150);
+            }
+
+            progressBar1.Visible = false;
+        }
+
         private void ToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             pass pass = new pass();
@@ -1086,6 +1130,7 @@ namespace rail
                         if (owner_name == "11" | owner_name == "12" | owner_name == "13" | owner_name == "14" | owner_name == "15" | owner_name == "16")//сухие смеси
                             s11_16(owner_name);
 
+                        Bar();
                         GetData();
                         Update_visualSilo();
                     }
@@ -1138,7 +1183,7 @@ namespace rail
                     {
                         item.DefaultCellStyle.BackColor = Color.GreenYellow;
                     }
-                    if (item.Cells[1].Value.ToString() == "Кирпич")
+                    if(item.Cells[1].Value.ToString() == "Силус кирпича")
                     {
                         item.DefaultCellStyle.BackColor = Color.Moccasin;
                     }
@@ -1161,17 +1206,10 @@ namespace rail
 
         private void fill_group_box(Control parent, int id)
         {
-            try
-            {
-                int str = Convert.ToInt32(dataGridView1.Rows[id].Cells[5].Value.ToString());
-                parent.Controls["label_s" + (id + 1).ToString() + "_name"].Text = dataGridView1.Rows[id].Cells[3].Value.ToString();
-                parent.Controls["label_s" + (id + 1).ToString() + "_sender"].Text = dataGridView1.Rows[id].Cells[4].Value.ToString();
-                parent.Controls["label_s" + (id + 1).ToString() + "_balance"].Text = string.Format("{0:N0}", str);
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            int str = Convert.ToInt32( dataGridView1.Rows[id].Cells[5].Value.ToString());
+            parent.Controls["label_s" + (id + 1).ToString() + "_name"].Text = dataGridView1.Rows[id].Cells[3].Value.ToString();
+            parent.Controls["label_s" + (id + 1).ToString() + "_sender"].Text = dataGridView1.Rows[id].Cells[4].Value.ToString();
+            parent.Controls["label_s" + (id + 1).ToString() + "_balance"].Text = string.Format("{0:N0}",str );
 
             //string str2=string.Format("{0:N0}", str);
         }
@@ -1266,7 +1304,7 @@ namespace rail
 
         private void Balance_Load(object sender, EventArgs e)
         {
-            //PLC_RZD();
+            PLC_RZD();
             //Thread.Sleep(5000);
             fill_cb();
             GetData();
@@ -1280,6 +1318,7 @@ namespace rail
 
             comboBox1.Text = "1";
 
+            SubscribeError();
             Update_visualSilo();
         }
 
@@ -1316,6 +1355,26 @@ namespace rail
             {
                 return;
             }
+        }
+
+        private void SubscribeError()
+        {
+            onErrorBar += () => button1.Invoke((MethodInvoker)delegate
+            {
+                button1.Visible = true;
+            });
+
+            onErrorBar += () => MessageBox.Show("Ошибка перемещения");
+        }
+
+        private void UnsubscribeError()
+        {
+            onErrorBar -= () => button1.Invoke((MethodInvoker)delegate
+            {
+                button1.Visible = true;
+            });
+
+            onErrorBar -= () => MessageBox.Show("Ошибка перемещения");
         }
 
         private void ComboBox1_TextChanged(object sender, EventArgs e)
@@ -1363,6 +1422,18 @@ namespace rail
                     //Move_mas_pru("20", Convert.ToInt32(textBox_weight.Text));
                     //else
 
+                    onUpdate += GetData;
+                    onUpdate += Update_visualSilo;
+                    onUpdate += UnsubscribeUpdate;
+
+                    onCompliteMove += () => button1.Invoke((MethodInvoker)delegate
+                    {
+                        button1.Visible = true;
+                    });
+
+                    onCompliteMove += UnsubscribeComplite;
+
+                    bar.ShowBar();
 
                     if (source_id == "1" | source_id == "2" | source_id == "3" | source_id == "4" | source_id == "5" | source_id == "20")//ПРУ
                         await move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
@@ -1377,9 +1448,26 @@ namespace rail
                     //textBox_weight.Text = "";
                     
                     PLC_RZD();
-                    button1.Visible = true;
+
+                    //Bar();
                 }
             }
+        }
+
+        private void UnsubscribeComplite()
+        {
+            onCompliteMove -= UnsubscribeComplite;
+            onCompliteMove -= () => button1.Invoke((MethodInvoker) delegate
+            {
+                button1.Visible = true;
+            });
+        }
+
+        private void UnsubscribeUpdate()
+        {
+            onUpdate -= GetData;
+            onUpdate -= Update_visualSilo;
+            bar.onProgress.Invoke();
         }
 
         private void ComboBox_manufaktur_target_SelectedValueChanged(object sender, EventArgs e)
@@ -1401,23 +1489,7 @@ namespace rail
             ContextMenuStrip strip = (ContextMenuStrip)cms.Owner;
             Control owner = strip.SourceControl;
             string owner_nmae = owner.Name.ToString();
-            owner_nmae = owner_nmae.Remove(0, 1);
-            
-            switch (owner_nmae)
-            {
-                case "21":
-                    owner_nmae = "23";
-                    break;
-                case "22":
-                    owner_nmae = "24";
-                    break;
-                case "23":
-                    owner_nmae = "25";
-                    break;
-                default:
-                    break;
-            }
-
+            owner_nmae = owner_nmae.Remove(0, 1); 
             material form6 = new material();
             form6.Show();
             string material_name;
@@ -1448,22 +1520,6 @@ namespace rail
             Control owner = strip.SourceControl;
             string owner_nmae = owner.Name.ToString();
             owner_nmae = owner_nmae.Remove(0, 1);
-
-            switch (owner_nmae)
-            {
-                case "21":
-                    owner_nmae = "23";
-                    break;
-                case "22":
-                    owner_nmae = "24";
-                    break;
-                case "23":
-                    owner_nmae = "25";
-                    break;
-                default:
-                    break;
-            }
-
             string material_name;
             sendler form4 = new sendler();
             form4.Show();
@@ -1514,7 +1570,6 @@ namespace rail
 
                 try
                 {
-                    //Наверное сухие смеси
                     fds.rfd = libnodave.openSocket(102, "192.168.37.199");
                     fds.wfd = fds.rfd;
                     if (fds.rfd > 0)
@@ -1571,61 +1626,6 @@ namespace rail
                             }
                             //res = dc.readBits(libnodave.daveDB, 160, 3890, 1, null);
                             //MessageBox.Show("результат функции:" + res + " = " + libnodave.daveStrerror(res));
-                        }
-                        dc.disconnectPLC();
-                        libnodave.closeSocket(fds.rfd);
-                    }
-                    else
-                    {
-
-                    }
-                }
-                catch (Exception exp)
-                {
-                    MessageBox.Show(exp.Message);
-
-                }
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
-            }
-        }
-
-        private void GetValueFromControllerByteBrick(ref int s23)
-        {
-            libnodave.daveOSserialType fds;
-            libnodave.daveInterface di;
-            libnodave.daveConnection dc;
-
-            s23 = 0;
-
-            try
-            {
-                int res = 0;
-
-                try
-                {
-                    //кирпич
-                    fds.rfd = libnodave.openSocket(102, "192.168.37.199");
-                    fds.wfd = fds.rfd;
-                    if (fds.rfd > 0)
-                    {
-
-                        di = new libnodave.daveInterface(fds, "IF1", 0, libnodave.daveProtoISOTCP, libnodave.daveSpeed187k);
-                        di.setTimeout(500);
-                        dc = new libnodave.daveConnection(di, 0, 0, 2);
-
-                        if (0 == dc.connectPLC())
-                        {
-                            //Заменить данные
-                            res = dc.readBytes(libnodave.daveDB, 305, 88, 4, null);
-
-                            if (res == 0) //conection OK 
-                            {
-                                s23 = dc.getU32();
-
-                            }
                         }
                         dc.disconnectPLC();
                         libnodave.closeSocket(fds.rfd);
@@ -1749,21 +1749,11 @@ namespace rail
             }
         }
 
-        private void PLC_RZD()
+        private async void PLC_RZD()
         {
-            int s1 = 0, s2 = 0, s3 = 0, s4 = 0, s5 = 0, s16 = 0, s17 = 0, s18 = 0, s19 = 0, s20 = 0, s21 = 0, s22 = 0, s23 = 0, s24 = 0, s25 = 0;
+            int s1 = 0, s2 = 0, s3 = 0, s4 = 0, s5 = 0, s16 = 0, s17 = 0, s18 = 0, s19 = 0, s20 = 0, s23 = 0, s24 = 0, s25 = 0;
             try /// подключение к ПРУ
             {
-                S7.Net.Plc plc = new S7.Net.Plc(CpuType.S7300, "192.168.37.139", 0, 2);
-                plc.Open();
-                if(plc.IsConnected == false)
-                {
-                    MessageBox.Show("no");
-                }
-                if (plc.IsConnected == true)
-                {
-                    MessageBox.Show("ok");
-                }
                 libnodave.daveOSserialType fds;
                 libnodave.daveInterface di;
                 libnodave.daveConnection dc;
@@ -1782,7 +1772,6 @@ namespace rail
 
                     try
                     {
-                        //ПРУ
                         fds.rfd = libnodave.openSocket(102, "192.168.37.139");
                         fds.wfd = fds.rfd;
                         if (fds.rfd > 0)
@@ -1841,21 +1830,8 @@ namespace rail
 
                                 if (res == 0) //conection OK 
                                 {
-                                    s21 = dc.getU32();
-                                }
-
-                                res = dc.readBytes(libnodave.daveDB, 12, 12, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    s22 = dc.getU32();
-                                }
-
-                                res = dc.readBytes(libnodave.daveDB, 12, 124, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
                                     s23 = dc.getU32();
+
                                 }
 
                                 res = dc.readBytes(libnodave.daveDB, 12, 128, 4, null);
@@ -1863,6 +1839,7 @@ namespace rail
                                 if (res == 0) //conection OK 
                                 {
                                     s24 = dc.getU32();
+
                                 }
 
                                 //res = dc.readBits(libnodave.daveDB, 160, 3890, 1, null);
@@ -1922,7 +1899,7 @@ namespace rail
 
             GetValueFromControllerByte(ref s6, ref s7, ref s8, ref s9, ref s10);
             GetValueFromControllerByte_SSS(ref s11, ref s12, ref s13, ref s14, ref s15, ref s16);
-            GetValueFromControllerByteBrick(ref s23);
+            //TODO Тут добавить для s23 и для s16-19
 
             UpdateData(new List<double> { s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s23, s24, s25});
         }
@@ -1941,6 +1918,7 @@ namespace rail
                 }
                 else
                 {
+                    bar.onError.Invoke();
                     Update_visualSilo();
                     return false;
                 }
@@ -1965,15 +1943,13 @@ namespace rail
             int id;
             for (id = 0; id < var.Count; id++)
             {
-                string conSQL = null;
-
                 if (id >= 20)
                 {
-                    conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 2).ToString() + "');";
+                    string conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 2).ToString() + "');";
                 }
                 else
                 {
-                    conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 1).ToString() + "');";
+                    string conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 1).ToString() + "');";
                 }
                 MySqlCommand dsq = new MySqlCommand(conSQL, mCon);
                 try
@@ -1985,6 +1961,7 @@ namespace rail
                     }
                     else
                     {
+                        bar.onError.Invoke();
                         MessageBox.Show("Ошибка записи");
 
                         Update_visualSilo();
@@ -2003,6 +1980,7 @@ namespace rail
 
         private void ToolStripButton1_Click(object sender, EventArgs e)
         {
+
             fill_cb();
             GetData();
             Fg();
@@ -2017,8 +1995,16 @@ namespace rail
             //
             //PLC_RZD();
             Update_visualSilo();
+
+
         }
 
+        private void balance_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            UnsubscribeError();
+
+            bar.onError.Invoke();
+        }
     }
 }
     
