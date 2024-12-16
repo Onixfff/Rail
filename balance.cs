@@ -1266,8 +1266,7 @@ namespace rail
 
         private void Balance_Load(object sender, EventArgs e)
         {
-            //PLC_RZD();
-            //Thread.Sleep(5000);
+            PLC_RZD();
             fill_cb();
             GetData();
             Fg();
@@ -1754,16 +1753,6 @@ namespace rail
             int s1 = 0, s2 = 0, s3 = 0, s4 = 0, s5 = 0, s16 = 0, s17 = 0, s18 = 0, s19 = 0, s20 = 0, s21 = 0, s22 = 0, s23 = 0, s24 = 0, s25 = 0;
             try /// подключение к ПРУ
             {
-                S7.Net.Plc plc = new S7.Net.Plc(CpuType.S7300, "192.168.37.139", 0, 2);
-                plc.Open();
-                if(plc.IsConnected == false)
-                {
-                    MessageBox.Show("no");
-                }
-                if (plc.IsConnected == true)
-                {
-                    MessageBox.Show("ok");
-                }
                 libnodave.daveOSserialType fds;
                 libnodave.daveInterface di;
                 libnodave.daveConnection dc;
@@ -1771,18 +1760,8 @@ namespace rail
                 try
                 {
                     int res = 0;
-                    //byte[] buffer = new byte[mvByteValue];
-                    //byte[] swapBuffer = new byte[mvByteValue];
-                    //int s6, s7, s8, s9, s10;
-                    //s6 = Convert.ToDouble(plc.Read("db305.dbd88"));
-                    //s7 = Convert.ToDouble(plc.Read("db305.dbd92"));
-                    //s8 = Convert.ToDouble(plc.Read("db305.dbd96"));
-                    //s9 = Convert.ToDouble(plc.Read("db305.dbd84"));
-                    //s10 = Convert.ToDouble(plc.Read("db305.dbd80"));
-
                     try
                     {
-                        //ПРУ
                         fds.rfd = libnodave.openSocket(102, "192.168.37.139");
                         fds.wfd = fds.rfd;
                         if (fds.rfd > 0)
@@ -1864,9 +1843,6 @@ namespace rail
                                 {
                                     s24 = dc.getU32();
                                 }
-
-                                //res = dc.readBits(libnodave.daveDB, 160, 3890, 1, null);
-                                //MessageBox.Show("результат функции:" + res + " = " + libnodave.daveStrerror(res));
                             }
                             dc.disconnectPLC();
                             libnodave.closeSocket(fds.rfd);
@@ -1886,35 +1862,10 @@ namespace rail
                 {
                     MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
                 }
-                //Plc plc = new Plc(CpuType.S7300, "192.168.37.139", 0, 2);
-                //ErrorCode open = plc.Open();
-                ////Console.Write(plc.lastErrorCode + plc.lastErrorString);
-
-                //if (open == ErrorCode.NoError)
-                //{                     
-
-
-                //        //int batch_id = Convert.ToInt16(plc.Read("db44.dbw1424"));
-                //    s1 = Convert.ToDouble(plc.Read("db12.dbd100"));
-                //    s2 = Convert.ToDouble(plc.Read("db12.dbd104"));
-                //    s3 = Convert.ToDouble(plc.Read("db12.dbd108"));
-                //    s4 = Convert.ToDouble(plc.Read("db12.dbd112"));
-                //    s5 = Convert.ToDouble(plc.Read("db12.dbd116"));
-                //    int s21 = Convert.ToInt32(plc.Read("db12.dbd120"));
-                //    //s20 = Convert.ToDouble(plc.Read("db12.dbd120"));
-
-
-                //}
-                ////MessageBox.Show(plc.LastErrorCode + plc.LastErrorString);
-
-
-                //plc.Close();
-                //MessageBox.Show("Отключился");
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                //Logger.Log(ex.Message);
             }
 
             int min = int.MinValue;
