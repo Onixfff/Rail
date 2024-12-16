@@ -10,6 +10,10 @@ using System.Threading;
 using DataUpdater;
 using System.Configuration;
 using S7.Net;
+using System.Net.Http;
+using System.Linq;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace rail
 {
@@ -20,6 +24,11 @@ namespace rail
         MySqlCommand msd;
         private object label;
         string conSQL = ConfigurationManager.ConnectionStrings["234"].ConnectionString;
+
+        private static readonly HttpClient client = new HttpClient
+        {
+            BaseAddress = new Uri("https://192.168.100.100:5048")
+        };
 
         public balance()
         {
@@ -1748,124 +1757,115 @@ namespace rail
             }
         }
 
-        private void PLC_RZD()
+        private async void PLC_RZD()
         {
+            string _errorMessage;
+
             int s1 = 0, s2 = 0, s3 = 0, s4 = 0, s5 = 0, s16 = 0, s17 = 0, s18 = 0, s19 = 0, s20 = 0, s21 = 0, s22 = 0, s23 = 0, s24 = 0, s25 = 0;
-            try /// подключение к ПРУ
+            
+            try
             {
-                libnodave.daveOSserialType fds;
-                libnodave.daveInterface di;
-                libnodave.daveConnection dc;
+                var addresses = new List<int> { 100, 104, 108, 112, 116, 120, 124, 128 };
+                var ipAddress = "192.168.37.139";
+                var dbNumber = 12;
 
-                try
+                var cancellationToken = new CancellationTokenSource();
+                cancellationToken.CancelAfter(TimeSpan.FromSeconds(30)); // Отмена через 30 секунд
+
+                // Формируем строку запроса
+                var addressString = string.Join(",", addresses);
+                var requestUriString = $"/api/PLCPRU/GetDatePRU?ipAddress={ipAddress}&dbNumber={dbNumber}";
+
+
+                if (!client.DefaultRequestHeaders.Accept.Any(h => h.MediaType == "text/plain"))
                 {
-                    int res = 0;
-                    try
+                    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("text/plain"));
+                }
+
+                // Сериализуем тело запроса в JSON
+                var content = new StringContent(JsonConvert.SerializeObject(addresses), Encoding.UTF8, "application/json");
+
+                // Выполняем запрос
+                var response = await client.PostAsync(requestUriString, content, cancellationToken.Token);
+
+                // Проверяем успешность запроса
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    var values = JsonConvert.DeserializeObject<List<uint>>(jsonString);
+
+                    foreach (var item in values)
                     {
-                        fds.rfd = libnodave.openSocket(102, "192.168.37.139");
-                        fds.wfd = fds.rfd;
-                        if (fds.rfd > 0)
+                        if(s1 == 0)
                         {
-
-                            di = new libnodave.daveInterface(fds, "IF1", 0, libnodave.daveProtoISOTCP, libnodave.daveSpeed187k);
-                            di.setTimeout(500);
-                            dc = new libnodave.daveConnection(di, 0, 0, 2);
-                            if (0 == dc.connectPLC())
-
-                            {
-                                res = dc.readBytes(libnodave.daveDB, 12, 100, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    s1 = dc.getU32();
-
-                                }
-                                res = dc.readBytes(libnodave.daveDB, 12, 104, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                  s2 = dc.getU32();
-
-                                }
-                                res = dc.readBytes(libnodave.daveDB, 12, 108, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    s3 = dc.getU32();
-
-                                }
-                                res = dc.readBytes(libnodave.daveDB, 12, 112, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    s4 = dc.getU32();
-
-                                }
-                                res = dc.readBytes(libnodave.daveDB, 12, 116, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    s5 = dc.getU32();
-
-                                }
-                                res = dc.readBytes(libnodave.daveDB, 12, 120, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    s20 = dc.getU32();
-
-                                }
-
-                                res = dc.readBytes(libnodave.daveDB, 12, 124, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    s21 = dc.getU32();
-                                }
-
-                                res = dc.readBytes(libnodave.daveDB, 12, 12, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    s22 = dc.getU32();
-                                }
-
-                                res = dc.readBytes(libnodave.daveDB, 12, 124, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    s23 = dc.getU32();
-                                }
-
-                                res = dc.readBytes(libnodave.daveDB, 12, 128, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    s24 = dc.getU32();
-                                }
-                            }
-                            dc.disconnectPLC();
-                            libnodave.closeSocket(fds.rfd);
+                            s1 = (int)item;
+                            continue;
                         }
-                        else
+                        if(s2 == 0)
                         {
+                            s2 = (int)item;
+                            continue;
+
+                        }
+                        if (s3 == 0)
+                        {
+                            s3 = (int)item;
+                            continue;
+
+                        }
+                        if (s4 == 0)
+                        {
+                            s4 = (int)item;
+                            continue;
+
+                        }
+                        if (s5 == 0)
+                        {
+                            s5 = (int)item;
+                            continue;
+
+                        }
+                        if (s21 == 0)
+                        {
+                            s21 = (int)item;
+                            continue;
+
+                        }
+                        if (s22 == 0)
+                        {
+                            s22 = (int)item;
+                            continue;
 
                         }
                     }
-                    catch (Exception exp)
-                    {
-                        MessageBox.Show(exp.Message);
-
-                    }
+                    // Логируем успешный результат
+                    Console.WriteLine("Данные успешно получены: {Values}", string.Join(", ", values));
                 }
-                catch (Exception exp)
+                else
                 {
-                    MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
+                    // Логируем ошибку HTTP
+                    _errorMessage = $"Ошибка HTTP-запроса: {(int)response.StatusCode} - {response.ReasonPhrase}";
+                    Console.WriteLine(_errorMessage);
+                    MessageBox.Show(_errorMessage);
                 }
+            }
+            catch (HttpRequestException ex)
+            {
+                _errorMessage = $"Ошибка HTTP-запроса: {ex.Message}";
+                Console.WriteLine(_errorMessage);
+                MessageBox.Show(_errorMessage);
+            }
+            catch (TaskCanceledException ex)
+            {
+                _errorMessage = "Запрос был отменён (таймаут или отмена токеном).";
+                Console.WriteLine(_errorMessage);
+                MessageBox.Show(_errorMessage);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                _errorMessage = "Произошла неожиданная ошибка.";
+                Console.WriteLine(_errorMessage);
+                MessageBox.Show(_errorMessage);
             }
 
             int min = int.MinValue;
