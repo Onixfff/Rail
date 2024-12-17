@@ -14,6 +14,7 @@ using System.Net.Http;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Text;
+using rail.Models;
 
 namespace rail
 {
@@ -1765,7 +1766,7 @@ namespace rail
             
             try
             {
-                var addresses = new List<int> { 100, 104, 108, 112, 116, 120, 124, 128 };
+                List<int> addresses = new List<int> { 100, 104, 108, 112, 116, 120, 124, 128 };
                 var ipAddress = "192.168.37.139";
                 var dbNumber = 12;
 
@@ -1792,54 +1793,120 @@ namespace rail
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonString = await response.Content.ReadAsStringAsync();
-                    var values = JsonConvert.DeserializeObject<List<uint>>(jsonString);
+                    var adresses = JsonConvert.DeserializeObject<List<Adress>>(jsonString);
+                    int resultParse = 0;
+                    bool isComliteParse;
 
-                    foreach (var item in values)
+                    foreach (var date in adresses)
                     {
-                        if(s1 == 0)
+                        foreach (var adres in addresses)
                         {
-                            s1 = (int)item;
-                            continue;
-                        }
-                        if(s2 == 0)
-                        {
-                            s2 = (int)item;
-                            continue;
+                            switch (adres)
+                            {
+                                case 100:
+                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
+                                    
+                                    if (isComliteParse)
+                                    {
+                                        s1 = resultParse;
+                                    }
+                                    else
+                                    {
+                                        s1 = 0;
+                                    }
+                                    break;
+                                case 104:
+                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
 
-                        }
-                        if (s3 == 0)
-                        {
-                            s3 = (int)item;
-                            continue;
+                                    if (isComliteParse)
+                                    {
+                                        s2 = resultParse;
+                                    }
+                                    else
+                                    {
+                                        s2 = 0;
+                                    }
+                                    break;
+                                case 108:
+                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
 
-                        }
-                        if (s4 == 0)
-                        {
-                            s4 = (int)item;
-                            continue;
+                                    if (isComliteParse)
+                                    {
+                                        s3 = resultParse;
+                                    }
+                                    else
+                                    {
+                                        s3 = 0;
+                                    }
+                                    break;
+                                case 112:
+                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
 
-                        }
-                        if (s5 == 0)
-                        {
-                            s5 = (int)item;
-                            continue;
+                                    if (isComliteParse)
+                                    {
+                                        s4 = resultParse;
+                                    }
+                                    else
+                                    {
+                                        s4 = 0;
+                                    }
+                                    break;
+                                case 116:
+                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
 
-                        }
-                        if (s21 == 0)
-                        {
-                            s21 = (int)item;
-                            continue;
+                                    if (isComliteParse)
+                                    {
+                                        s5 = resultParse;
+                                    }
+                                    else
+                                    {
+                                        s5 = 0;
+                                    }
+                                    break;
+                                case 120:
+                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
 
-                        }
-                        if (s22 == 0)
-                        {
-                            s22 = (int)item;
-                            continue;
+                                    if (isComliteParse)
+                                    {
+                                        s20 = resultParse;
+                                    }
+                                    else
+                                    {
+                                        s21 = 0;
+                                    }
+                                    break;
+                                case 124:
+                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
 
+                                    if (isComliteParse)
+                                    {
+                                        s21 = resultParse;
+                                    }
+                                    else
+                                    {
+                                        s21 = 0;
+                                    }
+                                    break;
+                                case 128:
+                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
+
+                                    if (isComliteParse)
+                                    {
+                                        s22 = resultParse;
+                                    }
+                                    else
+                                    {
+                                        s22 = 0;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
+
                     // Логируем успешный результат
-                    Console.WriteLine("Данные успешно получены: {Values}", string.Join(", ", values));
+                    Console.WriteLine("Данные успешно получены: {Values}", string.Join(", ", adresses));
                 }
                 else
                 {
