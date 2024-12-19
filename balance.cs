@@ -15,6 +15,8 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.Text;
 using rail.Models;
+using Org.BouncyCastle.Bcpg;
+using Google.Protobuf.WellKnownTypes;
 
 namespace rail
 {
@@ -1758,15 +1760,50 @@ namespace rail
             }
         }
 
-        private async void PLC_RZD()
+        private async void UpdatePLC()
+        {
+            //ПРУ
+            List<GrouBoxS> grouBoxSPZD = new List<GrouBoxS>() {new GrouBoxS(s1, 100), new GrouBoxS(s2, 104), new GrouBoxS(s3, 108), 
+                new GrouBoxS(s4, 112), new GrouBoxS(s5, 116), new GrouBoxS(s20, 120),new GrouBoxS(s21, 124), new GrouBoxS(s22, 128)};
+            //Газобетон
+            List<GrouBoxS> grouBoxSDaerocrete = new List<GrouBoxS>() { new GrouBoxS(s6), new GrouBoxS(s7), new GrouBoxS(s8), new GrouBoxS(s9), new GrouBoxS(s10) };
+            //Сухие смеси
+            List<GrouBoxS> grouBoxSDryMixes = new List<GrouBoxS>() { new GrouBoxS(s6), new GrouBoxS(s7), new GrouBoxS(s8), new GrouBoxS(s9), new GrouBoxS(s10) };
+
+            PLC_RZD(grouBoxSPZD);
+            GetValueFromControllerByte(ref s6, ref s7, ref s8, ref s9, ref s10);
+            GetValueFromControllerByte_SSS(ref s11, ref s12, ref s13, ref s14, ref s15, ref s16);
+
+            List<GrouBoxS> fullItems = new List<GrouBoxS>();
+            fullItems.AddRange(grouBoxSPZD);
+            fullItems.AddRange(grouBoxSDaerocrete);
+            fullItems.AddRange(grouBoxSDryMixes);
+            
+            List<double> value = new List<double>();
+            foreach (var item in fullItems)
+            {
+                value.Add(item.GetTextInt());
+            }
+
+            UpdateData(value);
+        }
+
+        private async void PLC_RZD(List<GrouBoxS> grouBoxS)
         {
             string _errorMessage;
+            List<int> addresses = new List<int>();
 
-            int s1 = 0, s2 = 0, s3 = 0, s4 = 0, s5 = 0, s16 = 0, s17 = 0, s18 = 0, s19 = 0, s20 = 0, s21 = 0, s22 = 0, s23 = 0, s24 = 0, s25 = 0;
-            
+            foreach (var item in grouBoxS)
+            {
+                var elementAdress = item.GetAdress();
+
+                if (elementAdress != 0 && elementAdress != default)
+                {
+                    addresses.Add(elementAdress);
+                }
+            }
             try
             {
-                List<int> addresses = new List<int> { 100, 104, 108, 112, 116, 120, 124, 128 };
                 var ipAddress = "192.168.37.139";
                 var dbNumber = 12;
 
@@ -1799,108 +1836,17 @@ namespace rail
 
                     foreach (var date in adresses)
                     {
-                        foreach (var adres in addresses)
+                        foreach (var item in grouBoxS)
                         {
-                            switch (adres)
+                            isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
+
+                            if (isComliteParse)
                             {
-                                case 100:
-                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
-                                    
-                                    if (isComliteParse)
-                                    {
-                                        s1 = resultParse;
-                                    }
-                                    else
-                                    {
-                                        s1 = 0;
-                                    }
-                                    break;
-                                case 104:
-                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
-
-                                    if (isComliteParse)
-                                    {
-                                        s2 = resultParse;
-                                    }
-                                    else
-                                    {
-                                        s2 = 0;
-                                    }
-                                    break;
-                                case 108:
-                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
-
-                                    if (isComliteParse)
-                                    {
-                                        s3 = resultParse;
-                                    }
-                                    else
-                                    {
-                                        s3 = 0;
-                                    }
-                                    break;
-                                case 112:
-                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
-
-                                    if (isComliteParse)
-                                    {
-                                        s4 = resultParse;
-                                    }
-                                    else
-                                    {
-                                        s4 = 0;
-                                    }
-                                    break;
-                                case 116:
-                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
-
-                                    if (isComliteParse)
-                                    {
-                                        s5 = resultParse;
-                                    }
-                                    else
-                                    {
-                                        s5 = 0;
-                                    }
-                                    break;
-                                case 120:
-                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
-
-                                    if (isComliteParse)
-                                    {
-                                        s20 = resultParse;
-                                    }
-                                    else
-                                    {
-                                        s21 = 0;
-                                    }
-                                    break;
-                                case 124:
-                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
-
-                                    if (isComliteParse)
-                                    {
-                                        s21 = resultParse;
-                                    }
-                                    else
-                                    {
-                                        s21 = 0;
-                                    }
-                                    break;
-                                case 128:
-                                    isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
-
-                                    if (isComliteParse)
-                                    {
-                                        s22 = resultParse;
-                                    }
-                                    else
-                                    {
-                                        s22 = 0;
-                                    }
-                                    break;
-                                default:
-                                    break;
+                                item.SetText(resultParse.ToString(), date._addres);
+                            }
+                            else
+                            {
+                                item.SetText(-, date._addres);
                             }
                         }
                     }
@@ -1934,15 +1880,6 @@ namespace rail
                 Console.WriteLine(_errorMessage);
                 MessageBox.Show(_errorMessage);
             }
-
-            int min = int.MinValue;
-            int s6 = min, s7 = min, s8 = min, s9 = min, s10 = min, s11= min, s12 = min, s13 = min, s14 = min, s15 = min;
-
-            GetValueFromControllerByte(ref s6, ref s7, ref s8, ref s9, ref s10);
-            GetValueFromControllerByte_SSS(ref s11, ref s12, ref s13, ref s14, ref s15, ref s16);
-            GetValueFromControllerByteBrick(ref s23);
-
-            UpdateData(new List<double> { s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s23, s24, s25});
         }
 
         private bool UpdateData(int id, double value)
