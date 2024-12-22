@@ -17,6 +17,7 @@ using System.Text;
 using rail.Models;
 using Org.BouncyCastle.Bcpg;
 using Google.Protobuf.WellKnownTypes;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace rail
 {
@@ -1241,7 +1242,7 @@ namespace rail
 
         private void Update_visualSilo()
         {
-            List<GroupBox> gb = new List<GroupBox>
+            List<System.Windows.Forms.GroupBox> gb = new List<System.Windows.Forms.GroupBox>
             {
                 s1,
                 s2,
@@ -1278,7 +1279,7 @@ namespace rail
 
         private void Balance_Load(object sender, EventArgs e)
         {
-            PLC_RZD();
+            UpdatePLC();
             fill_cb();
             GetData();
             Fg();
@@ -1386,8 +1387,8 @@ namespace rail
                     //await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text))); 
                     //if (source_id == "17" | source_id == "18" | source_id == "19" | source_id == "16" | source_id == "15")//сухие смеси
                     //textBox_weight.Text = "";
-                    
-                    PLC_RZD();
+
+                    UpdatePLC();
                     button1.Visible = true;
                 }
             }
@@ -1658,137 +1659,7 @@ namespace rail
             }
         }
 
-        public void GetValueFromControllerByte(ref int s6, ref int s7, ref int s8, ref int s9, ref int s10)
-        {
-            libnodave.daveOSserialType fds;
-            libnodave.daveInterface di;
-            libnodave.daveConnection dc;
-
-            s10 = 0;
-            s6 = 0;
-            s7 = 0;
-            s8 = 0;
-            s9 = 0;
-            try
-            {
-                int res = 0;
-                //byte[] buffer = new byte[mvByteValue];
-                //byte[] swapBuffer = new byte[mvByteValue];
-                //int s6, s7, s8, s9, s10;
-                //s6 = Convert.ToDouble(plc.Read("db305.dbd88"));
-                //s7 = Convert.ToDouble(plc.Read("db305.dbd92"));
-                //s8 = Convert.ToDouble(plc.Read("db305.dbd96"));
-                //s9 = Convert.ToDouble(plc.Read("db305.dbd84"));
-                //s10 = Convert.ToDouble(plc.Read("db305.dbd80"));
-
-                try
-                {
-                    fds.rfd = libnodave.openSocket(102, "192.168.37.102");
-                    fds.wfd = fds.rfd;
-                    if (fds.rfd > 0)
-                    {
-
-                        di = new libnodave.daveInterface(fds, "IF1", 0, libnodave.daveProtoISOTCP, libnodave.daveSpeed187k);
-                        di.setTimeout(500);
-                        dc = new libnodave.daveConnection(di, 0, 0, 2);
-                        if (0 == dc.connectPLC())
-
-                        {
-                            res = dc.readBytes(libnodave.daveDB, 305, 88, 4, null);
-
-                            if (res == 0) //conection OK 
-                            {
-                                s7 = dc.getU32();
-
-                            }
-                            res = dc.readBytes(libnodave.daveDB, 305, 92, 4, null);
-
-                            if (res == 0) //conection OK 
-                            {
-                                s6 = dc.getU32();
-
-                            }
-                            res = dc.readBytes(libnodave.daveDB, 305, 96, 4, null);
-
-                            if (res == 0) //conection OK 
-                            {
-                                s8 = dc.getU32();
-
-                            }
-                            res = dc.readBytes(libnodave.daveDB, 305, 84, 4, null);
-
-                            if (res == 0) //conection OK 
-                            {
-                                s10 = dc.getU32();
-
-                            }
-                            res = dc.readBytes(libnodave.daveDB, 305, 80, 4, null);
-
-                            if (res == 0) //conection OK 
-                            {
-                                s9 = dc.getU32();
-
-                            }
-                            //int a = 0;
-                            //a= libnodave.daveSwapIed_32(a+44513);
-                            //res=dc.writeBytes(libnodave.daveDB, 305, 92, 4, BitConverter.GetBytes(a));
-
-                            //res = dc.readBits(libnodave.daveDB, 160, 3890, 1, null);
-                            //MessageBox.Show("результат функции:" + res + " = " + libnodave.daveStrerror(res));
-
-
-
-
-                        }
-                        dc.disconnectPLC();
-                        libnodave.closeSocket(fds.rfd);
-                    }
-                    else
-                    {
-
-                    }
-                }
-                catch (Exception exp)
-                {
-                    MessageBox.Show(exp.Message);
-
-                }
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
-            }
-        }
-
-        private async void UpdatePLC()
-        {
-            //ПРУ
-            List<GrouBoxS> grouBoxSPZD = new List<GrouBoxS>() {new GrouBoxS(s1, 100), new GrouBoxS(s2, 104), new GrouBoxS(s3, 108), 
-                new GrouBoxS(s4, 112), new GrouBoxS(s5, 116), new GrouBoxS(s20, 120),new GrouBoxS(s21, 124), new GrouBoxS(s22, 128)};
-            //Газобетон
-            List<GrouBoxS> grouBoxSDaerocrete = new List<GrouBoxS>() { new GrouBoxS(s6), new GrouBoxS(s7), new GrouBoxS(s8), new GrouBoxS(s9), new GrouBoxS(s10) };
-            //Сухие смеси
-            List<GrouBoxS> grouBoxSDryMixes = new List<GrouBoxS>() { new GrouBoxS(s6), new GrouBoxS(s7), new GrouBoxS(s8), new GrouBoxS(s9), new GrouBoxS(s10) };
-
-            PLC_RZD(grouBoxSPZD);
-            GetValueFromControllerByte(ref s6, ref s7, ref s8, ref s9, ref s10);
-            GetValueFromControllerByte_SSS(ref s11, ref s12, ref s13, ref s14, ref s15, ref s16);
-
-            List<GrouBoxS> fullItems = new List<GrouBoxS>();
-            fullItems.AddRange(grouBoxSPZD);
-            fullItems.AddRange(grouBoxSDaerocrete);
-            fullItems.AddRange(grouBoxSDryMixes);
-            
-            List<double> value = new List<double>();
-            foreach (var item in fullItems)
-            {
-                value.Add(item.GetTextInt());
-            }
-
-            UpdateData(value);
-        }
-
-        private async void PLC_RZD(List<GrouBoxS> grouBoxS)
+        public async Task GetValueFromControllerByteAsync(List<GrouBoxS> grouBoxS, string ipAddress, int dbNumber)
         {
             string _errorMessage;
             List<int> addresses = new List<int>();
@@ -1804,9 +1675,6 @@ namespace rail
             }
             try
             {
-                var ipAddress = "192.168.37.139";
-                var dbNumber = 12;
-
                 var cancellationToken = new CancellationTokenSource();
                 cancellationToken.CancelAfter(TimeSpan.FromSeconds(30)); // Отмена через 30 секунд
 
@@ -1846,7 +1714,7 @@ namespace rail
                             }
                             else
                             {
-                                item.SetText(-, date._addres);
+                                item.SetText("-", date._addres);
                             }
                         }
                     }
@@ -1878,6 +1746,159 @@ namespace rail
             {
                 _errorMessage = "Произошла неожиданная ошибка.";
                 Console.WriteLine(_errorMessage);
+                MessageBox.Show(_errorMessage);
+            }
+        }
+
+        private async void UpdatePLC()
+        {
+            //Сухие смеси
+            List<GrouBoxS> grouBoxSDryMixes = new List<GrouBoxS>()
+            {
+                new GrouBoxS(s6,11),
+                new GrouBoxS(s7,11),
+                new GrouBoxS(s8,11),
+                new GrouBoxS(s9,11),
+                new GrouBoxS(s10,11)
+            };
+
+            //Газобетонs
+            List<GrouBoxS> grouBoxSDaerocrete = new List<GrouBoxS>() 
+            {
+                new GrouBoxS(s6, 94),
+                new GrouBoxS(s7, 88),
+                new GrouBoxS(s8, 96),
+                new GrouBoxS(s9, 80),
+                new GrouBoxS(s10, 84)
+            };
+
+            //ПРУ
+            List<GrouBoxS> grouBoxSPZD = new List<GrouBoxS>() 
+            {
+                new GrouBoxS(s1, 100),
+                new GrouBoxS(s2, 104),
+                new GrouBoxS(s3, 108),
+                new GrouBoxS(s4, 112),
+                new GrouBoxS(s5, 116),
+                new GrouBoxS(s20, 120),
+                new GrouBoxS(s21, 124),
+                new GrouBoxS(s22, 128) 
+            };
+ 
+            await PLC_RZDAsync(grouBoxSPZD, "192.168.37.139", 12);
+            await PLC_RZDAsync(grouBoxSDaerocrete, "192.168.37.102", 305);
+            await PLC_RZDAsync(grouBoxSDryMixes, "192.168.37.199", 305);
+            //GetValueFromControllerByte_SSS();
+
+            //Делаю компановку данных
+            List<GrouBoxS> fullItems = new List<GrouBoxS>();
+            fullItems.AddRange(grouBoxSPZD);
+            fullItems.AddRange(grouBoxSDaerocrete);
+            fullItems.AddRange(grouBoxSDaerocrete);
+            //fullItems.AddRange(grouBoxSDryMixes);
+
+            //Сгрупировываю все данные
+            List<double> value = new List<double>();
+
+            foreach (var item in fullItems)
+            {
+                value.Add(item.GetTextInt());
+            }
+
+            UpdateData(value);
+        }
+
+        private async Task PLC_RZDAsync(List<GrouBoxS> grouBoxS, string ipAddress, int dbNumber)
+        {
+            string _errorMessage;
+            List<int> addresses = new List<int>();
+
+            foreach (var item in grouBoxS)
+            {
+                var elementAdress = item.GetAdress();
+
+                if (elementAdress != 0 && elementAdress != default)
+                {
+                    addresses.Add(elementAdress);
+                }
+            }
+            try
+            {
+                var cancellationToken = new CancellationTokenSource();
+                cancellationToken.CancelAfter(TimeSpan.FromSeconds(30)); // Отмена через 30 секунд
+
+                // Формируем строку запроса
+                var addressString = string.Join(",", addresses);
+                var requestUriString = $"/api/PLCPRU/GetDatePRU?ipAddress={ipAddress}&dbNumber={dbNumber}";
+
+
+                if (!client.DefaultRequestHeaders.Accept.Any(h => h.MediaType == "text/plain"))
+                {
+                    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("text/plain"));
+                }
+
+                // Сериализуем тело запроса в JSON
+                var content = new StringContent(JsonConvert.SerializeObject(addresses), Encoding.UTF8, "application/json");
+
+                // Выполняем запрос
+                var response = await client.PostAsync(requestUriString, content, cancellationToken.Token);
+
+                // Проверяем успешность запроса
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    var adresses = JsonConvert.DeserializeObject<List<AdressDto>>(jsonString);
+                    int resultParse = 0;
+                    bool isComliteParse;
+
+                    foreach (var date in adresses)
+                    {
+                        foreach (var item in grouBoxS)
+                        {
+                            if (date.Addres == item.GetAdress())
+                            {
+                                isComliteParse = int.TryParse(date.ConvertToAdress()._value.ToString(), out resultParse);
+
+                                if (isComliteParse)
+                                {
+                                    item.SetText(resultParse.ToString(), date.ConvertToAdress()._addres);
+                                    break;
+                                }
+                                else
+                                {
+                                    item.SetText("0", date.ConvertToAdress()._addres);
+                                }
+                                break;
+                            }
+                        }
+                    }
+
+                    // Логируем успешный результат
+                }
+                else
+                {
+                    // Логируем ошибку HTTP
+                    _errorMessage = $"Ошибка HTTP-запроса: {(int)response.StatusCode} - {response.ReasonPhrase}";
+                    Console.WriteLine(_errorMessage);
+                    MessageBox.Show(_errorMessage);
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                _errorMessage = $"Ошибка HTTP-запроса: {ex.Message}";
+                Console.WriteLine(_errorMessage);
+                MessageBox.Show(_errorMessage);
+            }
+            catch (TaskCanceledException ex)
+            {
+                _errorMessage = "Запрос был отменён (таймаут или отмена токеном).";
+                Console.WriteLine(_errorMessage);
+                MessageBox.Show(_errorMessage);
+            }
+            catch (Exception ex)
+            {
+                _errorMessage = "Произошла неожиданная ошибка.";
+                Console.WriteLine(_errorMessage + "\n" + ex.Message);
                 MessageBox.Show(_errorMessage);
             }
         }

@@ -2,7 +2,7 @@
 
 namespace rail.Models
 {
-    internal class GrouBoxS
+    public class GrouBoxS
     {
         private GroupBox _name = default;
         private int _adress = default;
@@ -15,7 +15,7 @@ namespace rail.Models
 
         public int GetTextInt()
         {
-            if (_name == null)
+            if (_name != null)
             {
                 bool isCompliteParce = int.TryParse(_name.Text, out int result);
                 if (isCompliteParce)
