@@ -1077,9 +1077,8 @@ namespace rail
             pass.button_pass.MouseClick += (senderSlave, eSlave) =>
             {
                 if (pass.textBox_pass.Text == "08082014")
-                {
-                    pass.Close();
-                    DialogResult result = MessageBox.Show("Действительно обнулить силос? ", "Обнуление силоса", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                { 
+                    DialogResult result  = MessageBox.Show("Действительно обнулить силос? ", "Обнуление силоса", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                     if (result == DialogResult.No)
                     {
                         return;
@@ -1500,267 +1499,10 @@ namespace rail
 
         }
 
-        public void GetValueFromControllerByte_SSS(ref int s11, ref int s12, ref int s13, ref int s14, ref int s15, ref int s16)
-        {
-            libnodave.daveOSserialType fds;
-            libnodave.daveInterface di;
-            libnodave.daveConnection dc;
-
-            s16 = 0;
-            s15 = 0;
-            s14 = 0;
-            s13 = 0;
-            s12 = 0;
-            s11 = 0;
-            try
-            {
-                int res = 0;
-                //byte[] buffer = new byte[mvByteValue];
-                //byte[] swapBuffer = new byte[mvByteValue];
-                //int s6, s7, s8, s9, s10;
-                //s6 = Convert.ToDouble(plc.Read("db305.dbd88"));
-                //s7 = Convert.ToDouble(plc.Read("db305.dbd92"));
-                //s8 = Convert.ToDouble(plc.Read("db305.dbd96"));
-                //s9 = Convert.ToDouble(plc.Read("db305.dbd84"));
-                //s10 = Convert.ToDouble(plc.Read("db305.dbd80"));
-
-                try
-                {
-                    //Наверное сухие смеси
-                    fds.rfd = libnodave.openSocket(102, "192.168.37.199");
-                    fds.wfd = fds.rfd;
-                    if (fds.rfd > 0)
-                    {
-
-                        di = new libnodave.daveInterface(fds, "IF1", 0, libnodave.daveProtoISOTCP, libnodave.daveSpeed187k);
-                        di.setTimeout(500);
-                        dc = new libnodave.daveConnection(di, 0, 0, 2);
-                        if (0 == dc.connectPLC())
-
-                        {
-                            res = dc.readBytes(libnodave.daveDB, 10, 0, 4, null);
-
-                            if (res == 0) //conection OK 
-                            {
-                                s11 = dc.getU32();
-
-                            }
-                            res = dc.readBytes(libnodave.daveDB, 10, 4, 4, null);
-
-                            if (res == 0) //conection OK 
-                            {
-                                s12 = dc.getU32();
-
-                            }
-                            res = dc.readBytes(libnodave.daveDB, 10, 8, 4, null);
-
-                            if (res == 0) //conection OK 
-                            {
-                                s13 = dc.getU32();
-
-                            }
-                            res = dc.readBytes(libnodave.daveDB, 10, 12, 4, null);
-
-                            if (res == 0) //conection OK 
-                            {
-                                s14 = dc.getU32();
-
-                            }
-                            res = dc.readBytes(libnodave.daveDB, 10, 16, 4, null);
-
-                            if (res == 0) //conection OK 
-                            {
-                                s15 = dc.getU32();
-
-                            }
-                            ///TODO Проверить адрес bity для 16
-                            res = dc.readBytes(libnodave.daveDB, 10, 20, 4, null);
-
-                            if (res == 0) //conection OK 
-                            {
-                                s16 = dc.getU32();
-
-                            }
-                            //res = dc.readBits(libnodave.daveDB, 160, 3890, 1, null);
-                            //MessageBox.Show("результат функции:" + res + " = " + libnodave.daveStrerror(res));
-                        }
-                        dc.disconnectPLC();
-                        libnodave.closeSocket(fds.rfd);
-                    }
-                    else
-                    {
-
-                    }
-                }
-                catch (Exception exp)
-                {
-                    MessageBox.Show(exp.Message);
-
-                }
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
-            }
-        }
-
-        private void GetValueFromControllerByteBrick(ref int s23)
-        {
-            libnodave.daveOSserialType fds;
-            libnodave.daveInterface di;
-            libnodave.daveConnection dc;
-
-            s23 = 0;
-
-            try
-            {
-                int res = 0;
-
-                try
-                {
-                    //кирпич
-                    fds.rfd = libnodave.openSocket(102, "192.168.37.199");
-                    fds.wfd = fds.rfd;
-                    if (fds.rfd > 0)
-                    {
-
-                        di = new libnodave.daveInterface(fds, "IF1", 0, libnodave.daveProtoISOTCP, libnodave.daveSpeed187k);
-                        di.setTimeout(500);
-                        dc = new libnodave.daveConnection(di, 0, 0, 2);
-
-                        if (0 == dc.connectPLC())
-                        {
-                            //Заменить данные
-                            res = dc.readBytes(libnodave.daveDB, 305, 88, 4, null);
-
-                            if (res == 0) //conection OK 
-                            {
-                                s23 = dc.getU32();
-
-                            }
-                        }
-                        dc.disconnectPLC();
-                        libnodave.closeSocket(fds.rfd);
-                    }
-                    else
-                    {
-
-                    }
-                }
-                catch (Exception exp)
-                {
-                    MessageBox.Show(exp.Message);
-
-                }
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
-            }
-        }
-
-        public async Task GetValueFromControllerByteAsync(List<GrouBoxS> grouBoxS, string ipAddress, int dbNumber)
-        {
-            string _errorMessage;
-            List<int> addresses = new List<int>();
-
-            foreach (var item in grouBoxS)
-            {
-                var elementAdress = item.GetAdress();
-
-                if (elementAdress != 0 && elementAdress != default)
-                {
-                    addresses.Add(elementAdress);
-                }
-            }
-            try
-            {
-                var cancellationToken = new CancellationTokenSource();
-                cancellationToken.CancelAfter(TimeSpan.FromSeconds(30)); // Отмена через 30 секунд
-
-                // Формируем строку запроса
-                var addressString = string.Join(",", addresses);
-                var requestUriString = $"/api/PLCPRU/GetDatePRU?ipAddress={ipAddress}&dbNumber={dbNumber}";
-
-
-                if (!client.DefaultRequestHeaders.Accept.Any(h => h.MediaType == "text/plain"))
-                {
-                    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("text/plain"));
-                }
-
-                // Сериализуем тело запроса в JSON
-                var content = new StringContent(JsonConvert.SerializeObject(addresses), Encoding.UTF8, "application/json");
-
-                // Выполняем запрос
-                var response = await client.PostAsync(requestUriString, content, cancellationToken.Token);
-
-                // Проверяем успешность запроса
-                if (response.IsSuccessStatusCode)
-                {
-                    var jsonString = await response.Content.ReadAsStringAsync();
-                    var adresses = JsonConvert.DeserializeObject<List<Adress>>(jsonString);
-                    int resultParse = 0;
-                    bool isComliteParse;
-
-                    foreach (var date in adresses)
-                    {
-                        foreach (var item in grouBoxS)
-                        {
-                            isComliteParse = int.TryParse(date._value.ToString(), out resultParse);
-
-                            if (isComliteParse)
-                            {
-                                item.SetText(resultParse.ToString(), date._addres);
-                            }
-                            else
-                            {
-                                item.SetText("-", date._addres);
-                            }
-                        }
-                    }
-
-                    // Логируем успешный результат
-                    Console.WriteLine("Данные успешно получены: {Values}", string.Join(", ", adresses));
-                }
-                else
-                {
-                    // Логируем ошибку HTTP
-                    _errorMessage = $"Ошибка HTTP-запроса: {(int)response.StatusCode} - {response.ReasonPhrase}";
-                    Console.WriteLine(_errorMessage);
-                    MessageBox.Show(_errorMessage);
-                }
-            }
-            catch (HttpRequestException ex)
-            {
-                _errorMessage = $"Ошибка HTTP-запроса: {ex.Message}";
-                Console.WriteLine(_errorMessage);
-                MessageBox.Show(_errorMessage);
-            }
-            catch (TaskCanceledException ex)
-            {
-                _errorMessage = "Запрос был отменён (таймаут или отмена токеном).";
-                Console.WriteLine(_errorMessage);
-                MessageBox.Show(_errorMessage);
-            }
-            catch (Exception ex)
-            {
-                _errorMessage = "Произошла неожиданная ошибка.";
-                Console.WriteLine(_errorMessage);
-                MessageBox.Show(_errorMessage);
-            }
-        }
-
         private async void UpdatePLC()
         {
-            //Сухие смеси
-            List<GrouBoxS> grouBoxSDryMixes = new List<GrouBoxS>()
-            {
-                new GrouBoxS(s6,11),
-                new GrouBoxS(s7,11),
-                new GrouBoxS(s8,11),
-                new GrouBoxS(s9,11),
-                new GrouBoxS(s10,11)
-            };
+            string s1 = default, s2 = default, s3 = default, s4 = default, s5 = default, s6 = default, s7 = default, s8 = default, s9 = default, 
+                s10 = default, s11 = default, s12 = default, s13 = default, s14 = default, s15 = default, s16 = default, s20 = default, s21 = default, s22 = default;
 
             //Газобетонs
             List<GrouBoxS> grouBoxSDaerocrete = new List<GrouBoxS>() 
@@ -1784,18 +1526,27 @@ namespace rail
                 new GrouBoxS(s21, 124),
                 new GrouBoxS(s22, 128) 
             };
- 
+
+            //Сухие смеси
+            List<GrouBoxS> grouBoxSDryMixes = new List<GrouBoxS>()
+            {
+                new GrouBoxS(s11,0),
+                new GrouBoxS(s12,4),
+                new GrouBoxS(s13,8),
+                new GrouBoxS(s14,12),
+                new GrouBoxS(s15,16),
+                new GrouBoxS(s16,20)
+            };
+
             await PLC_RZDAsync(grouBoxSPZD, "192.168.37.139", 12);
             await PLC_RZDAsync(grouBoxSDaerocrete, "192.168.37.102", 305);
-            await PLC_RZDAsync(grouBoxSDryMixes, "192.168.37.199", 305);
-            //GetValueFromControllerByte_SSS();
+            await PLC_RZDAsync(grouBoxSDryMixes, "192.168.37.199", 10);
 
             //Делаю компановку данных
             List<GrouBoxS> fullItems = new List<GrouBoxS>();
             fullItems.AddRange(grouBoxSPZD);
             fullItems.AddRange(grouBoxSDaerocrete);
-            fullItems.AddRange(grouBoxSDaerocrete);
-            //fullItems.AddRange(grouBoxSDryMixes);
+            fullItems.AddRange(grouBoxSDryMixes);
 
             //Сгрупировываю все данные
             List<double> value = new List<double>();

@@ -4,10 +4,10 @@ namespace rail.Models
 {
     public class GrouBoxS
     {
-        private GroupBox _name = default;
+        private string _name = default;
         private int _adress = default;
 
-        public GrouBoxS(GroupBox name, int adress)
+        public GrouBoxS(string name, int adress)
         {
             _name = name;
             _adress = adress;
@@ -17,7 +17,7 @@ namespace rail.Models
         {
             if (_name != null)
             {
-                bool isCompliteParce = int.TryParse(_name.Text, out int result);
+                bool isCompliteParce = int.TryParse(_name, out int result);
                 if (isCompliteParce)
                 {
                     return result;
@@ -31,7 +31,7 @@ namespace rail.Models
         {
             if (adress == _adress)
             {
-                _name.Text = text;
+                _name = text;
                 return;
             }
         }

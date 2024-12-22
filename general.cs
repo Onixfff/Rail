@@ -318,7 +318,7 @@ namespace rail
             Method();
         }
 
-        private void Method()
+        private async void Method()
         {
             try
             {
@@ -362,11 +362,13 @@ namespace rail
                             break;
                         case "Все":
                             sql = ("SELECT * FROM vagon_vihod  ORDER BY id DESC LIMIT 100");
-                            dD = new MySqlDataAdapter(sql, mConDemo);
-                            ds = new DataSet();
-                            ds.Reset();
-                            dD.Fill(ds, sql);
-                            dataGridView1.DataSource = ds.Tables[0];
+                            using (var command = new MySqlCommand(sql, mConDemo))
+                            using (var reader = await command.ExecuteReaderAsync())
+                            {
+                                var dataTable = new DataTable();
+                                dataTable.Load(reader); // Загружаем данные из DataReader в DataTable
+                                dataGridView1.DataSource = dataTable; // Привязываем DataTable к DataGridView
+                            }
                             break;
                         default:
                             break;
