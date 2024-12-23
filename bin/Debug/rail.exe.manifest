@@ -162,14 +162,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="rail.exe" size="1661440">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="rail.exe" size="1660928">
       <assemblyIdentity name="rail" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>4txc84hMIjuZmKYWuLzax8Eq2GYKE9eUB6S3an+0o5g=</dsig:DigestValue>
+        <dsig:DigestValue>nG23neQHFz0YfOfpf0Eah+S6zPlsx2U9n6A/vDZrc6c=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
