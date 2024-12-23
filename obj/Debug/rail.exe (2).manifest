@@ -150,38 +150,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Newtonsoft.Json.dll" size="711952">
-      <assemblyIdentity name="Newtonsoft.Json" version="13.0.0.0" publicKeyToken="30AD4FE6B2A6AEED" language="neutral" processorArchitecture="msil" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>4eJ697B+7t9c5xqSVfBCKBam/FhJpIPGcU4bRyBE+p0=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="rail.exe" size="1661440">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="rail.exe" size="1656808">
       <assemblyIdentity name="rail" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>4txc84hMIjuZmKYWuLzax8Eq2GYKE9eUB6S3an+0o5g=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="S7.Net.dll" size="98304">
-      <assemblyIdentity name="S7.Net" version="0.20.0.0" publicKeyToken="D5812D469E84C693" language="neutral" processorArchitecture="msil" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>FPKX1Dph7PMtkK+m0aC0qK6CFFZ/8vYYvBDZE+uOmzU=</dsig:DigestValue>
+        <dsig:DigestValue>gygKXL/ebuiDO27QjwXlpoSEyIydoGVcRp1XoMnBy/A=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -293,13 +269,13 @@
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="rail.exe.config" size="2107">
+  <file name="rail.exe.config" size="2092">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>ixJj3zdfmRMh58VOg2fSumSMNEfY51OzF8UCQCQMjXw=</dsig:DigestValue>
+      <dsig:DigestValue>k0HZjk0vpdI/jALIBS3MArCYM3X1Tpx+o5Gr7n3vzlI=</dsig:DigestValue>
     </hash>
   </file>
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
