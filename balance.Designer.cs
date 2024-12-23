@@ -151,7 +151,6 @@
             this.label63 = new System.Windows.Forms.Label();
             this.label62 = new System.Windows.Forms.Label();
             this.label61 = new System.Windows.Forms.Label();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.s23 = new System.Windows.Forms.GroupBox();
             this.label_s23_balance = new System.Windows.Forms.Label();
@@ -1472,15 +1471,6 @@
             this.label61.TabIndex = 0;
             this.label61.Text = "Силос №";
             // 
-            // progressBar1
-            // 
-            this.progressBar1.ForeColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.progressBar1.Location = new System.Drawing.Point(351, 402);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(726, 23);
-            this.progressBar1.TabIndex = 4;
-            this.progressBar1.Visible = false;
-            // 
             // groupBox8
             // 
             this.groupBox8.BackColor = System.Drawing.Color.Moccasin;
@@ -1540,7 +1530,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1458, 847);
             this.Controls.Add(this.groupBox8);
-            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.groupBox4);
@@ -1734,7 +1723,6 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ComboBox comboBox_silo_num_target;
         private System.Windows.Forms.ComboBox comboBox_manufaktur_target;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.GroupBox s22;
         private System.Windows.Forms.Label label_s22_balance;
         private System.Windows.Forms.Label label_s22_sender;
