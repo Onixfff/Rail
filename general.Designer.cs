@@ -370,7 +370,7 @@
             this.dateTimePicker_start.Name = "dateTimePicker_start";
             this.dateTimePicker_start.Size = new System.Drawing.Size(79, 20);
             this.dateTimePicker_start.TabIndex = 7;
-            this.dateTimePicker_start.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
+            this.dateTimePicker_start.ValueChanged += new System.EventHandler(this.dateTimePicker_start_ValueChanged);
             this.dateTimePicker_start.ChangeUICues += new System.Windows.Forms.UICuesEventHandler(this.dateTimePicker_start_ChangeUICues);
             // 
             // backgroundWorker1

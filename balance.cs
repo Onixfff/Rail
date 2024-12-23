@@ -1270,7 +1270,7 @@ namespace rail
 
             int id;
 
-            for (id = 0; id <= 22; id++)
+            for (id = 0; id <= gb.Count -1; id++)
             {
                 fill_group_box(gb[id], id);
             }
@@ -1278,14 +1278,14 @@ namespace rail
 
         private void Balance_Load(object sender, EventArgs e)
         {
-            UpdatePLC();
-            fill_cb();
-            GetData();
-            Fg();
-            fill_cb("manufactur", comboBox_manufaktur_target);
-            fill_cb("silo_num", comboBox_manufaktur_target.SelectedValue.ToString(), comboBox_silo_num_target);
-            fill_tb("silo_material_name", comboBox_manufaktur_target.SelectedValue.ToString(), comboBox_silo_num_target.SelectedValue.ToString(), textBox_material_target);
-            fill_tb("weight", comboBox_manufaktur_target.SelectedValue.ToString(), comboBox_silo_num_target.SelectedValue.ToString(), textBox_weight_target);
+            UpdatePLC(); //Обновление данных из плс в бд
+            fill_cb(); //Получение данные из ПРУ (скорее всего ПРУ это стоковое значение) в combobox1
+            GetData(); //Загрузка данных
+            Fg(); //Загрузка вроде как базовых материалов
+            fill_cb("manufactur", comboBox_manufaktur_target);//Выводит данные об manufactur в comboBox_manufaktur_target (Отображает пользователю)
+            fill_cb("silo_num", comboBox_manufaktur_target.SelectedValue.ToString(), comboBox_silo_num_target); //
+            fill_tb("silo_material_name", comboBox_manufaktur_target.SelectedValue.ToString(), comboBox_silo_num_target.SelectedValue.ToString(), textBox_material_target);//Выводит информацию об label_s?_name из данных по manufaktur и по его silo_num
+            fill_tb("weight", comboBox_manufaktur_target.SelectedValue.ToString(), comboBox_silo_num_target.SelectedValue.ToString(), textBox_weight_target);//Короче берет данные и заносит их в Textbox_weight_target
 
             // comboBox_silo_num_target.Text
 
@@ -1507,40 +1507,40 @@ namespace rail
             //Газобетонs
             List<GrouBoxS> grouBoxSDaerocrete = new List<GrouBoxS>() 
             {
-                new GrouBoxS(s6, 94),
-                new GrouBoxS(s7, 88),
-                new GrouBoxS(s8, 96),
-                new GrouBoxS(s9, 80),
-                new GrouBoxS(s10, 84)
+                new GrouBoxS(s6, 94, 6),
+                new GrouBoxS(s7, 88, 7),
+                new GrouBoxS(s8, 96, 8),
+                new GrouBoxS(s9, 80, 9),
+                new GrouBoxS(s10, 84, 10)
             };
 
             //ПРУ
             List<GrouBoxS> grouBoxSPZD = new List<GrouBoxS>() 
             {
-                new GrouBoxS(s1, 100),
-                new GrouBoxS(s2, 104),
-                new GrouBoxS(s3, 108),
-                new GrouBoxS(s4, 112),
-                new GrouBoxS(s5, 116),
-                new GrouBoxS(s20, 120),
-                new GrouBoxS(s21, 124),
-                new GrouBoxS(s22, 128) 
+                new GrouBoxS(s1, 100, 1),
+                new GrouBoxS(s2, 104, 2),
+                new GrouBoxS(s3, 108, 3),
+                new GrouBoxS(s4, 112, 4),
+                new GrouBoxS(s5, 116, 5),
+                new GrouBoxS(s20, 120, 20),
+                new GrouBoxS(s21, 124, 21),
+                new GrouBoxS(s22, 128, 22) 
             };
 
             //Сухие смеси
             List<GrouBoxS> grouBoxSDryMixes = new List<GrouBoxS>()
             {
-                new GrouBoxS(s11,0),
-                new GrouBoxS(s12,4),
-                new GrouBoxS(s13,8),
-                new GrouBoxS(s14,12),
-                new GrouBoxS(s15,16),
-                new GrouBoxS(s16,20)
+                new GrouBoxS(s11,0, 11),
+                new GrouBoxS(s12,4, 12),
+                new GrouBoxS(s13,8, 13),
+                new GrouBoxS(s14,12, 14),
+                new GrouBoxS(s15,16, 15),
+                new GrouBoxS(s16,20, 16)
             };
 
-            await PLC_RZDAsync(grouBoxSPZD, "192.168.37.139", 12);
-            await PLC_RZDAsync(grouBoxSDaerocrete, "192.168.37.102", 305);
-            await PLC_RZDAsync(grouBoxSDryMixes, "192.168.37.199", 10);
+            PLC_RZDAsync(grouBoxSPZD, "192.168.37.139", 12);
+            PLC_RZDAsync(grouBoxSDaerocrete, "192.168.37.102", 305);
+            PLC_RZDAsync(grouBoxSDryMixes, "192.168.37.199", 10);
 
             //Делаю компановку данных
             List<GrouBoxS> fullItems = new List<GrouBoxS>();
@@ -1551,12 +1551,21 @@ namespace rail
             //Сгрупировываю все данные
             List<double> value = new List<double>();
 
-            foreach (var item in fullItems)
+            for(int i = 1; i < fullItems.Count; i++)
             {
-                value.Add(item.GetTextInt());
+                for(int j = 0; j < fullItems.Count; j++)
+                {
+                    var d = fullItems[j].GetIdDb();
+                    
+                    if (i == d)
+                    {
+                        value.Add(fullItems[i].GetTextInt());
+                        break;
+                    }
+                }
             }
 
-            UpdateData(value);
+             UpdateData(value);
         }
 
         private async Task PLC_RZDAsync(List<GrouBoxS> grouBoxS, string ipAddress, int dbNumber)
@@ -1694,14 +1703,22 @@ namespace rail
             {
                 string conSQL = null;
 
-                if (id >= 20)
+                switch (id)
                 {
-                    conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 2).ToString() + "');";
+                    case 20:
+                        conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 2).ToString() + "');";
+                        break;
+                    case 23:
+                        conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 2).ToString() + "');";
+                        break;
+                    case 24:
+                        conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 2).ToString() + "');";
+                        break;
+                    default:
+                        conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 1).ToString() + "');";
+                        break;
                 }
-                else
-                {
-                    conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 1).ToString() + "');";
-                }
+
                 MySqlCommand dsq = new MySqlCommand(conSQL, mCon);
                 try
                 {

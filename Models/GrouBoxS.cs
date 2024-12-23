@@ -6,11 +6,13 @@ namespace rail.Models
     {
         private string _name = default;
         private int _adress = default;
+        private int _idDb = default;
 
-        public GrouBoxS(string name, int adress)
+        public GrouBoxS(string name, int adress, int idDb)
         {
             _name = name;
             _adress = adress;
+            _idDb = idDb;
         }
 
         public int GetTextInt()
@@ -39,6 +41,11 @@ namespace rail.Models
         public int GetAdress()
         {
             return _adress;
+        }
+
+        public int GetIdDb()
+        {
+            return _idDb;
         }
     }
 }
