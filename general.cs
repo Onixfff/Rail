@@ -349,18 +349,12 @@ namespace rail
                             dataGridView1.DataSource = ds.Tables[0];
                             break;
                         case "Все":
-                            sql = ("SELECT * FROM vagon_vihod  ORDER BY id DESC");
-                            using (var command = new MySqlCommand(sql, mConDemo))
-                            {
-                                command.CommandTimeout = 300;
-
-                                using (var reader = command.ExecuteReader())
-                                {
-                                    var dataTable = new DataTable();
-                                    dataTable.Load(reader); // Загружаем данные из DataReader в DataTable
-                                    dataGridView1.DataSource = dataTable; // Привязываем DataTable к DataGridView
-                                }
-                            }
+                            sql = ($"SELECT * FROM vagon_vihod where date >= '{dateTimePicker_start.Value.ToString("yyyy-MM-dd")}' and date <= '{dateTimePicker_finish.Value.ToString("yyyy-MM-dd")}' ORDER BY id DESC");
+                            dD = new MySqlDataAdapter(sql, mConDemo);
+                            ds = new DataSet();
+                            ds.Reset();
+                            dD.Fill(ds, sql);
+                            dataGridView1.DataSource = ds.Tables[0];
                             break;
                         default:
                             sql = ("SELECT * FROM vagon_vihod  ORDER BY id DESC");

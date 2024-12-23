@@ -1523,49 +1523,32 @@ namespace rail
                 new GrouBoxS(s4, 112, 4),
                 new GrouBoxS(s5, 116, 5),
                 new GrouBoxS(s20, 120, 20),
-                new GrouBoxS(s21, 124, 21),
-                new GrouBoxS(s22, 128, 22) 
+                new GrouBoxS(s21, 124, 23),
+                new GrouBoxS(s22, 128, 24) 
             };
 
             //Сухие смеси
-            List<GrouBoxS> grouBoxSDryMixes = new List<GrouBoxS>()
-            {
-                new GrouBoxS(s11,0, 11),
-                new GrouBoxS(s12,4, 12),
-                new GrouBoxS(s13,8, 13),
-                new GrouBoxS(s14,12, 14),
-                new GrouBoxS(s15,16, 15),
-                new GrouBoxS(s16,20, 16)
-            };
+            //List<GrouBoxS> grouBoxSDryMixes = new List<GrouBoxS>()
+            //{
+            //    new GrouBoxS(s11,0, 11),
+            //    new GrouBoxS(s12,4, 12),
+            //    new GrouBoxS(s13,8, 13),
+            //    new GrouBoxS(s14,12, 14),
+            //    new GrouBoxS(s15,16, 15),
+            //    new GrouBoxS(s16,20, 16)
+            //};
 
-            PLC_RZDAsync(grouBoxSPZD, "192.168.37.139", 12);
-            PLC_RZDAsync(grouBoxSDaerocrete, "192.168.37.102", 305);
-            PLC_RZDAsync(grouBoxSDryMixes, "192.168.37.199", 10);
+            await PLC_RZDAsync(grouBoxSPZD, "192.168.37.139", 12);
+            await PLC_RZDAsync(grouBoxSDaerocrete, "192.168.37.102", 305);
+            //await PLC_RZDAsync(grouBoxSDryMixes, "192.168.37.199", 10);
 
             //Делаю компановку данных
             List<GrouBoxS> fullItems = new List<GrouBoxS>();
             fullItems.AddRange(grouBoxSPZD);
             fullItems.AddRange(grouBoxSDaerocrete);
-            fullItems.AddRange(grouBoxSDryMixes);
+           //fullItems.AddRange(grouBoxSDryMixes);
 
-            //Сгрупировываю все данные
-            List<double> value = new List<double>();
-
-            for(int i = 1; i < fullItems.Count; i++)
-            {
-                for(int j = 0; j < fullItems.Count; j++)
-                {
-                    var d = fullItems[j].GetIdDb();
-                    
-                    if (i == d)
-                    {
-                        value.Add(fullItems[i].GetTextInt());
-                        break;
-                    }
-                }
-            }
-
-             UpdateData(value);
+             UpdateData(fullItems);
         }
 
         private async Task PLC_RZDAsync(List<GrouBoxS> grouBoxS, string ipAddress, int dbNumber)
@@ -1693,29 +1676,24 @@ namespace rail
             }
         }
 
-        private void UpdateData(List<double> var)
+        private void UpdateData(List<GrouBoxS> var)
          {
             MySqlConnection mCon = new MySqlConnection(ConfigurationManager.ConnectionStrings["234"].ConnectionString);
             //MySqlConnection mCon = new MySqlConnection("Database=spslogger; Server=192.168.37.101; port=3306; username=%user_1; password=20112004; charset=utf8 ");
+            
+            int idDb;
 
             int id;
             for (id = 0; id < var.Count; id++)
             {
+                idDb = var[id].GetIdDb();
+                int weight = var[id].GetTextInt();
                 string conSQL = null;
 
-                switch (id)
+                switch (idDb)
                 {
-                    case 20:
-                        conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 2).ToString() + "');";
-                        break;
-                    case 23:
-                        conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 2).ToString() + "');";
-                        break;
-                    case 24:
-                        conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 2).ToString() + "');";
-                        break;
                     default:
-                        conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + var[id].ToString() + "' WHERE (`id` = '" + (id + 1).ToString() + "');";
+                        conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + weight + "' WHERE (`id` = '" + (idDb).ToString() + "');";
                         break;
                 }
 
