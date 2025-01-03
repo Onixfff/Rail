@@ -1677,7 +1677,7 @@ namespace rail
             //Газобетонs
             List<GrouBoxS> grouBoxSDaerocrete = new List<GrouBoxS>()
             {
-                new GrouBoxS(s6, 94, 6),
+                new GrouBoxS(s6, 92, 6),
                 new GrouBoxS(s7, 88, 7),
                 new GrouBoxS(s8, 96, 8),
                 new GrouBoxS(s9, 80, 9),
@@ -1698,20 +1698,10 @@ namespace rail
                 s9 = default,
                 s10 = default;
 
-            //Газобетонs
-            List<GrouBoxS> grouBoxSDaerocrete = new List<GrouBoxS>()
-            {
-                new GrouBoxS(s6, 94, 6),
-                new GrouBoxS(s7, 88, 7),
-                new GrouBoxS(s8, 96, 8),
-                new GrouBoxS(s9, 80, 9),
-                new GrouBoxS(s10, 84, 10)
-            };
-
             switch (id)
             {
-                case 94:
-                    grouBoxS = new GrouBoxS(s6, 94, 1);
+                case 92:
+                    grouBoxS = new GrouBoxS(s6, 92, 1);
                     break;
 
                 case 88:
@@ -1872,17 +1862,6 @@ namespace rail
                 s14 = default,
                 s15 = default,
                 s16 = default;
-
-            //Сухие смеси
-            List<GrouBoxS> grouBoxSDryMixes = new List<GrouBoxS>()
-            {
-                new GrouBoxS(s11,0, 11),
-                new GrouBoxS(s12,4, 12),
-                new GrouBoxS(s13,8, 13),
-                new GrouBoxS(s14,12, 14),
-                new GrouBoxS(s15,16, 15),
-                new GrouBoxS(s16,20, 16)
-            };
 
             switch (id)
             {
