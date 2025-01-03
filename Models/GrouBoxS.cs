@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace rail.Models
+﻿namespace rail.Models
 {
     public class GrouBoxS
     {

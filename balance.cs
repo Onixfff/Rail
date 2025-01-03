@@ -6,18 +6,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using System.Threading;
-//using ru.nvg79.connector;
 using DataUpdater;
 using System.Configuration;
-using S7.Net;
 using System.Net.Http;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Text;
 using rail.Models;
-using Org.BouncyCastle.Bcpg;
-using Google.Protobuf.WellKnownTypes;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace rail
 {
@@ -77,138 +72,20 @@ namespace rail
             finally { mCon.Close(); }
         }
 
-        private void s1_6(string on)
-        {
-            //conSQL = "Database=u0550310_aeroblock; Server=31.31.196.234; port=3306; username=u0550_kornev; password=18061981Kornev; charset=utf8 ";
-            string strSQL3 = "SELECT * FROM `silo_balance` where `id`='" + on + "' ;";
-            string strSQLdata = "select * from zeroing_silos  where `id_silos`='" + on + "' order by id desc limit 1 ";
-            MySQLData.GetData.Result tb1 = MySQLData.GetData.Table(strSQL3, conSQL);
-            MySQLData.GetData.Result tb2 = MySQLData.GetData.Table(strSQLdata, conSQL);
-            string weight = tb1.ResultData.Rows[0][5].ToString();
-            string material = tb1.ResultData.Rows[0][3].ToString();
-
-            string weight_sum_in = "1";
-            string weight_sum_out = "1";
-
-            if (tb2.ResultData.Rows.Count == 0)
-            {
-                weight_sum_in = "1";
-                weight_sum_out = "1";
-            }
-            else
-            {
-                string data = tb2.ResultData.Rows[0][1].ToString();
-                string strSQL4;
-                DateTime data2 = DateTime.Parse(data);
-                data = data2.ToString("yyyy-MM-dd HH:mm");
-                if (on == "20")
-                { strSQL4 = "SELECT sum(weight) FROM `vagon_vihod` where `data_finish`>'" + data + "' and number_silos='6' ;"; }
-                else
-                { strSQL4 = "SELECT sum(weight) FROM `vagon_vihod` where `data_finish`>'" + data + "' and number_silos='" + on + "' ;"; }
-                MySQLData.GetScalar.Result wsi = MySQLData.GetScalar.Scalar(strSQL4, conSQL);
-                weight_sum_in = wsi.ResultText;
-                if (weight_sum_in == "")
-                    weight_sum_in = "1";
-
-            }
-
-            //ExecutQuery(strSQL3);
-
-            Dictionary<string, string> str = new Dictionary<string, string>();
-            str.Add("`date`", MySQLData.MysqlTime(DateTime.Now));
-            str.Add("weight", weight);
-            str.Add("weight_sum_in", weight_sum_in);
-            str.Add("weight_sum_out", weight_sum_out);
-            str.Add("material", material);
-            str.Add("id_silos", on);
-
-            string keys, values;
-            MySQLData.ConvertInsertData(str, out keys, out values);
-            string strSQL = "insert into zeroing_silos (" + keys + ") values (" + values + ");";
-            bool isok = false;
-            while (!isok)
-            {
-                MySQLData.GetScalar.Result wres = MySQLData.GetScalar.NoResponse(strSQL, conSQL);
-                if (wres.HasError == true)
-                { isok = false; Thread.Sleep(500); }
-                else
-                {
-                    isok = true;
-                    zero_plc_rzd(on);
-                }
-            }
-        }
-
-        private void zero_plc_gb(string silo)
-        {
-            // ОБНУЛЕНИЕ В КОНТРОЛЛЕРЕ
-
-            libnodave.daveOSserialType fds;
-            libnodave.daveInterface di;
-            libnodave.daveConnection dc;
-
-            try
-            {
-                int res = 0;
-
-                try
-                {
-                    fds.rfd = libnodave.openSocket(102, "192.168.37.102");
-                    fds.wfd = fds.rfd;
-
-                    if (fds.rfd > 0)
-                    {
-                        di = new libnodave.daveInterface(fds, "IF1", 0, libnodave.daveProtoISOTCP, libnodave.daveSpeed187k);
-                        di.setTimeout(50);
-                        dc = new libnodave.daveConnection(di, 0, 0, 2);
-
-                        if (0 == dc.connectPLC())
-                        {
-                            byte[] aa = { 0, 0, 0, 0 };
-                            if (silo == "7")
-                                res = dc.writeBytes(libnodave.daveDB, 305, 88, 4, aa);
-                            if (silo == "6")
-                                res = dc.writeBytes(libnodave.daveDB, 305, 92, 4, aa);
-                            if (silo == "8")
-                                res = dc.writeBytes(libnodave.daveDB, 305, 96, 4, aa);
-                            if (silo == "10")
-                                res = dc.writeBytes(libnodave.daveDB, 305, 84, 4, aa);
-                            if (silo == "9")
-                                res = dc.writeBytes(libnodave.daveDB, 305, 80, 4, aa);
-
-
-                            res = dc.readBits(libnodave.daveDB, 160, 3890, 1, null);
-                            //MessageBox.Show("результат функции:" + res + " = " + libnodave.daveStrerror(res));
-                        }
-                        dc.disconnectPLC();
-                        libnodave.closeSocket(fds.rfd);
-                    }
-                    else
-                    {
-
-                    }
-                }
-                catch (Exception exp)
-                {
-                    MessageBox.Show(exp.Message);
-
-                }
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
-            }
-        }
-
         private async Task move_mas(string target_id, string source_id, int mas)
         {
+            List<GrouBoxS> grouBoxS = GetGrouBoxSPZD();
+
+            //source_id = Куда перевожу 
+            //target_id = Откуда перевожу
+            //mas = Масса
             switch (source_id)
             {
                 case "1":
-                    await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text))); //ПРУ
+                    Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
                     break;
                 case "2":
-                    await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
+                     Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text));//ПРУ
                     break;
                 case "3":
                     await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
@@ -269,6 +146,14 @@ namespace rail
                 case "23":
 
                     break;
+
+                case "24":
+
+                    break;
+                default:
+
+                    break;
+
             }
         }
 
@@ -355,149 +240,17 @@ namespace rail
             }
         }
 
-        private void Move_mas_pru (string silo,  int mas)
+        private async void Move_mas_pru (GrouBoxS grouBoxS, string silo, int mas)
         {
-            libnodave.daveOSserialType fds;
-            libnodave.daveInterface di;
-            libnodave.daveConnection dc;
-
-            try
+            bool isComplite = await UpdateDatePlc(grouBoxS, "192.168.37.139", 12, silo, mas);
+            
+            if (isComplite)
             {
-                int res = 0;
-                int silo_mas = 0;
-
-                try
-                {
-                    fds.rfd = libnodave.openSocket(102, "192.168.37.139");
-                    fds.wfd = fds.rfd;
-                    if (fds.rfd > 0)
-                    {
-                        di = new libnodave.daveInterface(fds, "IF1", 0, libnodave.daveProtoISOTCP, libnodave.daveSpeed187k);
-                        di.setTimeout(50);
-                        dc = new libnodave.daveConnection(di, 0, 0, 2);
-
-                        if (0 == dc.connectPLC())
-                        {
-
-                            if (silo == "1")
-                            {
-                                res = dc.readBytes(libnodave.daveDB, 12, 100, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    silo_mas = dc.getU32();
-
-                                }
-                                silo_mas = silo_mas - mas;
-                                res = dc.writeBytes(libnodave.daveDB, 12, 100, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
-                            }
-
-                            if (silo == "2")
-                            {
-                                res = dc.readBytes(libnodave.daveDB, 12, 104, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    silo_mas = dc.getU32();
-
-                                }
-                                silo_mas = silo_mas - mas;
-                                res = dc.writeBytes(libnodave.daveDB, 12, 104, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
-                            }
-
-                            if (silo == "3")
-                            {
-                                res = dc.readBytes(libnodave.daveDB, 12, 108, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    silo_mas = dc.getU32();
-
-                                }
-                                silo_mas = silo_mas - mas;
-                                res = dc.writeBytes(libnodave.daveDB, 12, 108, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
-                            }
-
-                            if (silo == "4")
-                            {
-                                res = dc.readBytes(libnodave.daveDB, 12, 112, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    silo_mas = dc.getU32();
-
-                                }
-                                silo_mas = silo_mas - mas;
-                                res = dc.writeBytes(libnodave.daveDB, 12, 112, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
-                            }
-
-                            if (silo == "5")
-                            {
-                                res = dc.readBytes(libnodave.daveDB, 12, 116, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    silo_mas = dc.getU32();
-
-                                }
-                                silo_mas = silo_mas - mas;
-                                res = dc.writeBytes(libnodave.daveDB, 12, 116, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
-                            }
-                            ///TODO Сверить адреса silo с 20 по 22 (120-124-128)
-                            if (silo == "20")
-                            {
-                                res = dc.readBytes(libnodave.daveDB, 12, 120, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    silo_mas = dc.getU32();
-
-                                }
-                                silo_mas = silo_mas - mas;
-                                res = dc.writeBytes(libnodave.daveDB, 12, 120, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
-                            }
-
-                            if(silo == "21")
-                            {
-                                res = dc.readBytes(libnodave.daveDB, 12, 124, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    silo_mas = dc.getU32();
-
-                                }
-                                silo_mas = silo_mas - mas;
-                                res = dc.writeBytes(libnodave.daveDB, 12, 124, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
-                            }
-
-                            if(silo == "22")
-                            {
-                                res = dc.readBytes(libnodave.daveDB, 12, 128, 4, null);
-
-                                if (res == 0) //conection OK 
-                                {
-                                    silo_mas = dc.getU32();
-
-                                }
-                                silo_mas = silo_mas - mas;
-                                res = dc.writeBytes(libnodave.daveDB, 12, 128, 4, BitConverter.GetBytes(libnodave.daveSwapIed_32(silo_mas)));
-                            }
-                        }
-                        dc.disconnectPLC();
-                        libnodave.closeSocket(fds.rfd);
-                    }
-                    else
-                    {
-                    }
-                }
-                catch (Exception exp)
-                {
-                    MessageBox.Show(exp.Message);
-                }
+                Console.WriteLine("Успешно прошло перемещение");
             }
-            catch (Exception exp)
+            else
             {
-                MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
+                Console.WriteLine("Ошибка перемещения");
             }
         }
 
@@ -775,6 +528,67 @@ namespace rail
             }
         }
 
+        private void zero_plc_gb(string silo)
+        {
+            // ОБНУЛЕНИЕ В КОНТРОЛЛЕРЕ
+
+            libnodave.daveOSserialType fds;
+            libnodave.daveInterface di;
+            libnodave.daveConnection dc;
+
+            try
+            {
+                int res = 0;
+
+                try
+                {
+                    fds.rfd = libnodave.openSocket(102, "192.168.37.102");
+                    fds.wfd = fds.rfd;
+
+                    if (fds.rfd > 0)
+                    {
+                        di = new libnodave.daveInterface(fds, "IF1", 0, libnodave.daveProtoISOTCP, libnodave.daveSpeed187k);
+                        di.setTimeout(50);
+                        dc = new libnodave.daveConnection(di, 0, 0, 2);
+
+                        if (0 == dc.connectPLC())
+                        {
+                            byte[] aa = { 0, 0, 0, 0 };
+                            if (silo == "7")
+                                res = dc.writeBytes(libnodave.daveDB, 305, 88, 4, aa);
+                            if (silo == "6")
+                                res = dc.writeBytes(libnodave.daveDB, 305, 92, 4, aa);
+                            if (silo == "8")
+                                res = dc.writeBytes(libnodave.daveDB, 305, 96, 4, aa);
+                            if (silo == "10")
+                                res = dc.writeBytes(libnodave.daveDB, 305, 84, 4, aa);
+                            if (silo == "9")
+                                res = dc.writeBytes(libnodave.daveDB, 305, 80, 4, aa);
+
+
+                            res = dc.readBits(libnodave.daveDB, 160, 3890, 1, null);
+                            //MessageBox.Show("результат функции:" + res + " = " + libnodave.daveStrerror(res));
+                        }
+                        dc.disconnectPLC();
+                        libnodave.closeSocket(fds.rfd);
+                    }
+                    else
+                    {
+
+                    }
+                }
+                catch (Exception exp)
+                {
+                    MessageBox.Show(exp.Message);
+
+                }
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
+            }
+        }
+
         private void zero_plc_sss(string silo)
         {
             // ОБНУЛЕНИЕ В КОНТРОЛЛЕРЕ
@@ -838,6 +652,7 @@ namespace rail
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
             }
         }
+
         private void zero_plc_rzd(string silo)
         {
             // ОБНУЛЕНИЕ В КОНТРОЛЛЕРЕ
@@ -897,6 +712,68 @@ namespace rail
             catch (Exception exp)
             {
                 MessageBox.Show("GetValueFromController() - " + exp.Message, "Error");
+            }
+        }
+
+        private void s1_6(string on)
+        {
+            //conSQL = "Database=u0550310_aeroblock; Server=31.31.196.234; port=3306; username=u0550_kornev; password=18061981Kornev; charset=utf8 ";
+            string strSQL3 = "SELECT * FROM `silo_balance` where `id`='" + on + "' ;";
+            string strSQLdata = "select * from zeroing_silos  where `id_silos`='" + on + "' order by id desc limit 1 ";
+            MySQLData.GetData.Result tb1 = MySQLData.GetData.Table(strSQL3, conSQL);
+            MySQLData.GetData.Result tb2 = MySQLData.GetData.Table(strSQLdata, conSQL);
+            string weight = tb1.ResultData.Rows[0][5].ToString();
+            string material = tb1.ResultData.Rows[0][3].ToString();
+
+            string weight_sum_in = "1";
+            string weight_sum_out = "1";
+
+            if (tb2.ResultData.Rows.Count == 0)
+            {
+                weight_sum_in = "1";
+                weight_sum_out = "1";
+            }
+            else
+            {
+                string data = tb2.ResultData.Rows[0][1].ToString();
+                string strSQL4;
+                DateTime data2 = DateTime.Parse(data);
+                data = data2.ToString("yyyy-MM-dd HH:mm");
+                if (on == "20")
+                { strSQL4 = "SELECT sum(weight) FROM `vagon_vihod` where `data_finish`>'" + data + "' and number_silos='6' ;"; }
+                else
+                { strSQL4 = "SELECT sum(weight) FROM `vagon_vihod` where `data_finish`>'" + data + "' and number_silos='" + on + "' ;"; }
+                MySQLData.GetScalar.Result wsi = MySQLData.GetScalar.Scalar(strSQL4, conSQL);
+                weight_sum_in = wsi.ResultText;
+                if (weight_sum_in == "")
+                    weight_sum_in = "1";
+
+            }
+
+            //ExecutQuery(strSQL3);
+
+            Dictionary<string, string> str = new Dictionary<string, string>();
+            str.Add("`date`", MySQLData.MysqlTime(DateTime.Now));
+            str.Add("weight", weight);
+            str.Add("weight_sum_in", weight_sum_in);
+            str.Add("weight_sum_out", weight_sum_out);
+            str.Add("material", material);
+            str.Add("id_silos", on);
+
+            string keys, values;
+            MySQLData.ConvertInsertData(str, out keys, out values);
+            string strSQL = "insert into zeroing_silos (" + keys + ") values (" + values + ");";
+            bool isok = false;
+            while (!isok)
+            {
+                MySQLData.GetScalar.Result wres = MySQLData.GetScalar.NoResponse(strSQL, conSQL);
+                if (wres.HasError == true)
+                { isok = false; Thread.Sleep(500); }
+                else
+                {
+                    isok = true;
+                    zero_plc_rzd(on);
+                }
             }
         }
 
@@ -1501,42 +1378,9 @@ namespace rail
 
         private async void UpdatePLC()
         {
-            string s1 = default, s2 = default, s3 = default, s4 = default, s5 = default, s6 = default, s7 = default, s8 = default, s9 = default, 
-                s10 = default, s11 = default, s12 = default, s13 = default, s14 = default, s15 = default, s16 = default, s20 = default, s21 = default, s22 = default;
-
-            //Газобетонs
-            List<GrouBoxS> grouBoxSDaerocrete = new List<GrouBoxS>() 
-            {
-                new GrouBoxS(s6, 94, 6),
-                new GrouBoxS(s7, 88, 7),
-                new GrouBoxS(s8, 96, 8),
-                new GrouBoxS(s9, 80, 9),
-                new GrouBoxS(s10, 84, 10)
-            };
-
-            //ПРУ
-            List<GrouBoxS> grouBoxSPZD = new List<GrouBoxS>() 
-            {
-                new GrouBoxS(s1, 100, 1),
-                new GrouBoxS(s2, 104, 2),
-                new GrouBoxS(s3, 108, 3),
-                new GrouBoxS(s4, 112, 4),
-                new GrouBoxS(s5, 116, 5),
-                new GrouBoxS(s20, 120, 20),
-                new GrouBoxS(s21, 124, 23),
-                new GrouBoxS(s22, 128, 24) 
-            };
-
-            //Сухие смеси
-            //List<GrouBoxS> grouBoxSDryMixes = new List<GrouBoxS>()
-            //{
-            //    new GrouBoxS(s11,0, 11),
-            //    new GrouBoxS(s12,4, 12),
-            //    new GrouBoxS(s13,8, 13),
-            //    new GrouBoxS(s14,12, 14),
-            //    new GrouBoxS(s15,16, 15),
-            //    new GrouBoxS(s16,20, 16)
-            //};
+            var grouBoxSPZD = GetGrouBoxSPZD();
+            var grouBoxSDaerocrete = GetGrouBoxSDaerocrete();
+            var grouBoxSDryMixes = GetGrouBoxSDryMixes();
 
             await PLC_RZDAsync(grouBoxSPZD, "192.168.37.139", 12);
             await PLC_RZDAsync(grouBoxSDaerocrete, "192.168.37.102", 305);
@@ -1646,6 +1490,85 @@ namespace rail
             }
         }
 
+        private async Task<bool> UpdateDatePlc(GrouBoxS grouBoxS, string ipAddress, int dbNumber, string silo, int mas)
+        {
+            string _errorMessage;
+            List<int> addresses = new List<int>();
+
+            if (grouBoxS != null)
+            {
+                var elementAdress = grouBoxS.GetAdress();
+
+                if (elementAdress != 0 && elementAdress != default)
+                {
+                    addresses.Add(elementAdress);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Ошибка UpdateDatePlc grouBoxS не содержит данных");
+                MessageBox.Show("Ошибка UpdateDatePlc grouBoxS не содержит данных");
+                return false;
+            }
+
+            try
+            {
+                var cancellationToken = new CancellationTokenSource();
+                cancellationToken.CancelAfter(TimeSpan.FromSeconds(30)); // Отмена через 30 секунд
+
+                // Формируем строку запроса
+                var requestUriString = $"/api/PLCPRU/ChangeDatePRU?ipAddress={ipAddress}&dbNumber={dbNumber}&addresses={addresses}&mas={mas}";
+
+                // Выполняем запрос
+                var response = await client.GetAsync(requestUriString, cancellationToken.Token);
+
+                // Проверяем успешность запроса
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<(bool isComplite, string error)>(jsonString);
+
+                    if(result.isComplite == true)
+                    {
+                        Console.WriteLine("Обновление plc прошло успешно");
+                        return true;
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Ошибка обновления \n{result.error}");
+                        Console.WriteLine($"Ошибка обновления \n{result.error}");
+                    }
+                }
+                else
+                {
+                    // Логируем ошибку HTTP
+                    _errorMessage = $"Ошибка HTTP-запроса: {(int)response.StatusCode} - {response.ReasonPhrase}";
+                    Console.WriteLine(_errorMessage);
+                    MessageBox.Show(_errorMessage);
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                _errorMessage = $"Ошибка HTTP-запроса: {ex.Message}";
+                Console.WriteLine(_errorMessage);
+                MessageBox.Show(_errorMessage);
+            }
+            catch (TaskCanceledException ex)
+            {
+                _errorMessage = "Запрос был отменён (таймаут или отмена токеном).";
+                Console.WriteLine(_errorMessage);
+                MessageBox.Show(_errorMessage);
+            }
+            catch (Exception ex)
+            {
+                _errorMessage = "Произошла неожиданная ошибка.";
+                Console.WriteLine(_errorMessage + "\n" + ex.Message);
+                MessageBox.Show(_errorMessage);
+            }
+
+            return false;
+        }
+
         private bool UpdateData(int id, double value)
         {
             string conSql = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + value + "' WHERE (`id` = '" + (id) + "');";
@@ -1741,6 +1664,79 @@ namespace rail
             Update_visualSilo();
         }
 
+        private List<GrouBoxS> GetGrouBoxSDaerocrete()
+        {
+            string
+                s6 = default,
+                s7 = default,
+                s8 = default,
+                s9 = default,
+                s10 = default;
+
+            //Газобетонs
+            List<GrouBoxS> grouBoxSDaerocrete = new List<GrouBoxS>()
+            {
+                new GrouBoxS(s6, 94, 6),
+                new GrouBoxS(s7, 88, 7),
+                new GrouBoxS(s8, 96, 8),
+                new GrouBoxS(s9, 80, 9),
+                new GrouBoxS(s10, 84, 10)
+            };
+
+            return grouBoxSDaerocrete;
+        }
+
+        private List<GrouBoxS> GetGrouBoxSPZD()
+        {
+            string
+                s1 = default,
+                s2 = default,
+                s3 = default,
+                s4 = default,
+                s5 = default,
+                s20 = default,
+                s21 = default,
+                s22 = default;
+
+            //ПРУ
+            List<GrouBoxS> grouBoxSPZD = new List<GrouBoxS>()
+            {
+                new GrouBoxS(s1, 100, 1),
+                new GrouBoxS(s2, 104, 2),
+                new GrouBoxS(s3, 108, 3),
+                new GrouBoxS(s4, 112, 4),
+                new GrouBoxS(s5, 116, 5),
+                new GrouBoxS(s20, 120, 20),
+                new GrouBoxS(s21, 124, 23),
+                new GrouBoxS(s22, 128, 24)
+            };
+
+            return grouBoxSPZD;
+        }
+
+        private List<GrouBoxS> GetGrouBoxSDryMixes()
+        {
+            string
+                s11 = default,
+                s12 = default,
+                s13 = default,
+                s14 = default,
+                s15 = default,
+                s16 = default;
+
+            //Сухие смеси
+            List<GrouBoxS> grouBoxSDryMixes = new List<GrouBoxS>()
+            {
+                new GrouBoxS(s11,0, 11),
+                new GrouBoxS(s12,4, 12),
+                new GrouBoxS(s13,8, 13),
+                new GrouBoxS(s14,12, 14),
+                new GrouBoxS(s15,16, 15),
+                new GrouBoxS(s16,20, 16)
+            };
+
+            return grouBoxSDryMixes;
+        }
     }
 }
     
