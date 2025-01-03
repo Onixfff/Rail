@@ -13,6 +13,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.Text;
 using rail.Models;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace rail
 {
@@ -74,7 +75,7 @@ namespace rail
 
         private async Task move_mas(string target_id, string source_id, int mas)
         {
-            List<GrouBoxS> grouBoxS = GetGrouBoxSPZD();
+            List<GrouBoxS> grouBoxS = GetListGrouBoxSPZD();
 
             //source_id = Куда перевожу 
             //target_id = Откуда перевожу
@@ -1378,9 +1379,9 @@ namespace rail
 
         private async void UpdatePLC()
         {
-            var grouBoxSPZD = GetGrouBoxSPZD();
-            var grouBoxSDaerocrete = GetGrouBoxSDaerocrete();
-            var grouBoxSDryMixes = GetGrouBoxSDryMixes();
+            var grouBoxSPZD = GetListGrouBoxSPZD();
+            var grouBoxSDaerocrete = GetListGrouBoxSDaerocrete();
+            var grouBoxSDryMixes = GetListGrouBoxSDryMixes();
 
             await PLC_RZDAsync(grouBoxSPZD, "192.168.37.139", 12);
             await PLC_RZDAsync(grouBoxSDaerocrete, "192.168.37.102", 305);
@@ -1664,7 +1665,7 @@ namespace rail
             Update_visualSilo();
         }
 
-        private List<GrouBoxS> GetGrouBoxSDaerocrete()
+        private List<GrouBoxS> GetListGrouBoxSDaerocrete()
         {
             string
                 s6 = default,
@@ -1686,7 +1687,65 @@ namespace rail
             return grouBoxSDaerocrete;
         }
 
-        private List<GrouBoxS> GetGrouBoxSPZD()
+        private (GrouBoxS grouBoxS, string error) GetListGrouBoxSDaerocrete(int id)
+        {
+            GrouBoxS grouBoxS;
+
+            string
+                s6 = default,
+                s7 = default,
+                s8 = default,
+                s9 = default,
+                s10 = default;
+
+            //Газобетонs
+            List<GrouBoxS> grouBoxSDaerocrete = new List<GrouBoxS>()
+            {
+                new GrouBoxS(s6, 94, 6),
+                new GrouBoxS(s7, 88, 7),
+                new GrouBoxS(s8, 96, 8),
+                new GrouBoxS(s9, 80, 9),
+                new GrouBoxS(s10, 84, 10)
+            };
+
+            switch (id)
+            {
+                case 94:
+                    grouBoxS = new GrouBoxS(s6, 94, 1);
+                    break;
+
+                case 88:
+                    grouBoxS = new GrouBoxS(s7, 88, 2);
+                    break;
+
+                case 96:
+                    grouBoxS = new GrouBoxS(s8, 96, 2);
+                    break;
+
+                case 80:
+                    grouBoxS = new GrouBoxS(s9, 80, 2);
+                    break;
+
+                case 84:
+                    grouBoxS = new GrouBoxS(s10, 84, 2);
+                    break;
+
+                default:
+                    grouBoxS = null;
+                    break;
+            }
+
+            if (grouBoxS != null)
+            {
+                return (grouBoxS, null);
+            }
+            else
+            {
+                return (grouBoxS, "grouBoxS == null");
+            }
+        }
+
+        private List<GrouBoxS> GetListGrouBoxSPZD()
         {
             string
                 s1 = default,
@@ -1714,7 +1773,71 @@ namespace rail
             return grouBoxSPZD;
         }
 
-        private List<GrouBoxS> GetGrouBoxSDryMixes()
+        private (GrouBoxS grouBoxS, string error) GetGrouBoxSPZD(int id)
+        {
+            GrouBoxS grouBoxS;
+
+            string
+                s1 = default,
+                s2 = default,
+                s3 = default,
+                s4 = default,
+                s5 = default,
+                s20 = default,
+                s21 = default,
+                s22 = default;
+
+            switch (id)
+            {
+                case 100:
+                    grouBoxS = new GrouBoxS(s1, 100, 1);
+                    break;
+
+                case 104:
+                    grouBoxS = new GrouBoxS(s2, 104, 2);
+                    break;
+
+                case 108:
+                    grouBoxS = new GrouBoxS(s3, 108, 2);
+                    break;
+
+                case 112:
+                    grouBoxS = new GrouBoxS(s4, 112, 2);
+                    break;
+
+                case 116:
+                    grouBoxS = new GrouBoxS(s5, 116, 2);
+                    break;
+
+                case 120:
+                    grouBoxS = new GrouBoxS(s20, 120, 2);
+                    break;
+
+                case 124:
+                    grouBoxS = new GrouBoxS(s21, 124, 2);
+                    break;
+
+                case 128:
+                    grouBoxS = new GrouBoxS(s22, 128, 2);
+                    break;
+
+                default:
+                    grouBoxS = null;
+                    break;
+            }
+
+            if(grouBoxS != null)
+            {
+                return (grouBoxS, null);
+            }
+            else
+            {
+                return (grouBoxS, "grouBoxS == null");
+            }
+
+        }
+
+        private List<GrouBoxS> GetListGrouBoxSDryMixes()
         {
             string
                 s11 = default,
@@ -1736,6 +1859,70 @@ namespace rail
             };
 
             return grouBoxSDryMixes;
+        }
+
+        private (GrouBoxS grouBoxS, string error) GetGrouBoxSDryMixes(int id)
+        {
+            GrouBoxS grouBoxS;
+
+            string
+                s11 = default,
+                s12 = default,
+                s13 = default,
+                s14 = default,
+                s15 = default,
+                s16 = default;
+
+            //Сухие смеси
+            List<GrouBoxS> grouBoxSDryMixes = new List<GrouBoxS>()
+            {
+                new GrouBoxS(s11,0, 11),
+                new GrouBoxS(s12,4, 12),
+                new GrouBoxS(s13,8, 13),
+                new GrouBoxS(s14,12, 14),
+                new GrouBoxS(s15,16, 15),
+                new GrouBoxS(s16,20, 16)
+            };
+
+            switch (id)
+            {
+                case 0:
+                    grouBoxS = new GrouBoxS(s11, 0, 1);
+                    break;
+
+                case 4:
+                    grouBoxS = new GrouBoxS(s12, 4, 2);
+                    break;
+
+                case 8:
+                    grouBoxS = new GrouBoxS(s13, 8, 2);
+                    break;
+
+                case 12:
+                    grouBoxS = new GrouBoxS(s14, 12, 2);
+                    break;
+
+                case 16:
+                    grouBoxS = new GrouBoxS(s15, 16, 2);
+                    break;
+
+                case 20:
+                    grouBoxS = new GrouBoxS(s16, 20, 2);
+                    break;
+
+                default:
+                    grouBoxS = null;
+                    break;
+            }
+
+            if (grouBoxS != null)
+            {
+                return (grouBoxS, null);
+            }
+            else
+            {
+                return (grouBoxS, "grouBoxS == null");
+            }
         }
     }
 }
