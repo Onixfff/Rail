@@ -13,7 +13,9 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.Text;
 using rail.Models;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
+using S7.Net;
+using Mysqlx;
+using ZstdSharp.Unsafe;
 
 namespace rail
 {
@@ -24,6 +26,12 @@ namespace rail
         MySqlCommand msd;
         private object label;
         string conSQL = ConfigurationManager.ConnectionStrings["234"].ConnectionString;
+
+        LogFileManager logFileManager = new LogFileManager();
+
+        Dictionary<string, int> plcIpPRU = new Dictionary<string, int>() { { "192.168.37.139", 12 } };
+        Dictionary<string, int> plcIpDaerocrete = new Dictionary<string, int>() { { "192.168.37.102", 305 } };
+        Dictionary<string, int> plcIpDryMixes =  new Dictionary<string, int>() { { "192.168.37.199", 10 } };
 
         private static readonly HttpClient client = new HttpClient
         {
@@ -73,89 +81,417 @@ namespace rail
             finally { mCon.Close(); }
         }
 
-        private async Task move_mas(string target_id, string source_id, int mas)
+        private async Task<bool> move_mas(string target_id, string source_id, int mas)
         {
+            string error = "Ошибка перемещения";
             List<GrouBoxS> grouBoxS = GetListGrouBoxSPZD();
+            bool isCompliteSource, isCompliteTarget, isDataReturn;
+            (GrouBoxS grouBoxS, string error) result;
+            //target_id = Откуда перевожу (девая часть ПРУ)
+            //source_id = Куда перевожу (Правая часть остальные + ПРУ)
+            //mas = Масса
+
+            switch (source_id)
+            {
+                case "1":
+                    result = GetGrouBoxSPZD(1);
+                    break;
+                case "2":
+                    result = GetGrouBoxSPZD(2);
+                    break;
+                case "3":
+                    result = GetGrouBoxSPZD(3);
+                    break;
+                case "4":
+                    result = GetGrouBoxSPZD(3);
+                    break;
+                case "5":
+                    result = GetGrouBoxSPZD(4);
+                    break;
+                case "6":
+                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
+                    result = GetListGrouBoxSDaerocrete(6);
+                    break;
+                case "7":
+                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
+                    result = GetListGrouBoxSDaerocrete(7);
+                    break;
+                case "8":
+                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
+                    result = GetListGrouBoxSDaerocrete(8);
+                    break;
+                case "9":
+                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
+                    result = GetListGrouBoxSDaerocrete(9);
+                    break;
+                case "10":
+                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
+                    result = GetListGrouBoxSDaerocrete(10);
+                    break;
+                case "11":
+                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
+                    result = GetGrouBoxSDryMixes(11);
+                    break;
+                case "12":
+                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
+                    result = GetGrouBoxSDryMixes(12);
+                    break;
+                case "13":
+                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
+                    result = GetGrouBoxSDryMixes(13);
+                    break;
+                case "14":
+                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
+                    result = GetGrouBoxSDryMixes(14);
+                    break;
+                case "15":
+                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
+                    result = GetGrouBoxSDryMixes(15);
+                    break;
+                case "16":
+                    result = (GetGrouBoxSPZD(1).grouBoxS, "Нету таких данных");
+                    break;
+                case "17":
+                    result = (GetGrouBoxSPZD(1).grouBoxS, "Нету таких данных");
+                    break;
+                case "18":
+                    result = (GetGrouBoxSPZD(1).grouBoxS, "Нету таких данных");
+                    break;
+                case "19":
+                    result = (GetGrouBoxSPZD(1).grouBoxS, "Нету таких данных");
+                    break;
+                case "20":
+                    result = GetGrouBoxSPZD(20);
+                    break;
+                case "21":
+                    result = GetGrouBoxSPZD(21);
+                    break;
+                case "22":
+                    result = GetGrouBoxSPZD(22);
+                    break;
+                case "23":
+                    result = GetGrouBoxSPZD(23);
+                    break;
+                case "24":
+                    result = (GetGrouBoxSPZD(1).grouBoxS, "Нету таких данных");
+                    break;
+                default:
+                    result = (GetGrouBoxSPZD(1).grouBoxS, "Нету таких данных");
+                    break;
+            }
+
+            if (result.error != null)
+            {
+                MessageBox.Show("Не удалось получить данные об plc");
+                return false;
+            }
+
+            isCompliteSource = await Move_mas_pru(result.grouBoxS, source_id, mas);
+
+            if (!isCompliteSource)
+            {
+                MessageBox.Show(error);
+                return false;
+            }
+
+            isCompliteTarget = await MoveTargetMas(target_id, mas);
+
+            if (!isCompliteTarget)
+            {
+                isDataReturn = await Move_mas_pru(result.grouBoxS, source_id, mas);
+
+                if (!isDataReturn)
+                {
+                    logFileManager.AddLog($"Не получилось вернуть данные обратно в source - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
+                    return false;
+                }
+            }
+
+            return isCompliteTarget;
+        }
+
+        private async Task<bool> MoveTargetMas(string target_id, int mas)
+        {
+            mas = mas * -1;//Конвертирую значение в минусовое для изьятия данных;
+            bool isComplite = false;
+            string error = "Ошибка перемещения";
+            (GrouBoxS grouBoxS, string error) result;
+
+            switch (target_id)
+            {
+                case "1":
+                    result = GetGrouBoxSPZD(1);
+                    break;
+                case "2":
+                    result = GetGrouBoxSPZD(2);
+                    break;
+                case "3":
+                    result = GetGrouBoxSPZD(3);
+                    break;
+                case "4":
+                    result = GetGrouBoxSPZD(4);
+                    break;
+                case "5":
+                    result = GetGrouBoxSPZD(5);
+                    break;
+                case "20":
+                    result = GetGrouBoxSPZD(20);
+                    break;
+                case "21":
+                    result = GetGrouBoxSPZD(21);
+                    break;
+                case "22":
+                    result = GetGrouBoxSPZD(22);
+                    break;
+                case "23":
+                    result = GetGrouBoxSPZD(23);
+                    break;
+                default:
+                    isComplite = false;
+                    result = (GetGrouBoxSPZD(1).grouBoxS, "Таких данных нету");
+                    break;
+            }
+
+            if (result.error != null)
+            {
+                MessageBox.Show("Не удалось получить данные об plc в списках\n" + result.error);
+            }
+            else
+            {
+                isComplite = await Move_mas_pru(result.grouBoxS, target_id, mas); //ПРУ
+
+                if (!isComplite)
+                {
+                    MessageBox.Show(error);
+                    logFileManager.AddLog($"Перенос Target каких данных не произошел - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
+                }
+            }
+
+            return isComplite;
+        }
+
+        private async Task<bool> MoveMasError(string source_id, int mas)
+        {
+            string error = $"Ошибка пемеремещия данных обратно (свяжитесь с администратором) и отправте по возможности файл.\n" +
+                $"Файл находиться по этому пути - {logFileManager.GetPathFolder()}";
+            List<GrouBoxS> grouBoxS = GetListGrouBoxSPZD();
+            bool isComplite = false;
+            (GrouBoxS grouBoxS , string error) result;
 
             //source_id = Куда перевожу 
             //target_id = Откуда перевожу
             //mas = Масса
+
             switch (source_id)
             {
                 case "1":
-                    Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
+                    result = GetGrouBoxSPZD(1);
+
+                    if(result.error != null)    
+                    {
+                        MessageBox.Show("Не удалось получить данные об plc");
+                    }
+                    else
+                    {
+                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
+
+                        if (!isComplite)
+                        {
+                            MessageBox.Show(error);
+                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
+                        }
+                    }
                     break;
                 case "2":
-                     Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text));//ПРУ
+                    result = GetGrouBoxSPZD(2);
+
+                    if (result.error != null)
+                    {
+                        MessageBox.Show("Не удалось получить данные об plc");
+                    }
+                    else
+                    {
+                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
+
+                        if (!isComplite)
+                        {
+                            MessageBox.Show(error);
+                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
+                        }
+                    }
                     break;
                 case "3":
-                    await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
+                    result = GetGrouBoxSPZD(3);
+
+                    if (result.error != null)
+                    {
+                        MessageBox.Show("Не удалось получить данные об plc");
+                    }
+                    else
+                    {
+                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
+
+                        if (!isComplite)
+                        {
+                            MessageBox.Show(error);
+                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
+                        }
+                    }
                     break;
                 case "4":
-                    await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
+                    result = GetGrouBoxSPZD(4);
+
+                    if (result.error != null)
+                    {
+                        MessageBox.Show("Не удалось получить данные об plc");
+                    }
+                    else
+                    {
+                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
+
+                        if (!isComplite)
+                        {
+                            MessageBox.Show(error);
+                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
+                        }
+                    }
                     break;
                 case "5":
-                    await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
+                    result = GetGrouBoxSPZD(5);
+
+                    if (result.error != null)
+                    {
+                        MessageBox.Show("Не удалось получить данные об plc");
+                    }
+                    else
+                    {
+                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
+
+                        if (!isComplite)
+                        {
+                            MessageBox.Show(error);
+                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
+                        }
+                    }
                     break;
                 case "6":
                     await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
+                    isComplite = true;
                     break;
                 case "7":
                     await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
+                    isComplite = true;
                     break;
                 case "8":
                     await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
+                    isComplite = true;
                     break;
                 case "9":
                     await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
+                    isComplite = true;
                     break;
                 case "10":
                     await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
+                    isComplite = true;
                     break;
                 case "11":
                     await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
+                    isComplite = true;
                     break;
                 case "12":
                     await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
+                    isComplite = true;
                     break;
                 case "13":
                     await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
+                    isComplite = true;
                     break;
                 case "14":
                     await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
+                    isComplite = true;
                     break;
                 case "15":
                     await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
+                    isComplite = true;
                     break;
                 case "16":
+                    isComplite = true;
                     break;
                 case "17":
+                    isComplite = true;
                     break;
                 case "18":
+                    isComplite = true;
                     break;
                 case "19":
+                    isComplite = true;
                     break;
                 case "20":
-                    await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
+                    result = GetGrouBoxSPZD(20);
+
+                    if (result.error != null)
+                    {
+                        MessageBox.Show("Не удалось получить данные об plc");
+                    }
+                    else
+                    {
+                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
+
+                        if (!isComplite)
+                        {
+                            MessageBox.Show(error);
+                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
+                        }
+                    }
                     break;
                 case "21":
-                    //await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
+                    result = GetGrouBoxSPZD(21);
+
+                    if (result.error != null)
+                    {
+                        MessageBox.Show("Не удалось получить данные об plc");
+                    }
+                    else
+                    {
+                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
+
+                        if (!isComplite)
+                        {
+                            MessageBox.Show(error);
+                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
+                        }
+                    }
                     break;
                 case "22":
-                    //await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));//ПРУ
+                    result = GetGrouBoxSPZD(22);
+
+                    if (result.error != null)
+                    {
+                        MessageBox.Show("Не удалось получить данные об plc");
+                    }
+                    else
+                    {
+                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
+
+                        if (!isComplite)
+                        {
+                            MessageBox.Show(error);
+                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
+                        }
+                    }
                     break;
                 case "23":
-
+                    isComplite = true;
                     break;
-
                 case "24":
-
+                    isComplite = true;
                     break;
                 default:
-
+                    isComplite = false;
                     break;
-
             }
+
+            return isComplite;
         }
 
         private void Move_mas_bsu(string silo, int mas)
@@ -172,7 +508,7 @@ namespace rail
                 try
                 {
                     ///TODO задать правельный ip
-                    fds.rfd = libnodave.openSocket(102, "192.168.37.139");
+                    fds.rfd = libnodave.openSocket(102, plcIpPRU.Keys.FirstOrDefault());
                     fds.wfd = fds.rfd;
                     if (fds.rfd > 0)
                     {
@@ -241,9 +577,9 @@ namespace rail
             }
         }
 
-        private async void Move_mas_pru (GrouBoxS grouBoxS, string silo, int mas)
+        private async Task<bool> Move_mas_pru (GrouBoxS grouBoxS, string silo, int mas)
         {
-            bool isComplite = await UpdateDatePlc(grouBoxS, "192.168.37.139", 12, silo, mas);
+            bool isComplite = await UpdateDatePlc(grouBoxS, plcIpPRU.Keys.FirstOrDefault(), 12, silo, mas);
             
             if (isComplite)
             {
@@ -252,7 +588,22 @@ namespace rail
             else
             {
                 Console.WriteLine("Ошибка перемещения");
+                return isComplite;
             }
+
+            isComplite = await UpdateDatePlc(grouBoxS, plcIpPRU.Keys.FirstOrDefault(), 12, silo, (mas * -1));
+
+            if (isComplite)
+            {
+                Console.WriteLine("Успешно прошло перемещение");
+            }
+            else
+            {
+                await UpdateDatePlc(grouBoxS, plcIpPRU.Keys.FirstOrDefault(), 12, silo, (mas * -1));
+                Console.WriteLine("Ошибка перемещения");
+                return isComplite;
+            }
+            return isComplite;
         }
 
         private void Move_mas_sss(string silo, int mas)
@@ -270,7 +621,7 @@ namespace rail
 
                 try
                 {
-                    fds.rfd = libnodave.openSocket(102, "192.168.37.199");
+                    fds.rfd = libnodave.openSocket(102, plcIpDryMixes.Keys.FirstOrDefault());
                     fds.wfd = fds.rfd;
 
                     if (fds.rfd > 0)
@@ -392,7 +743,7 @@ namespace rail
 
                 try
                 {
-                    fds.rfd = libnodave.openSocket(102, "192.168.37.102");
+                    fds.rfd = libnodave.openSocket(102, plcIpDaerocrete.Keys.FirstOrDefault());
                     fds.wfd = fds.rfd;
 
                     if (fds.rfd > 0)
@@ -543,7 +894,7 @@ namespace rail
 
                 try
                 {
-                    fds.rfd = libnodave.openSocket(102, "192.168.37.102");
+                    fds.rfd = libnodave.openSocket(102, plcIpDaerocrete.Keys.FirstOrDefault());
                     fds.wfd = fds.rfd;
 
                     if (fds.rfd > 0)
@@ -603,7 +954,7 @@ namespace rail
 
                 try
                 {
-                    fds.rfd = libnodave.openSocket(102, "192.168.37.199");
+                    fds.rfd = libnodave.openSocket(102, plcIpDryMixes.Keys.FirstOrDefault());
                     fds.wfd = fds.rfd;
                     if (fds.rfd > 0)
                     {
@@ -667,7 +1018,7 @@ namespace rail
 
                 try
                 {
-                    fds.rfd = libnodave.openSocket(102, "192.168.37.139");
+                    fds.rfd = libnodave.openSocket(102, plcIpPRU.Keys.FirstOrDefault());
                     fds.wfd = fds.rfd;
                     if (fds.rfd > 0)
                     {
@@ -1176,21 +1527,7 @@ namespace rail
         {
             string sql;
             string val = comboBox1.SelectedValue.ToString();
-            switch (val)
-            {
-                case "20":
-                    sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' and silo_num='6'");
-                    break;
-                case "23":
-                    sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' and silo_num='7'");
-                    break;
-                case "24":
-                    sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' and silo_num='8'");
-                    break;
-                default:
-                    sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' and silo_num='" + val + "'");
-                    break;
-            }
+            sql = GetVal(val);
             MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
 
             DataTable tbl1 = new DataTable();
@@ -1220,10 +1557,9 @@ namespace rail
             string source_manuf = comboBox_manufaktur_target.Text.ToString();
             string source_num = comboBox_silo_num_target.Text.ToString();
             string sql;
-            if (val == "20")
-                sql = ("SELECT `id` FROM silo_balance where manufactur='ПРУ' and silo_num='6'");
-            else
-                sql = ("SELECT `id` FROM silo_balance where manufactur='ПРУ' and silo_num='" + val + "'");
+
+            sql = GetVal(val);
+
             MySQLData.GetScalar.Result wsi = MySQLData.GetScalar.Scalar(sql, conSQL);
             target_id = wsi.ResultText;          
             string sql2 = ("SELECT `id` FROM silo_balance where manufactur='"+source_manuf+"' and silo_num='" + source_num + "'");
@@ -1247,25 +1583,29 @@ namespace rail
                 if (result == DialogResult.Yes)
                 {
                     button1.Visible = false;
-                    //Targe_sours_silo(target_id, source_id);
-                    //if (source_num=="6")
-                    //Move_mas_pru("20", Convert.ToInt32(textBox_weight.Text));
-                    //else
+                    int mas;
 
+                    bool resultParse = Int32.TryParse(textBox_weight.Text, out mas);
 
-                    if (source_id == "1" | source_id == "2" | source_id == "3" | source_id == "4" | source_id == "5" | source_id == "20")//ПРУ
-                        await move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
-                        //await Task.Run(() => Move_mas_pru(target_id, Convert.ToInt32(textBox_weight.Text)));
-                    if (source_id == "6" | source_id == "7" | source_id == "8" | source_id == "9" | source_id == "10")//газобетон
-                        await move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
-                    //await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));
-                    if (source_id == "11" | source_id == "12" | source_id == "13" | source_id == "14" | source_id == "15")//сухие смеси
-                        await move_mas(target_id, source_id, Convert.ToInt32(textBox_weight.Text));
-                    //await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text))); 
-                    //if (source_id == "17" | source_id == "18" | source_id == "19" | source_id == "16" | source_id == "15")//сухие смеси
-                    //textBox_weight.Text = "";
+                    if (resultParse)
+                    {
+                        bool isCopmliteMove = await move_mas(target_id, source_id, mas);
+                        UpdatePLC();
 
-                    UpdatePLC();
+                        if (!isCopmliteMove)
+                        {
+                            Console.WriteLine("Ошибка переноса данных");
+                        }
+                        else
+                        {
+                            //Сюда добавить работу с базой данных.
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Невозможное значение в поле `Вес`");
+                    }
+
                     button1.Visible = true;
                 }
             }
@@ -1383,9 +1723,9 @@ namespace rail
             var grouBoxSDaerocrete = GetListGrouBoxSDaerocrete();
             var grouBoxSDryMixes = GetListGrouBoxSDryMixes();
 
-            await PLC_RZDAsync(grouBoxSPZD, "192.168.37.139", 12);
-            await PLC_RZDAsync(grouBoxSDaerocrete, "192.168.37.102", 305);
-            //await PLC_RZDAsync(grouBoxSDryMixes, "192.168.37.199", 10);
+            await PLC_RZDAsync(grouBoxSPZD, plcIpPRU.Keys.FirstOrDefault(), plcIpPRU.Values.FirstOrDefault());
+            await PLC_RZDAsync(grouBoxSDaerocrete, plcIpDaerocrete.Keys.FirstOrDefault(), plcIpDaerocrete.Values.FirstOrDefault());
+            //await PLC_RZDAsync(grouBoxSDryMixes, plcIpDryMixes.Keys.FirstOrDefault(), plcIpDryMixes.Values.FirstOrDefault());
 
             //Делаю компановку данных
             List<GrouBoxS> fullItems = new List<GrouBoxS>();
@@ -1902,6 +2242,28 @@ namespace rail
             {
                 return (grouBoxS, "grouBoxS == null");
             }
+        }
+
+        private string GetVal(string val)
+        {
+            string sql;
+            switch (val)
+            {
+                case "20":
+                    sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' and silo_num='6'");
+                    break;
+                case "23":
+                    sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' and silo_num='7'");
+                    break;
+                case "24":
+                    sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' and silo_num='8'");
+                    break;
+                default:
+                    sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' and silo_num='" + val + "'");
+                    break;
+            }
+
+            return sql;
         }
     }
 }
