@@ -13,9 +13,6 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.Text;
 using rail.Models;
-using S7.Net;
-using Mysqlx;
-using ZstdSharp.Unsafe;
 
 namespace rail
 {
@@ -23,9 +20,9 @@ namespace rail
     {
         //MySqlConnection mCon = new MySqlConnection("Database=u0550310_aeroblock; Server=31.31.196.234; port=3306; username=u0550_kornev; password=18061981Kornev; charset=utf8 ");
         MySqlConnection mCon = new MySqlConnection(ConfigurationManager.ConnectionStrings["234"].ConnectionString);
+        string conSQL = ConfigurationManager.ConnectionStrings["234"].ConnectionString;
         MySqlCommand msd;
         private object label;
-        string conSQL = ConfigurationManager.ConnectionStrings["234"].ConnectionString;
 
         LogFileManager logFileManager = new LogFileManager();
 
@@ -43,27 +40,62 @@ namespace rail
             InitializeComponent();
         }
         
-        private void OpenCon()
-        {
-            if (mCon.State == ConnectionState.Closed)
-            {
-                mCon.Open();
-            }
-        }
-
-        private void CloseCon()
-        {
-            if (mCon.State == ConnectionState.Open)
-            {
-                mCon.Close();
-            }
-        }
-
-        public void ExecutQuery(string q)
+        private async Task OpenConAsync(MySqlConnection mCon)
         {
             try
             {
-                OpenCon();
+                if (mCon.State == ConnectionState.Closed)
+                {
+                    await mCon.OpenAsync();
+                }
+            }
+            catch(MySqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                MessageBox.Show("Ошибка открытия подключения к базе данных");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                MessageBox.Show("Непонятная ошибка");
+            }
+            finally
+            {
+                await mCon.CloseAsync();
+            }
+        }
+
+        private async Task CloseConAsync(MySqlConnection mCon)
+        {
+            try
+            {
+                if (mCon.State == ConnectionState.Open)
+                {
+                    await mCon.CloseAsync();
+                }
+            }
+            catch(MySqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                MessageBox.Show("Ошибка закрытия подключения к базе данных");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                MessageBox.Show("Непонятная ошибка");
+            }
+            finally
+            {
+                await mCon.CloseAsync();
+            }
+        }
+
+        public async Task ExecutQuery(string q, MySqlConnection mCon)
+        {
+            try
+            {
+                await OpenConAsync(mCon);
+
                 msd = new MySqlCommand(q, mCon);
                 if (msd.ExecuteNonQuery() == 1)
                 {
@@ -78,107 +110,16 @@ namespace rail
             {
                 MessageBox.Show(ex.Message);
             }
-            finally { mCon.Close(); }
+            finally { await CloseConAsync(mCon); }
         }
 
         private async Task<bool> move_mas(string target_id, string source_id, int mas)
         {
             string error = "Ошибка перемещения";
-            List<GrouBoxS> grouBoxS = GetListGrouBoxSPZD();
             bool isCompliteSource, isCompliteTarget, isDataReturn;
-            (GrouBoxS grouBoxS, string error) result;
-            //target_id = Откуда перевожу (девая часть ПРУ)
-            //source_id = Куда перевожу (Правая часть остальные + ПРУ)
-            //mas = Масса
+            (GrouBoxS grouBoxS, Dictionary<string, int> ipAdres , string error) result;
 
-            switch (source_id)
-            {
-                case "1":
-                    result = GetGrouBoxSPZD(1);
-                    break;
-                case "2":
-                    result = GetGrouBoxSPZD(2);
-                    break;
-                case "3":
-                    result = GetGrouBoxSPZD(3);
-                    break;
-                case "4":
-                    result = GetGrouBoxSPZD(3);
-                    break;
-                case "5":
-                    result = GetGrouBoxSPZD(4);
-                    break;
-                case "6":
-                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
-                    result = GetListGrouBoxSDaerocrete(6);
-                    break;
-                case "7":
-                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
-                    result = GetListGrouBoxSDaerocrete(7);
-                    break;
-                case "8":
-                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
-                    result = GetListGrouBoxSDaerocrete(8);
-                    break;
-                case "9":
-                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
-                    result = GetListGrouBoxSDaerocrete(9);
-                    break;
-                case "10":
-                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
-                    result = GetListGrouBoxSDaerocrete(10);
-                    break;
-                case "11":
-                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
-                    result = GetGrouBoxSDryMixes(11);
-                    break;
-                case "12":
-                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
-                    result = GetGrouBoxSDryMixes(12);
-                    break;
-                case "13":
-                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
-                    result = GetGrouBoxSDryMixes(13);
-                    break;
-                case "14":
-                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
-                    result = GetGrouBoxSDryMixes(14);
-                    break;
-                case "15":
-                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
-                    result = GetGrouBoxSDryMixes(15);
-                    break;
-                case "16":
-                    result = (GetGrouBoxSPZD(1).grouBoxS, "Нету таких данных");
-                    break;
-                case "17":
-                    result = (GetGrouBoxSPZD(1).grouBoxS, "Нету таких данных");
-                    break;
-                case "18":
-                    result = (GetGrouBoxSPZD(1).grouBoxS, "Нету таких данных");
-                    break;
-                case "19":
-                    result = (GetGrouBoxSPZD(1).grouBoxS, "Нету таких данных");
-                    break;
-                case "20":
-                    result = GetGrouBoxSPZD(20);
-                    break;
-                case "21":
-                    result = GetGrouBoxSPZD(21);
-                    break;
-                case "22":
-                    result = GetGrouBoxSPZD(22);
-                    break;
-                case "23":
-                    result = GetGrouBoxSPZD(23);
-                    break;
-                case "24":
-                    result = (GetGrouBoxSPZD(1).grouBoxS, "Нету таких данных");
-                    break;
-                default:
-                    result = (GetGrouBoxSPZD(1).grouBoxS, "Нету таких данных");
-                    break;
-            }
+            result = GetNumberId(source_id);
 
             if (result.error != null)
             {
@@ -186,7 +127,7 @@ namespace rail
                 return false;
             }
 
-            isCompliteSource = await Move_mas_pru(result.grouBoxS, source_id, mas);
+            isCompliteSource = await MoveMasPLC(result.grouBoxS, result.ipAdres , mas);
 
             if (!isCompliteSource)
             {
@@ -194,11 +135,11 @@ namespace rail
                 return false;
             }
 
-            isCompliteTarget = await MoveTargetMas(target_id, mas);
+            isCompliteTarget = await MoveTargetMas(target_id, plcIpPRU , mas);
 
             if (!isCompliteTarget)
             {
-                isDataReturn = await Move_mas_pru(result.grouBoxS, source_id, mas);
+                isDataReturn = await MoveMasPLC(result.grouBoxS, result.ipAdres, mas);
 
                 if (!isDataReturn)
                 {
@@ -210,7 +151,7 @@ namespace rail
             return isCompliteTarget;
         }
 
-        private async Task<bool> MoveTargetMas(string target_id, int mas)
+        private async Task<bool> MoveTargetMas(string target_id, Dictionary<string, int> ipAdres, int mas)
         {
             mas = mas * -1;//Конвертирую значение в минусовое для изьятия данных;
             bool isComplite = false;
@@ -258,237 +199,13 @@ namespace rail
             }
             else
             {
-                isComplite = await Move_mas_pru(result.grouBoxS, target_id, mas); //ПРУ
+                isComplite = await MoveMasPLC(result.grouBoxS, ipAdres , mas); //ПРУ
 
                 if (!isComplite)
                 {
                     MessageBox.Show(error);
                     logFileManager.AddLog($"Перенос Target каких данных не произошел - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
                 }
-            }
-
-            return isComplite;
-        }
-
-        private async Task<bool> MoveMasError(string source_id, int mas)
-        {
-            string error = $"Ошибка пемеремещия данных обратно (свяжитесь с администратором) и отправте по возможности файл.\n" +
-                $"Файл находиться по этому пути - {logFileManager.GetPathFolder()}";
-            List<GrouBoxS> grouBoxS = GetListGrouBoxSPZD();
-            bool isComplite = false;
-            (GrouBoxS grouBoxS , string error) result;
-
-            //source_id = Куда перевожу 
-            //target_id = Откуда перевожу
-            //mas = Масса
-
-            switch (source_id)
-            {
-                case "1":
-                    result = GetGrouBoxSPZD(1);
-
-                    if(result.error != null)    
-                    {
-                        MessageBox.Show("Не удалось получить данные об plc");
-                    }
-                    else
-                    {
-                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
-
-                        if (!isComplite)
-                        {
-                            MessageBox.Show(error);
-                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
-                        }
-                    }
-                    break;
-                case "2":
-                    result = GetGrouBoxSPZD(2);
-
-                    if (result.error != null)
-                    {
-                        MessageBox.Show("Не удалось получить данные об plc");
-                    }
-                    else
-                    {
-                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
-
-                        if (!isComplite)
-                        {
-                            MessageBox.Show(error);
-                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
-                        }
-                    }
-                    break;
-                case "3":
-                    result = GetGrouBoxSPZD(3);
-
-                    if (result.error != null)
-                    {
-                        MessageBox.Show("Не удалось получить данные об plc");
-                    }
-                    else
-                    {
-                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
-
-                        if (!isComplite)
-                        {
-                            MessageBox.Show(error);
-                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
-                        }
-                    }
-                    break;
-                case "4":
-                    result = GetGrouBoxSPZD(4);
-
-                    if (result.error != null)
-                    {
-                        MessageBox.Show("Не удалось получить данные об plc");
-                    }
-                    else
-                    {
-                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
-
-                        if (!isComplite)
-                        {
-                            MessageBox.Show(error);
-                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
-                        }
-                    }
-                    break;
-                case "5":
-                    result = GetGrouBoxSPZD(5);
-
-                    if (result.error != null)
-                    {
-                        MessageBox.Show("Не удалось получить данные об plc");
-                    }
-                    else
-                    {
-                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
-
-                        if (!isComplite)
-                        {
-                            MessageBox.Show(error);
-                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
-                        }
-                    }
-                    break;
-                case "6":
-                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
-                    isComplite = true;
-                    break;
-                case "7":
-                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
-                    isComplite = true;
-                    break;
-                case "8":
-                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
-                    isComplite = true;
-                    break;
-                case "9":
-                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
-                    isComplite = true;
-                    break;
-                case "10":
-                    await Task.Run(() => Move_mas_gb(source_id, Convert.ToInt32(textBox_weight.Text)));//газобетон
-                    isComplite = true;
-                    break;
-                case "11":
-                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
-                    isComplite = true;
-                    break;
-                case "12":
-                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
-                    isComplite = true;
-                    break;
-                case "13":
-                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
-                    isComplite = true;
-                    break;
-                case "14":
-                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
-                    isComplite = true;
-                    break;
-                case "15":
-                    await Task.Run(() => Move_mas_sss(source_id, Convert.ToInt32(textBox_weight.Text)));//сухие смеси
-                    isComplite = true;
-                    break;
-                case "16":
-                    isComplite = true;
-                    break;
-                case "17":
-                    isComplite = true;
-                    break;
-                case "18":
-                    isComplite = true;
-                    break;
-                case "19":
-                    isComplite = true;
-                    break;
-                case "20":
-                    result = GetGrouBoxSPZD(20);
-
-                    if (result.error != null)
-                    {
-                        MessageBox.Show("Не удалось получить данные об plc");
-                    }
-                    else
-                    {
-                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
-
-                        if (!isComplite)
-                        {
-                            MessageBox.Show(error);
-                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
-                        }
-                    }
-                    break;
-                case "21":
-                    result = GetGrouBoxSPZD(21);
-
-                    if (result.error != null)
-                    {
-                        MessageBox.Show("Не удалось получить данные об plc");
-                    }
-                    else
-                    {
-                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
-
-                        if (!isComplite)
-                        {
-                            MessageBox.Show(error);
-                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
-                        }
-                    }
-                    break;
-                case "22":
-                    result = GetGrouBoxSPZD(22);
-
-                    if (result.error != null)
-                    {
-                        MessageBox.Show("Не удалось получить данные об plc");
-                    }
-                    else
-                    {
-                        isComplite = await Move_mas_pru(result.grouBoxS, source_id, Convert.ToInt32(textBox_weight.Text)); //ПРУ
-
-                        if (!isComplite)
-                        {
-                            MessageBox.Show(error);
-                            logFileManager.AddLog($"Куда вносились данные - {result.grouBoxS.GetAdress()}|| Какие данные - {mas}");
-                        }
-                    }
-                    break;
-                case "23":
-                    isComplite = true;
-                    break;
-                case "24":
-                    isComplite = true;
-                    break;
-                default:
-                    isComplite = false;
-                    break;
             }
 
             return isComplite;
@@ -577,21 +294,11 @@ namespace rail
             }
         }
 
-        private async Task<bool> Move_mas_pru (GrouBoxS grouBoxS, string silo, int mas)
+        private async Task<bool> MoveMasPLC (GrouBoxS grouBoxS, Dictionary<string, int> ipAdres, int mas)
         {
-            bool isComplite = await UpdateDatePlc(grouBoxS, plcIpPRU.Keys.FirstOrDefault(), 12, silo, mas);
-            
-            if (isComplite)
-            {
-                Console.WriteLine("Успешно прошло перемещение");
-            }
-            else
-            {
-                Console.WriteLine("Ошибка перемещения");
-                return isComplite;
-            }
+            bool isComplite = false;
 
-            isComplite = await UpdateDatePlc(grouBoxS, plcIpPRU.Keys.FirstOrDefault(), 12, silo, (mas * -1));
+            isComplite = await UpdateDatePlc(grouBoxS, ipAdres.Keys.FirstOrDefault(), ipAdres.Values.FirstOrDefault(), mas);
 
             if (isComplite)
             {
@@ -599,7 +306,6 @@ namespace rail
             }
             else
             {
-                await UpdateDatePlc(grouBoxS, plcIpPRU.Keys.FirstOrDefault(), 12, silo, (mas * -1));
                 Console.WriteLine("Ошибка перемещения");
                 return isComplite;
             }
@@ -880,8 +586,131 @@ namespace rail
             }
         }
 
-        private void zero_plc_gb(string silo)
+        private (GrouBoxS grouBoxS, Dictionary<string, int> , string error) GetNumberId(string numberId)
         {
+            (GrouBoxS grouBoxS,Dictionary<string, int> ipAdres , string error) result;
+            (GrouBoxS grouBoxS, string error) demoResult;
+
+            switch (numberId)
+            {
+                case "1":
+                    demoResult = GetGrouBoxSPZD(1);
+                    result = (demoResult.grouBoxS, plcIpPRU, demoResult.error);
+                    break;
+                case "2":
+                    demoResult = GetGrouBoxSPZD(2);
+                    result = (demoResult.grouBoxS, plcIpPRU, demoResult.error);
+                    break;
+                case "3":
+                    demoResult = GetGrouBoxSPZD(3);
+                    result = (demoResult.grouBoxS, plcIpPRU, demoResult.error);
+                    break;
+                case "4":
+                    demoResult = GetGrouBoxSPZD(4);
+                    result = (demoResult.grouBoxS, plcIpPRU, demoResult.error);
+                    break;
+                case "5":
+                    demoResult = GetGrouBoxSPZD(5);
+                    result = (demoResult.grouBoxS, plcIpPRU, demoResult.error);
+                    break;
+                case "6":
+                    demoResult = GetGrouBoxSPZD(6);
+                    result = (demoResult.grouBoxS, plcIpDaerocrete, demoResult.error);
+                    break;
+                case "7":
+                    demoResult = GetGrouBoxSPZD(7);
+                    result = (demoResult.grouBoxS, plcIpDaerocrete, demoResult.error);
+                    break;
+                case "8":
+                    demoResult = GetGrouBoxSPZD(8);
+                    result = (demoResult.grouBoxS, plcIpDaerocrete, demoResult.error);
+                    break;
+                case "9":
+                    demoResult = GetGrouBoxSPZD(9);
+                    result = (demoResult.grouBoxS, plcIpDaerocrete, demoResult.error);
+                    break;
+                case "10":
+                    demoResult = GetGrouBoxSPZD(10);
+                    result = (demoResult.grouBoxS, plcIpDaerocrete, demoResult.error);
+                    break;
+                case "11":
+                    demoResult = GetGrouBoxSPZD(11);
+                    result = (demoResult.grouBoxS, plcIpDryMixes, demoResult.error);
+                    break;
+                case "12":
+                    demoResult = GetGrouBoxSPZD(12);
+                    result = (demoResult.grouBoxS, plcIpDryMixes, demoResult.error);
+                    break;
+                case "13":
+                    demoResult = GetGrouBoxSPZD(13);
+                    result = (demoResult.grouBoxS, plcIpDryMixes, demoResult.error);
+                    break;
+                case "14":
+                    demoResult = GetGrouBoxSPZD(14);
+                    result = (demoResult.grouBoxS, plcIpDryMixes, demoResult.error);
+                    break;
+                case "15":
+                    demoResult = GetGrouBoxSPZD(15);
+                    result = (demoResult.grouBoxS, plcIpDryMixes, demoResult.error);
+                    break;
+                case "16":
+                    result = (GetGrouBoxSPZD(1).grouBoxS,null , "Нету таких данных");
+                    break;
+                case "17":
+                    result = (GetGrouBoxSPZD(1).grouBoxS, null,"Нету таких данных");
+                    break;
+                case "18":
+                    result = (GetGrouBoxSPZD(1).grouBoxS, null ,"Нету таких данных");
+                    break;
+                case "19":
+                    result = (GetGrouBoxSPZD(1).grouBoxS, null ,"Нету таких данных");
+                    break;
+                case "20":
+                    demoResult = GetGrouBoxSPZD(20);
+                    result = (demoResult.grouBoxS, plcIpPRU, demoResult.error);
+                    break;
+                case "21":
+                    demoResult = GetGrouBoxSPZD(21);
+                    result = (demoResult.grouBoxS, plcIpPRU, demoResult.error);
+                    break;
+                case "22":
+                    demoResult = GetGrouBoxSPZD(22);
+                    result = (demoResult.grouBoxS, plcIpPRU, demoResult.error);
+                    break;
+                case "23":
+                    demoResult = GetGrouBoxSPZD(23);
+                    result = (demoResult.grouBoxS, plcIpPRU, demoResult.error);
+                    break;
+                default:
+                    result = (GetGrouBoxSPZD(1).grouBoxS,null , "Нету таких данных");
+                    break;
+            }
+
+            return result;
+        }
+
+        private async Task<bool> zero_plc_gb(string silo)
+        {
+            bool isComplite = false;
+            string error = "Ошибка перемещения";
+
+            (GrouBoxS grouBoxS, Dictionary<string, int> ipAdres, string error) result = GetNumberId(silo);
+
+            if (result.error != null)
+            {
+                MessageBox.Show("Не удалось получить данные об plc");
+                return false;
+            }
+
+            isComplite = await UpdateZeroPlc(result.grouBoxS, result.ipAdres.Keys.FirstOrDefault(), result.ipAdres.Values.FirstOrDefault());
+
+            if (isComplite == false)
+            {
+                MessageBox.Show(error);
+            }
+
+            return isComplite;
+
             // ОБНУЛЕНИЕ В КОНТРОЛЛЕРЕ
 
             libnodave.daveOSserialType fds;
@@ -1104,13 +933,15 @@ namespace rail
 
             //ExecutQuery(strSQL3);
 
-            Dictionary<string, string> str = new Dictionary<string, string>();
-            str.Add("`date`", MySQLData.MysqlTime(DateTime.Now));
-            str.Add("weight", weight);
-            str.Add("weight_sum_in", weight_sum_in);
-            str.Add("weight_sum_out", weight_sum_out);
-            str.Add("material", material);
-            str.Add("id_silos", on);
+            Dictionary<string, string> str = new Dictionary<string, string>
+            {
+                { "`date`", MySQLData.MysqlTime(DateTime.Now) },
+                { "weight", weight },
+                { "weight_sum_in", weight_sum_in },
+                { "weight_sum_out", weight_sum_out },
+                { "material", material },
+                { "id_silos", on }
+            };
 
             string keys, values;
             MySQLData.ConvertInsertData(str, out keys, out values);
@@ -1284,23 +1115,43 @@ namespace rail
             MySQLData.ConvertInsertData(str, out keys, out values);
             string strSQL = "insert into move_silo (" + keys + ") values (" + values + ");";
             bool isok = false;
+
             while (!isok)
             {
-                MySQLData.GetScalar.Result wres = MySQLData.GetScalar.NoResponse(strSQL, conSQL);
-                if (wres.HasError == true)
-                { isok = false; Thread.Sleep(500); }
-                else
+                try
                 {
-                    isok = true;
-                    
-                    MessageBox.Show("Перемещение проведено", "Перемещение", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    //textBox_weight.Text = "";
+                    MySQLData.GetScalar.Result wres = MySQLData.GetScalar.NoResponse(strSQL, conSQL);
+                    if (wres.HasError == true)
+                    { isok = false; Thread.Sleep(500); }
+                    else
+                    {
+                        isok = true;
+
+                        MessageBox.Show("Перемещение проведено", "Перемещение", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        //textBox_weight.Text = "";
+                    }
+                }
+                catch(MySqlException ex)
+                {
+                    Console.WriteLine("Ошибка перемещения " + ex.Message);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine("Ошибка перемещения " + ex.Message);
                 }
             }
         }
 
         private void ToolStripMenuItem2_Click(object sender, EventArgs e)
         {
+            ToolStripMenuItem cms = (ToolStripMenuItem)sender;
+            ContextMenuStrip strip = (ContextMenuStrip)cms.Owner;
+            Control owner = strip.SourceControl;
+            string owner_name = owner.Name.ToString();
+            owner_name = owner_name.Remove(0, 1);
+
+            owner_name = ChangeOwner_nmae(owner_name);
+
             pass pass = new pass();
             pass.Show();
             pass.button_pass.MouseClick += (senderSlave, eSlave) =>
@@ -1314,12 +1165,6 @@ namespace rail
                     }
                     if (result == DialogResult.Yes)
                     {
-                        ToolStripMenuItem cms = (ToolStripMenuItem)sender;
-                        ContextMenuStrip strip = (ContextMenuStrip)cms.Owner;
-                        Control owner = strip.SourceControl;
-                        // MessageBox.Show(owner.Name);
-                        string owner_name = owner.Name.ToString();
-                        owner_name = owner_name.Remove(0, 1);
                         if (owner_name == "1" | owner_name == "2" | owner_name == "3" | owner_name == "4" | owner_name == "5" | owner_name == "20")//ПРУ
                             s1_6(owner_name);
                         if (owner_name == "6" | owner_name == "7" | owner_name == "8" | owner_name == "9" | owner_name == "10")//газобетон
@@ -1336,7 +1181,7 @@ namespace rail
 
         private void GetData()
         {
-            string sql = ("SELECT * FROM silo_balance where id<>22;");
+            string sql = ("SELECT * FROM silo_balance where id <> 22;");
             MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
             DataSet ds = new DataSet();
             ds.Reset();
@@ -1419,58 +1264,113 @@ namespace rail
 
         private void fill_cb()
         {
-            string sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' ");
-            MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
-            DataTable tbl1 = new DataTable();
-            dD.Fill(tbl1);
+            try
+            {
+                string sql = ("SELECT * FROM silo_balance where manufactur='ПРУ' ");
+                MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
+                DataTable tbl1 = new DataTable();
+                dD.Fill(tbl1);
 
-            comboBox1.DataSource = tbl1;
-            comboBox1.DisplayMember = "silo_num";// столбец для отображения
-            comboBox1.ValueMember = "id";
+                comboBox1.DataSource = tbl1;
+                comboBox1.DisplayMember = "silo_num";// столбец для отображения
+                comboBox1.ValueMember = "id";
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show("Ошибка в fill_cb");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка в fill_cb");
+            }
+            finally
+            {
+                mCon.Close();
+            }
         }
 
         private void fill_cb(string sql_disp, ComboBox cb)
         {
-            string sql = ("SELECT distinct " + sql_disp + " FROM silo_balance");
-            MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
-            DataTable tbl1 = new DataTable();
-            dD.Fill(tbl1);
-            cb.DataSource = tbl1;
-            cb.DisplayMember = sql_disp;// столбец для отображения
-            cb.ValueMember = sql_disp;
+            try
+            {
+                string sql = ("SELECT distinct " + sql_disp + " FROM silo_balance");
+                MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
+                DataTable tbl1 = new DataTable();
+                dD.Fill(tbl1);
+                cb.DataSource = tbl1;
+                cb.DisplayMember = sql_disp;// столбец для отображения
+                cb.ValueMember = sql_disp;
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show("Ошибка в fill_cb");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка в fill_cb");
+            }
+            finally
+            {
+                mCon.Close();
+            }
         }
 
         private void fill_cb(string sql_disp, string sql_us, ComboBox cb)
         {
-            string sql = ("SELECT distinct " + sql_disp + " FROM silo_balance where  manufactur= '" + sql_us + "'");
-            MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
-            DataTable tbl1 = new DataTable();
-            dD.Fill(tbl1);
+            try
+            {
+                string sql = ("SELECT distinct " + sql_disp + " FROM silo_balance where  manufactur= '" + sql_us + "'");
+                MySqlDataAdapter dD = new MySqlDataAdapter(sql, mCon);
+                DataTable tbl1 = new DataTable();
+                dD.Fill(tbl1);
 
-            cb.DataSource = tbl1;
-            cb.DisplayMember = sql_disp;// столбец для отображения
-            cb.ValueMember = sql_disp;
+                cb.DataSource = tbl1;
+                cb.DisplayMember = sql_disp;// столбец для отображения
+                cb.ValueMember = sql_disp;
+            }
+            catch(MySqlException ex)
+            {
+                MessageBox.Show("Ошибка в fill_cb");
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Ошибка в fill_cb");
+            }
+            finally
+            {
+                mCon.Close();
+            }
         }
 
         private void fill_tb(string sql_disp, string sql_us, string sql_us2, TextBox tb)
         {
             string sql = ("SELECT " + sql_disp + " FROM silo_balance where  manufactur= '" + sql_us + "' and silo_num='" + sql_us2 + "' ");
-            msd = new MySqlCommand(sql, mCon);
-            mCon.Open();
-            try
+            
+            using (msd = new MySqlCommand(sql, mCon))
             {
-                tb.Text = msd.ExecuteScalar().ToString();
+                try
+                {
+                    mCon.Open();
+                    tb.Text = msd.ExecuteScalar().ToString();
+                }
+                catch (MySqlException ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+                finally 
+                { 
+                    mCon.Close();
+                }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-            mCon.Close();
         }
 
         private void Update_visualSilo()
         {
-            List<System.Windows.Forms.GroupBox> gb = new List<System.Windows.Forms.GroupBox>
+            List<GroupBox> gb = new List<GroupBox>
             {
                 s1,
                 s2,
@@ -1598,6 +1498,7 @@ namespace rail
                         }
                         else
                         {
+                            Targe_sours_silo(target_id, source_id);
                             //Сюда добавить работу с базой данных.
                         }
                     }
@@ -1631,21 +1532,8 @@ namespace rail
             Control owner = strip.SourceControl;
             string owner_nmae = owner.Name.ToString();
             owner_nmae = owner_nmae.Remove(0, 1);
-            
-            switch (owner_nmae)
-            {
-                case "21":
-                    owner_nmae = "23";
-                    break;
-                case "22":
-                    owner_nmae = "24";
-                    break;
-                case "23":
-                    owner_nmae = "25";
-                    break;
-                default:
-                    break;
-            }
+
+            owner_nmae = ChangeOwner_nmae(owner_nmae);
 
             material form6 = new material();
             form6.Show();
@@ -1655,7 +1543,7 @@ namespace rail
                material_name = form6.dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
                 form6.Close();
                 string strSQL3 = "update silo_balance set silo_material_name ='" + material_name + "' where `id`='" + owner_nmae + "' ;";
-                ExecutQuery(strSQL3);
+                ExecutQuery(strSQL3, new MySqlConnection(ConfigurationManager.ConnectionStrings["234"].ConnectionString));
                 GetData();
                 Update_visualSilo();
             };
@@ -1664,10 +1552,33 @@ namespace rail
                material_name = form6.dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
                 form6.Close();
                 string strSQL3 = "update silo_balance set silo_material_name ='" + material_name + "' where `id`='" + owner_nmae + "' ;";
-                ExecutQuery(strSQL3);
+                ExecutQuery(strSQL3, new MySqlConnection(ConfigurationManager.ConnectionStrings["234"].ConnectionString));
                 GetData();
                 Update_visualSilo();
             };
+        }
+
+        private string ChangeOwner_nmae(string owner_nmae)
+        {
+            string result;
+
+            switch (owner_nmae)
+            {
+                case "21":
+                    result = "23";
+                    break;
+                case "22":
+                    result = "24";
+                    break;
+                case "23":
+                    result = "25";
+                    break;
+                default:
+                    result = owner_nmae;
+                    break;
+            }
+
+            return result;
         }
 
         private void ПоставщикToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1678,20 +1589,7 @@ namespace rail
             string owner_nmae = owner.Name.ToString();
             owner_nmae = owner_nmae.Remove(0, 1);
 
-            switch (owner_nmae)
-            {
-                case "21":
-                    owner_nmae = "23";
-                    break;
-                case "22":
-                    owner_nmae = "24";
-                    break;
-                case "23":
-                    owner_nmae = "25";
-                    break;
-                default:
-                    break;
-            }
+            owner_nmae = ChangeOwner_nmae(owner_nmae);
 
             string material_name;
             sendler form4 = new sendler();
@@ -1701,7 +1599,7 @@ namespace rail
                 material_name = form4.dataGridView2.SelectedRows[0].Cells[1].Value.ToString();
                 form4.Close();
                 string strSQL3 = "update silo_balance set silo_name_sendler ='" + material_name + "' where `id`='" + owner_nmae + "' ;";
-                ExecutQuery(strSQL3);
+                ExecutQuery(strSQL3, new MySqlConnection(ConfigurationManager.ConnectionStrings["234"].ConnectionString));
                 GetData();
                 Update_visualSilo();
             };
@@ -1710,7 +1608,7 @@ namespace rail
                 material_name = form4.dataGridView2.SelectedRows[0].Cells[1].Value.ToString();
                 form4.Close();
                 string strSQL3 = "update silo_balance set silo_name_sendler ='" + material_name + "' where `id`='" + owner_nmae + "' ;";
-                ExecutQuery(strSQL3);
+                ExecutQuery(strSQL3 , new MySqlConnection(ConfigurationManager.ConnectionStrings["234"].ConnectionString));
                 GetData();
                 Update_visualSilo();
             };
@@ -1831,7 +1729,7 @@ namespace rail
             }
         }
 
-        private async Task<bool> UpdateDatePlc(GrouBoxS grouBoxS, string ipAddress, int dbNumber, string silo, int mas)
+        private async Task<bool> UpdateDatePlc(GrouBoxS grouBoxS, string ipAddress, int dbNumber, int mas)
         {
             string _errorMessage;
             List<int> addresses = new List<int>();
@@ -1910,22 +1808,103 @@ namespace rail
             return false;
         }
 
-        private bool UpdateData(int id, double value)
+        private async Task<bool> UpdateZeroPlc(GrouBoxS grouBoxS, string ipAddress, int dbNumber)
         {
-            string conSql = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + value + "' WHERE (`id` = '" + (id) + "');";
+            string _errorMessage;
+            List<int> addresses = new List<int>();
 
-            MySqlCommand dsq = new MySqlCommand(conSQL, mCon);
+            if (grouBoxS != null)
+            {
+                var elementAdress = grouBoxS.GetAdress();
+
+                if (elementAdress != 0 && elementAdress != default)
+                {
+                    addresses.Add(elementAdress);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Ошибка UpdateDatePlc grouBoxS не содержит данных");
+                MessageBox.Show("Ошибка UpdateDatePlc grouBoxS не содержит данных");
+                return false;
+            }
+
             try
             {
-                mCon.Open();
-                if (dsq.ExecuteNonQuery() == 1)
+                var cancellationToken = new CancellationTokenSource();
+                cancellationToken.CancelAfter(TimeSpan.FromSeconds(30)); // Отмена через 30 секунд
+
+                // Формируем строку запроса
+                var requestUriString = $"/api/PLCPRU/UpdateDateZeroPlc?ipAddress={ipAddress}&dbNumber={dbNumber}&addresses={addresses}";
+
+                // Выполняем запрос
+                var response = await client.GetAsync(requestUriString, cancellationToken.Token);
+
+                // Проверяем успешность запроса
+                if (response.IsSuccessStatusCode)
                 {
-                    return true;
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<(bool isComplite, string error)>(jsonString);
+
+                    if (result.isComplite == true)
+                    {
+                        Console.WriteLine("Обнуление PLC прошло успешно");
+                        return true;
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Ошибка обновления \n{result.error}");
+                        Console.WriteLine($"Ошибка обновления \n{result.error}");
+                    }
                 }
                 else
                 {
-                    Update_visualSilo();
-                    return false;
+                    // Логируем ошибку HTTP
+                    _errorMessage = $"Ошибка HTTP-запроса: {(int)response.StatusCode} - {response.ReasonPhrase}";
+                    Console.WriteLine(_errorMessage);
+                    MessageBox.Show(_errorMessage);
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                _errorMessage = $"Ошибка HTTP-запроса: {ex.Message}";
+                Console.WriteLine(_errorMessage);
+                MessageBox.Show(_errorMessage);
+            }
+            catch (TaskCanceledException ex)
+            {
+                _errorMessage = "Запрос был отменён (таймаут или отмена токеном).";
+                Console.WriteLine(_errorMessage);
+                MessageBox.Show(_errorMessage);
+            }
+            catch (Exception ex)
+            {
+                _errorMessage = "Произошла неожиданная ошибка.";
+                Console.WriteLine(_errorMessage + "\n" + ex.Message);
+                MessageBox.Show(_errorMessage);
+            }
+
+            return false;
+        }
+
+        private async Task<bool> UpdateData(int id, double value)
+        {
+            string conSql = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + value + "' WHERE (`id` = '" + (id) + "');";
+            try
+            {
+                await mCon.OpenAsync();
+
+                using (MySqlCommand dsq = new MySqlCommand(conSQL, mCon))
+                {
+                    if (await dsq.ExecuteNonQueryAsync() == 1)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        Update_visualSilo();
+                        return false;
+                    }
                 }
             }
             catch (Exception ex)
@@ -1936,52 +1915,49 @@ namespace rail
             }
             finally
             {
-                mCon.Close();
+                await mCon.CloseAsync();
             }
         }
 
-        private void UpdateData(List<GrouBoxS> var)
-         {
+        private async Task UpdateData(List<GrouBoxS> var)
+        {
             MySqlConnection mCon = new MySqlConnection(ConfigurationManager.ConnectionStrings["234"].ConnectionString);
-            //MySqlConnection mCon = new MySqlConnection("Database=spslogger; Server=192.168.37.101; port=3306; username=%user_1; password=20112004; charset=utf8 ");
-            
             int idDb;
-
             int id;
+
             for (id = 0; id < var.Count; id++)
             {
                 idDb = var[id].GetIdDb();
                 int weight = var[id].GetTextInt();
                 string conSQL = null;
 
-                switch (idDb)
-                {
-                    default:
-                        conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + weight + "' WHERE (`id` = '" + (idDb).ToString() + "');";
-                        break;
-                }
+                conSQL = "UPDATE `u0550310_aeroblock`.`silo_balance` SET `weight` = '" + weight + "' WHERE (`id` = '" + (idDb).ToString() + "');";
 
-                MySqlCommand dsq = new MySqlCommand(conSQL, mCon);
                 try
                 {
-                    mCon.Open();
-                    if (dsq.ExecuteNonQuery() == 1)
-                    {
-                        // MessageBox.Show("Запись добавлена");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Ошибка записи");
+                    await mCon.OpenAsync();
 
-                        Update_visualSilo();
+                    using (MySqlCommand dsq = new MySqlCommand(conSQL, mCon))
+                    {
+
+                        if (await dsq.ExecuteNonQueryAsync() == 1)
+                        {
+                            // MessageBox.Show("Запись добавлена");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Ошибка записи");
+                            Update_visualSilo();
+                        }
                     }
-                    // MessageBox.Show("OK");
-                    mCon.Close();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
-                    if (mCon != null && mCon.State != System.Data.ConnectionState.Closed) mCon.Clone();
+                }
+                finally
+                {
+                    await mCon.CloseAsync();
                 }
 
             }
